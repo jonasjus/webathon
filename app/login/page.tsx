@@ -1,11 +1,11 @@
 import { signIn, signUp } from "./actions";
 
 interface LoginPageProps {
-  searchParams: Promise<{ error?: string; mode?: string }>;
+  searchParams: Promise<{ error?: string; mode?: string; success?: string }>;
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const { error, mode } = await searchParams;
+  const { error, mode, success } = await searchParams;
   const isSignUp = mode === "signup";
 
   return (
@@ -23,6 +23,12 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         {error && (
           <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
             {decodeURIComponent(error)}
+          </p>
+        )}
+
+        {success && (
+          <p className="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+            {decodeURIComponent(success)}
           </p>
         )}
 

@@ -7,6 +7,7 @@ export interface ProfileRow {
   display_name: string;
   initials: string;
   avatar_color: string;
+  avatar_url: string | null;
   created_at: string;
 }
 
@@ -57,6 +58,8 @@ export interface Activity {
   category: SportCategory;
   mapPin: { x: number; y: number };
   isJoined: boolean;
+  hostUserId: string;
+  hostAvatarUrl: string | null;
 }
 
 // ---------------------------------------------------------------------------

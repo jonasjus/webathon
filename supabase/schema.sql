@@ -11,6 +11,7 @@ create table if not exists public.profiles (
   display_name text        not null,
   initials     text        not null,
   avatar_color text        not null default '#5FA8D3',
+  avatar_url   text,
   created_at   timestamptz not null default now()
 );
 
@@ -173,3 +174,13 @@ begin
   end if;
 end;
 $$;
+
+-- ============================================================
+-- 6. Avatar column migration
+-- ============================================================
+-- If you already ran this schema before avatar support was added,
+-- run this one-liner in the SQL Editor to add the column:
+--
+--   alter table public.profiles add column if not exists avatar_url text;
+--
+-- Also run the storage bucket setup described in AVATAR_SETUP.md.

@@ -1,4 +1,5 @@
 import type { Activity } from "../lib/supabase/types";
+import { Avatar } from "./avatar";
 import { CategoryTag, getCategoryAppearance, SportGlyph } from "./category-tag";
 import { JoinButton } from "./join-button";
 import { ParticipantStack } from "./participant-stack";
@@ -6,9 +7,11 @@ import { ParticipantStack } from "./participant-stack";
 interface ActivityCardProps {
   activity: Activity;
   isLoggedIn: boolean;
+  currentUserId?: string | null;
 }
 
-export function ActivityCard({ activity, isLoggedIn }: ActivityCardProps) {
+export function ActivityCard({ activity, isLoggedIn, currentUserId }: ActivityCardProps) {
+  const isOwnActivity = !!currentUserId && currentUserId === activity.hostUserId;
   const appearance = getCategoryAppearance(activity.category);
 
   return (
@@ -22,10 +25,14 @@ export function ActivityCard({ activity, isLoggedIn }: ActivityCardProps) {
 
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--ink-muted)]">
+          <Avatar
+            src={activity.hostAvatarUrl}
+            initials={activity.hostInitials}
+            color={activity.hostColor}
+            size={24}
+          />
           <span className="font-medium text-[var(--ink)]">{activity.host}</span>
-          <span aria-hidden="true" className="text-[var(--ink-subtle)]">
-            ·
-          </span>
+          <span aria-hidden="true" className="text-[var(--ink-subtle)]">·</span>
           <span>{activity.location}</span>
         </div>
 
@@ -53,11 +60,17 @@ export function ActivityCard({ activity, isLoggedIn }: ActivityCardProps) {
       </div>
 
       <div className="lg:justify-self-end">
-        <JoinButton
-          activityId={activity.id}
-          isJoined={activity.isJoined}
-          isLoggedIn={isLoggedIn}
-        />
+        {isOwnActivity ? (
+          <span className="inline-flex h-11 items-center rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] px-5 text-sm font-medium text-[var(--ink-muted)]">
+            Din aktivitet
+          </span>
+        ) : (
+          <JoinButton
+            activityId={activity.id}
+            isJoined={activity.isJoined}
+            isLoggedIn={isLoggedIn}
+          />
+        )}
       </div>
     </article>
   );

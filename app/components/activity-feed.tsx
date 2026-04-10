@@ -10,6 +10,7 @@ type FilterId = "alle" | "naer" | "ledige" | "helg";
 interface ActivityFeedProps {
   activities: Activity[];
   isLoggedIn: boolean;
+  currentUserId?: string | null;
 }
 
 const filters: { id: FilterId; label: string }[] = [
@@ -19,7 +20,7 @@ const filters: { id: FilterId; label: string }[] = [
   { id: "helg", label: "Denne helgen" },
 ];
 
-export function ActivityFeed({ activities, isLoggedIn }: ActivityFeedProps) {
+export function ActivityFeed({ activities, isLoggedIn, currentUserId }: ActivityFeedProps) {
   const [activeFilter, setActiveFilter] = useState<FilterId>("alle");
   const [showCreateForm, setShowCreateForm] = useState(false);
 
@@ -95,6 +96,7 @@ export function ActivityFeed({ activities, isLoggedIn }: ActivityFeedProps) {
             key={activity.id}
             activity={activity}
             isLoggedIn={isLoggedIn}
+            currentUserId={currentUserId}
           />
         ))}
         {visibleActivities.length === 0 && (

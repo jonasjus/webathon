@@ -30,6 +30,7 @@ function formatNorwegianTime(iso: string): string {
 interface ActivityQueryRow {
   id: string;
   title: string;
+  host_user_id: string;
   location: string;
   starts_at: string;
   description: string;
@@ -41,6 +42,7 @@ interface ActivityQueryRow {
     display_name: string;
     initials: string;
     avatar_color: string;
+    avatar_url: string | null;
   } | null;
   activity_participants: { user_id: string }[];
 }
@@ -60,9 +62,9 @@ export const getActivities = cache(async (): Promise<Activity[]> => {
     .from("activities")
     .select(
       `
-      id, title, location, starts_at, description,
+      id, title, host_user_id, location, starts_at, description,
       participants_max, category, map_pin_x, map_pin_y,
-      profiles!host_user_id ( display_name, initials, avatar_color ),
+      profiles!host_user_id ( display_name, initials, avatar_color, avatar_url ),
       activity_participants ( user_id )
     `
     )
@@ -93,6 +95,8 @@ export const getActivities = cache(async (): Promise<Activity[]> => {
       isJoined: user
         ? participants.some((p) => p.user_id === user.id)
         : false,
+      hostUserId: row.host_user_id,
+      hostAvatarUrl: profile?.avatar_url ?? null,
     };
   });
 });

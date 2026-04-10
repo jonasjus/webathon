@@ -20,9 +20,11 @@ export default async function Home() {
 
   const sidebarUser = user
     ? {
+        id: user.id,
         displayName: (user.user_metadata?.display_name as string | undefined) ?? user.email ?? "Bruker",
         initials: (user.user_metadata?.initials as string | undefined) ?? "?",
         avatarColor: (user.user_metadata?.avatar_color as string | undefined) ?? "#5FA8D3",
+        avatarUrl: (user.user_metadata?.avatar_url as string | undefined) ?? null,
       }
     : null;
 
@@ -30,11 +32,11 @@ export default async function Home() {
     <main className="min-h-screen bg-[var(--canvas)] px-4 py-6 sm:px-6 xl:px-8">
       <div className="mx-auto grid max-w-[1440px] gap-6 xl:grid-cols-[248px_minmax(0,1fr)]">
         <div className="xl:sticky xl:top-6 xl:h-[calc(100vh-3rem)]">
-          <Sidebar user={sidebarUser} />
+          <Sidebar activeItem="Aktivitetsstrøm" user={sidebarUser} />
         </div>
 
         <div className="flex flex-col gap-4">
-          <ActivityFeed activities={activities} isLoggedIn={!!user} />
+          <ActivityFeed activities={activities} isLoggedIn={!!user} currentUserId={user?.id} />
         </div>
       </div>
     </main>
