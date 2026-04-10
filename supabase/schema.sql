@@ -109,7 +109,132 @@ create policy "participants: own delete"
   using (user_id = auth.uid());
 
 -- ------------------------------------------------------------
--- 4. Trigger: auto-create profile on sign-up
+-- 4. activity_chat_messages
+-- ------------------------------------------------------------
+create table if not exists public.activity_chat_messages (
+  id             uuid        primary key default gen_random_uuid(),
+  activity_id    uuid        not null references public.activities(id) on delete cascade,
+  sender_user_id uuid        not null default auth.uid() references public.profiles(id) on delete cascade,
+  body           text        not null check (char_length(btrim(body)) between 1 and 2000),
+  created_at     timestamptz not null default now()
+);
+
+create index if not exists activity_chat_messages_activity_created_idx
+  on public.activity_chat_messages (activity_id, created_at);
+
+create index if not exists activity_chat_messages_sender_idx
+  on public.activity_chat_messages (sender_user_id);
+
+alter table public.activity_chat_messages enable row level security;
+
+create policy "activity_chat_messages: host or participant read"
+  on public.activity_chat_messages for select
+  to authenticated
+  using (
+    exists (
+      select 1
+      from public.activities a
+      where a.id = activity_chat_messages.activity_id
+        and timezone('Europe/Oslo', a.starts_at)::date >= timezone('Europe/Oslo', now())::date
+        and (
+          a.host_user_id = (select auth.uid())
+          or exists (
+            select 1
+            from public.activity_participants ap
+            where ap.activity_id = activity_chat_messages.activity_id
+              and ap.user_id = (select auth.uid())
+          )
+        )
+    )
+  );
+
+create policy "activity_chat_messages: host or participant insert"
+  on public.activity_chat_messages for insert
+  to authenticated
+  with check (
+    sender_user_id = (select auth.uid())
+    and exists (
+      select 1
+      from public.activities a
+      where a.id = activity_chat_messages.activity_id
+        and timezone('Europe/Oslo', a.starts_at)::date >= timezone('Europe/Oslo', now())::date
+        and (
+          a.host_user_id = (select auth.uid())
+          or exists (
+            select 1
+            from public.activity_participants ap
+            where ap.activity_id = activity_chat_messages.activity_id
+              and ap.user_id = (select auth.uid())
+          )
+        )
+    )
+  );
+
+do $$
+begin
+  if exists (
+    select 1
+    from pg_publication
+    where pubname = 'supabase_realtime'
+  ) and not exists (
+    select 1
+    from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'activity_chat_messages'
+  ) then
+    alter publication supabase_realtime add table public.activity_chat_messages;
+  end if;
+end;
+$$;
+
+-- ------------------------------------------------------------
+-- 5. Scheduled cleanup for expired chats
+-- ------------------------------------------------------------
+create extension if not exists pg_cron with schema pg_catalog;
+
+create or replace function public.delete_expired_activity_chat_messages()
+returns integer
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  deleted_count integer := 0;
+begin
+  delete from public.activity_chat_messages m
+  using public.activities a
+  where a.id = m.activity_id
+    and timezone('Europe/Oslo', a.starts_at)::date < timezone('Europe/Oslo', now())::date;
+
+  get diagnostics deleted_count = row_count;
+  return deleted_count;
+end;
+$$;
+
+do $$
+declare
+  existing_job_id bigint;
+begin
+  select jobid
+  into existing_job_id
+  from cron.job
+  where jobname = 'delete-expired-activity-chat-messages';
+
+  if existing_job_id is not null then
+    perform cron.unschedule(existing_job_id);
+  end if;
+
+  perform cron.schedule(
+    'delete-expired-activity-chat-messages',
+    '0 * * * *',
+    $job$select public.delete_expired_activity_chat_messages();$job$
+  );
+end;
+$$;
+
+-- ------------------------------------------------------------
+-- 6. Trigger: auto-create profile on sign-up
 -- ------------------------------------------------------------
 -- When a new user is created in auth.users, this function inserts a matching
 -- row into public.profiles using the user's metadata (set during signUp).
@@ -138,7 +263,7 @@ create trigger on_auth_user_created
   for each row execute procedure public.handle_new_user();
 
 -- ============================================================
--- 5. Seed data
+-- 7. Seed data
 -- ============================================================
 -- IMPORTANT: The seed activities require a real host_user_id.
 -- Auto-picks the first user in profiles as the demo host.
@@ -176,7 +301,7 @@ end;
 $$;
 
 -- ============================================================
--- 6. Avatar column migration
+-- 8. Avatar column migration
 -- ============================================================
 -- If you already ran this schema before avatar support was added,
 -- run this one-liner in the SQL Editor to add the column:

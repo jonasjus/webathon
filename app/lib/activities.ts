@@ -2,26 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { createClient } from "./supabase/server";
 import type { Activity, SportCategory } from "./supabase/types";
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-function formatNorwegianDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("nb-NO", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-  });
-}
-
-function formatNorwegianTime(iso: string): string {
-  return new Date(iso).toLocaleTimeString("nb-NO", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-}
+import { formatNorwegianDate, formatNorwegianTime } from "./date-time";
 
 // ---------------------------------------------------------------------------
 // Row shape returned by the joined query
@@ -92,6 +73,7 @@ export const getActivities = cache(async (): Promise<Activity[]> => {
       participantsMax: row.participants_max,
       category: row.category as SportCategory,
       mapPin: { x: Number(row.map_pin_x), y: Number(row.map_pin_y) },
+      startsAt: row.starts_at,
       isJoined: user
         ? participants.some((p) => p.user_id === user.id)
         : false,

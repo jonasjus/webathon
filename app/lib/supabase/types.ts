@@ -31,6 +31,14 @@ export interface ParticipantRow {
   joined_at: string;
 }
 
+export interface ActivityChatMessageRow {
+  id: string;
+  activity_id: string;
+  sender_user_id: string;
+  body: string;
+  created_at: string;
+}
+
 // ---------------------------------------------------------------------------
 // Application-level types (what components consume)
 // ---------------------------------------------------------------------------
@@ -57,9 +65,37 @@ export interface Activity {
   participantsMax: number;
   category: SportCategory;
   mapPin: { x: number; y: number };
+  startsAt: string;
   isJoined: boolean;
   hostUserId: string;
   hostAvatarUrl: string | null;
+}
+
+export interface ChatParticipant {
+  id: string;
+  displayName: string;
+  initials: string;
+  avatarColor: string;
+  avatarUrl: string | null;
+}
+
+export interface ActivityChatMessage {
+  id: string;
+  activityId: string;
+  body: string;
+  createdAt: string;
+  sender: ChatParticipant;
+}
+
+export interface ActivityChatSummary {
+  activityId: string;
+  title: string;
+  location: string;
+  startsAt: string;
+  dateLabel: string;
+  timeLabel: string;
+  lastMessageAt: string | null;
+  lastMessagePreview: string | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -82,6 +118,12 @@ export interface Database {
       activity_participants: {
         Row: ParticipantRow;
         Insert: Omit<ParticipantRow, "joined_at">;
+        Update: never;
+      };
+      activity_chat_messages: {
+        Row: ActivityChatMessageRow;
+        Insert: Omit<ActivityChatMessageRow, "id" | "sender_user_id" | "created_at"> &
+          Partial<Pick<ActivityChatMessageRow, "sender_user_id">>;
         Update: never;
       };
     };

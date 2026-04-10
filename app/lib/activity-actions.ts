@@ -36,6 +36,8 @@ export async function createActivity(input: CreateActivityInput) {
 
   if (error) throw new Error(`Kunne ikke opprette aktivitet: ${error.message}`);
   revalidatePath("/");
+  revalidatePath("/mine-aktiviteter");
+  revalidatePath("/meldinger");
 }
 
 export async function joinActivity(activityId: string) {
@@ -51,6 +53,8 @@ export async function joinActivity(activityId: string) {
 
   if (error) throw new Error(`Kunne ikke melde på: ${error.message}`);
   revalidatePath("/");
+  revalidatePath("/mine-aktiviteter");
+  revalidatePath("/meldinger");
 }
 
 export async function leaveActivity(activityId: string) {
@@ -68,4 +72,6 @@ export async function leaveActivity(activityId: string) {
 
   if (error) throw new Error(`Kunne ikke melde av: ${error.message}`);
   revalidatePath("/");
+  revalidatePath("/mine-aktiviteter");
+  revalidatePath("/meldinger");
 }

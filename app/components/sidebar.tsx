@@ -6,7 +6,7 @@ const navigation: ReadonlyArray<{ label: string; href?: string }> = [
   { label: "Hjem", href: "/" },
   { label: "Aktivitetsstrøm", href: "/" },
   { label: "Mine aktiviteter", href: "/mine-aktiviteter" },
-  { label: "Meldinger" },
+  { label: "Meldinger", href: "/meldinger" },
   { label: "Kart" },
   { label: "Innstillinger", href: "/instillinger" },
 ];

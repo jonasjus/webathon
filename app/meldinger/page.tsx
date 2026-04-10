@@ -1,0 +1,47 @@
+import { redirect } from "next/navigation";
+import { MessagesWorkspace } from "../components/messages-workspace";
+import { Sidebar } from "../components/sidebar";
+import { getMessagesPageData } from "../lib/messages";
+
+interface MessagesPageProps {
+  searchParams: Promise<{
+    activityId?: string | string[];
+  }>;
+}
+
+function getRequestedActivityId(searchParams: Awaited<MessagesPageProps["searchParams"]>) {
+  const activityId = searchParams.activityId;
+  return typeof activityId === "string" ? activityId : undefined;
+}
+
+export default async function MessagesPage(props: MessagesPageProps) {
+  const searchParams = await props.searchParams;
+  const data = await getMessagesPageData(getRequestedActivityId(searchParams));
+
+  if (!data) {
+    redirect(
+      `/login?error=${encodeURIComponent(
+        "Du må være logget inn for å se meldingene dine."
+      )}`
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-[var(--canvas)] px-4 py-6 sm:px-6 xl:px-8">
+      <div className="mx-auto grid max-w-[1440px] gap-6 xl:grid-cols-[248px_minmax(0,1fr)]">
+        <div className="xl:sticky xl:top-6 xl:h-[calc(100vh-3rem)]">
+          <Sidebar activeItem="Meldinger" user={data.sidebarUser} />
+        </div>
+
+        <MessagesWorkspace
+          currentUser={data.sidebarUser}
+          currentUserId={data.currentUserId}
+          initialSummaries={data.summaries}
+          initialMessagesByActivityId={data.messagesByActivityId}
+          initialSelectedActivityId={data.selectedActivityId}
+          initialSelectionNotice={data.selectionNotice}
+        />
+      </div>
+    </main>
+  );
+}
