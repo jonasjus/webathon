@@ -43,8 +43,9 @@ next-env.d.ts
 # idea
 .idea
 
-# claude
+# Coding
 .claude
 AGENTS.md
 CLAUDE.md
 .codex
+.mcp.json

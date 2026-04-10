@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
-import { MessagesWorkspace } from "../components/messages-workspace";
-import { Sidebar } from "../components/sidebar";
-import { getMessagesPageData } from "../lib/messages";
+import { Sidebar } from "@/components/layout/sidebar";
+import { getMessagesPageData } from "@/lib/messages";
+import { MessagesWorkspace } from "./_components/messages-workspace";
 
 interface MessagesPageProps {
   searchParams: Promise<{
@@ -9,7 +9,9 @@ interface MessagesPageProps {
   }>;
 }
 
-function getRequestedActivityId(searchParams: Awaited<MessagesPageProps["searchParams"]>) {
+function getRequestedActivityId(
+  searchParams: Awaited<MessagesPageProps["searchParams"]>
+) {
   const activityId = searchParams.activityId;
   return typeof activityId === "string" ? activityId : undefined;
 }

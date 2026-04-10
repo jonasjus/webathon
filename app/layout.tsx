@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Geist_Mono, Manrope } from "next/font/google";
 import "./globals.css";
@@ -13,15 +14,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Aktivitetsstrøm | Puls",
-  description:
-    "Desktopgrensesnitt for en sosial sportsapp med aktivitetsfeed og vennforslag.",
+  title: "Venue",
+  description: "Sosial app for aktiviteter og arrangementer",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html
