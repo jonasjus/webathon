@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Activity } from "../lib/mock-data";
+import type { Activity } from "../lib/supabase/types";
 import { getCategoryAppearance } from "./category-tag";
 
 interface InteractiveMapProps {

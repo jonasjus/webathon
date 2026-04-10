@@ -1,13 +1,14 @@
-import type { Activity } from "../lib/mock-data";
+import type { Activity } from "../lib/supabase/types";
 import { CategoryTag, getCategoryAppearance, SportGlyph } from "./category-tag";
 import { JoinButton } from "./join-button";
 import { ParticipantStack } from "./participant-stack";
 
 interface ActivityCardProps {
   activity: Activity;
+  isLoggedIn: boolean;
 }
 
-export function ActivityCard({ activity }: ActivityCardProps) {
+export function ActivityCard({ activity, isLoggedIn }: ActivityCardProps) {
   const appearance = getCategoryAppearance(activity.category);
 
   return (
@@ -52,7 +53,11 @@ export function ActivityCard({ activity }: ActivityCardProps) {
       </div>
 
       <div className="lg:justify-self-end">
-        <JoinButton />
+        <JoinButton
+          activityId={activity.id}
+          isJoined={activity.isJoined}
+          isLoggedIn={isLoggedIn}
+        />
       </div>
     </article>
   );

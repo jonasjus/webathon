@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import type { Activity } from "../lib/mock-data";
+import type { Activity } from "../lib/supabase/types";
 import { ActivityCard } from "./activity-card";
+import { CreateActivityForm } from "./create-activity-form";
 
 type FilterId = "alle" | "naer" | "ledige" | "helg";
 
 interface ActivityFeedProps {
   activities: Activity[];
+  isLoggedIn: boolean;
 }
 
 const filters: { id: FilterId; label: string }[] = [
@@ -17,8 +19,9 @@ const filters: { id: FilterId; label: string }[] = [
   { id: "helg", label: "Denne helgen" },
 ];
 
-export function ActivityFeed({ activities }: ActivityFeedProps) {
+export function ActivityFeed({ activities, isLoggedIn }: ActivityFeedProps) {
   const [activeFilter, setActiveFilter] = useState<FilterId>("alle");
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   const visibleActivities = activities.filter((activity) => {
     switch (activeFilter) {
@@ -27,7 +30,7 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
       case "ledige":
         return activity.participantsMax - activity.participantsCurrent >= 3;
       case "helg":
-        return activity.date.startsWith("Lør") || activity.date.startsWith("Søn");
+        return activity.date.startsWith("lør") || activity.date.startsWith("søn");
       case "alle":
         return true;
     }
@@ -47,11 +50,22 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
 
         <button
           type="button"
+          onClick={() => {
+            if (!isLoggedIn) {
+              window.location.href = "/login";
+            } else {
+              setShowCreateForm(true);
+            }
+          }}
           className="inline-flex h-11 items-center justify-center rounded-xl border border-[var(--sage-500)] px-4 text-sm font-semibold text-[var(--sage-700)] transition hover:bg-[var(--sage-50)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
         >
           Opprett aktivitet
         </button>
       </div>
+
+      {showCreateForm && (
+        <CreateActivityForm onClose={() => setShowCreateForm(false)} />
+      )}
 
       <div className="mt-5 flex flex-wrap gap-2">
         {filters.map((filter) => {
@@ -77,8 +91,17 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
 
       <div className="mt-6 space-y-4">
         {visibleActivities.map((activity) => (
-          <ActivityCard key={activity.id} activity={activity} />
+          <ActivityCard
+            key={activity.id}
+            activity={activity}
+            isLoggedIn={isLoggedIn}
+          />
         ))}
+        {visibleActivities.length === 0 && (
+          <p className="py-12 text-center text-sm text-[var(--ink-muted)]">
+            Ingen aktiviteter for dette filteret.
+          </p>
+        )}
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-import type { SportCategory } from "../lib/mock-data";
+import type { SportCategory } from "../lib/supabase/types";
 
 type CategoryAppearance = {
   label: string;

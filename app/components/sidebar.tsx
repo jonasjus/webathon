@@ -1,14 +1,25 @@
+import { signOut } from "../login/actions";
+
 const navigation = [
   "Hjem",
   "Aktivitetsstrøm",
   "Mine aktiviteter",
-  "Venner",
   "Meldinger",
   "Kart",
   "Innstillinger",
 ];
 
-export function Sidebar() {
+interface SidebarUser {
+  displayName: string;
+  initials: string;
+  avatarColor: string;
+}
+
+interface SidebarProps {
+  user?: SidebarUser | null;
+}
+
+export function Sidebar({ user }: SidebarProps) {
   return (
     <aside className="flex h-full flex-col rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]">
       <div className="flex items-center gap-3">
@@ -51,23 +62,39 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="mt-auto rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] p-4">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--sage-500)] text-sm font-semibold text-white">
-            IN
+      <div className="mt-auto">
+        {user ? (
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] p-4">
+            <div className="flex items-center gap-3">
+              <div
+                className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white"
+                style={{ backgroundColor: user.avatarColor }}
+              >
+                {user.initials}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-[var(--ink)]">
+                  {user.displayName}
+                </p>
+                <form action={signOut}>
+                  <button
+                    type="submit"
+                    className="text-sm font-medium text-[var(--sage-700)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+                  >
+                    Logg ut
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-[var(--ink)]">
-              Ingrid Nordby
-            </p>
-            <button
-              type="button"
-              className="text-sm font-medium text-[var(--sage-700)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
-            >
-              Se profil
-            </button>
-          </div>
-        </div>
+        ) : (
+          <a
+            href="/login"
+            className="flex h-11 w-full items-center justify-center rounded-xl border border-[var(--sage-500)] text-sm font-semibold text-[var(--sage-700)] transition hover:bg-[var(--sage-50)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+          >
+            Logg inn
+          </a>
+        )}
       </div>
     </aside>
   );
