@@ -44,14 +44,14 @@ export function ProfileActivityCard({
           >
             {isHost ? "Arrangerer" : "Deltar"} · {appearance.label}
           </p>
-          <h3 className="card-title mt-2 text-[1.55rem] text-[var(--ink)]">
+          <h3 className="card-title mt-3 text-[1.7rem] text-[var(--ink)]">
             {activity.title}
           </h3>
-          <p className="card-copy mt-2.5 text-[15px]">
+          <p className="card-copy mt-3 text-[15px]">
             {activity.description}
           </p>
 
-          <div className="mt-4 flex flex-wrap items-center gap-3">
+          <div className="mt-5 flex flex-wrap items-center gap-3">
             <MetaItem icon={<CalendarDays className="h-4 w-4" />}>
               {activity.date} kl. {activity.time}
             </MetaItem>

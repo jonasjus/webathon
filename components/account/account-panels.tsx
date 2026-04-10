@@ -19,10 +19,12 @@ export function DisplayNamePanel({
     <section
       className={`rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)] ${className}`.trim()}
     >
-      <h2 className="card-title text-[1.55rem] text-[var(--ink)]">{title}</h2>
-      <p className="card-copy mt-2 text-[15px]">{description}</p>
+      <div className="card-intro">
+        <h2 className="card-title text-[1.65rem] text-[var(--ink)]">{title}</h2>
+        <p className="card-copy text-[15px]">{description}</p>
+      </div>
 
-      <form action={updateDisplayName} className="mt-5 space-y-4">
+      <form action={updateDisplayName} className="mt-6 space-y-4">
         <input type="hidden" name="redirect_to" value={redirectPath} />
         <div className="flex flex-col gap-1.5">
           <label
@@ -74,10 +76,12 @@ export function PasswordPanel({
     <section
       className={`rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)] ${className}`.trim()}
     >
-      <h2 className="card-title text-[1.55rem] text-[var(--ink)]">{title}</h2>
-      <p className="card-copy mt-2 text-[15px]">{description}</p>
+      <div className="card-intro">
+        <h2 className="card-title text-[1.65rem] text-[var(--ink)]">{title}</h2>
+        <p className="card-copy text-[15px]">{description}</p>
+      </div>
 
-      <form action={updatePassword} className="mt-5 space-y-4">
+      <form action={updatePassword} className="mt-6 space-y-4">
         <input type="hidden" name="redirect_to" value={redirectPath} />
         <div className="flex flex-col gap-1.5">
           <label

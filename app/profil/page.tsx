@@ -109,14 +109,16 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
               </div>
 
               <section className="rounded-[28px] border border-white/60 bg-white/80 p-5 backdrop-blur-sm">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--ink-subtle)]">
-                  Preferanser
-                </p>
-                <p className="card-copy mt-3 text-[15px]">
-                  Her ser du hva slags aktiviteter du oftest trekkes mot, og hvor du raskest kan justere profilen din.
-                </p>
+                <div className="card-intro">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--ink-subtle)]">
+                    Preferanser
+                  </p>
+                  <p className="card-copy text-[15px]">
+                    Her ser du hva slags aktiviteter du oftest trekkes mot, og hvor du raskest kan justere profilen din.
+                  </p>
+                </div>
 
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="mt-5 flex flex-wrap gap-2">
                   {favoriteCategories.length > 0 ? (
                     favoriteCategories.map((category) => (
                       <CategoryTag key={category} category={category} />
@@ -164,10 +166,10 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
           <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_380px]">
             <div className="space-y-6">
               <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
-                <h2 className="card-title text-[2rem] text-[var(--ink)]">
+                <h2 className="card-title text-[2.15rem] text-[var(--ink)]">
                   Din aktivitetsprofil
                 </h2>
-                <p className="card-copy mt-3 text-[15px]">
+                <p className="card-copy mt-4 text-[15px]">
                   En rask oversikt over hvordan du bruker Puls akkurat nå.
                 </p>
 
@@ -227,12 +229,12 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
               </section>
 
               <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
-                <div className="flex flex-col gap-3 border-b border-[var(--border)] pb-5 sm:flex-row sm:items-end sm:justify-between">
-                  <div>
+                <div className="flex flex-col gap-3 border-b border-[var(--border)] pb-6 sm:flex-row sm:items-end sm:justify-between">
+                  <div className="card-intro">
                     <p className="text-sm font-medium text-[var(--ink-muted)]">
                       Kommende aktiviteter
                     </p>
-                    <h2 className="card-title mt-1 text-[2rem] text-[var(--ink)]">
+                    <h2 className="card-title text-[2.15rem] text-[var(--ink)]">
                       Din neste plan
                     </h2>
                   </div>
@@ -249,7 +251,7 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
                     <h3 className="card-title text-[1.7rem] text-[var(--ink)]">
                       Profilen din venter på første aktivitet
                     </h3>
-                    <p className="card-copy mt-3 text-[15px]">
+                    <p className="card-copy mt-4 text-[15px]">
                       Bli med på en aktivitet fra hjem-siden, eller opprett en ny for å fylle ut profilen din.
                     </p>
                   </div>
@@ -269,13 +271,13 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
 
             <div className="space-y-6">
               <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]">
-                <h2 className="card-title text-[1.45rem] text-[var(--ink)]">
+                <h2 className="card-title text-[1.55rem] text-[var(--ink)]">
                   Profilbilde
                 </h2>
-                <p className="card-copy mt-2 text-[15px]">
+                <p className="card-copy mt-3 text-[15px]">
                   Bytt avataren din direkte her slik at andre kjenner deg igjen i aktivitetene og meldingene.
                 </p>
-                <div className="mt-5">
+                <div className="mt-6">
                   <AvatarUpload
                     userId={user.id}
                     currentSrc={currentUser.avatarUrl}
@@ -299,11 +301,11 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
               />
 
               <section className="rounded-[32px] border border-red-200 bg-[color:rgba(239,68,68,0.04)] p-5 shadow-[var(--shadow-card)]">
-                <h2 className="card-title text-[1.45rem] text-red-950">Slett konto</h2>
-                <p className="mt-3 text-[15px] leading-7 text-gray-700">
+                <h2 className="card-title text-[1.55rem] text-red-950">Slett konto</h2>
+                <p className="mt-4 text-[15px] leading-7 text-gray-700">
                   Dette fjerner kontoen din permanent, inkludert aktiviteter, deltakelser og profildata.
                 </p>
-                <div className="mt-5">
+                <div className="mt-6">
                   <DeleteAccountForm redirectPath="/profil" />
                 </div>
               </section>

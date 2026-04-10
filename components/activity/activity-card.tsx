@@ -127,13 +127,13 @@ export function ActivityCard({
                       <CountdownBadge daysUntil={daysUntil} compact />
                     ) : null}
                   </div>
-                  <h3 className="card-title mt-1 text-[1.2rem] text-[var(--ink)]">
+                  <h3 className="card-title mt-2 text-[1.28rem] text-[var(--ink)]">
                     {activity.title}
                   </h3>
                 </div>
               </div>
 
-              <div className="mt-2 flex flex-wrap items-center gap-2">
+              <div className="mt-3 flex flex-wrap items-center gap-2">
                 <MetaItem compact icon={<CalendarDays className="h-3.5 w-3.5" />}>
                   {activity.date} · {activity.time}
                 </MetaItem>
@@ -189,7 +189,7 @@ export function ActivityCard({
                       color={activity.hostColor}
                     />
                   </div>
-                  <h3 className="card-title mt-2 text-[1.75rem] text-[var(--ink)]">
+                  <h3 className="card-title mt-3 text-[1.9rem] text-[var(--ink)]">
                     {activity.title}
                   </h3>
                 </div>
@@ -201,7 +201,7 @@ export function ActivityCard({
             </div>
           </div>
 
-          <div className="mt-4 ml-20 flex flex-wrap items-center gap-3">
+          <div className="mt-5 ml-20 flex flex-wrap items-center gap-3">
             <MetaItem icon={<CalendarDays className="h-4 w-4" />}>
               {activity.date} · {activity.time}
             </MetaItem>
@@ -209,7 +209,7 @@ export function ActivityCard({
             {daysUntil !== undefined ? <CountdownBadge daysUntil={daysUntil} /> : null}
           </div>
 
-          <div className="mt-4 ml-20">
+          <div className="mt-5 ml-20">
             <ParticipantStack
               current={activity.participantsCurrent}
               max={activity.participantsMax}

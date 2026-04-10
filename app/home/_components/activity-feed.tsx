@@ -17,13 +17,13 @@ export function ActivityFeed({
 }: ActivityFeedProps) {
   return (
     <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
-      <div className="border-b border-[var(--border)] pb-5">
+      <div className="border-b border-[var(--border)] pb-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
+          <div className="card-intro">
             <p className="text-sm font-medium text-[var(--ink-muted)]">
               Aktiviteter akkurat nå
             </p>
-            <h2 className="card-title mt-1 text-[2.15rem] text-[var(--ink)]">
+            <h2 className="card-title text-[2.35rem] text-[var(--ink)]">
               Neste økter i venue
             </h2>
           </div>

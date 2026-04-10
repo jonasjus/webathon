@@ -10,10 +10,10 @@ interface AuthCardProps {
 export function AuthCard({ error, success, isSignUp }: AuthCardProps) {
   return (
     <div className="w-full max-w-sm rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-8 shadow-[var(--shadow-card)]">
-      <h1 className="card-title text-3xl text-[var(--ink)]">
+      <h1 className="card-title text-[2.1rem] text-[var(--ink)]">
         {isSignUp ? "Opprett konto" : "Logg inn"}
       </h1>
-      <p className="card-copy mt-2 text-[15px]">
+      <p className="card-copy mt-3 text-[15px]">
         {isSignUp
           ? "Lag en konto for å opprette og delta i aktiviteter."
           : "Logg inn for å delta i aktiviteter."}

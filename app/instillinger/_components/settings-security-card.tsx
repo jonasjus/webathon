@@ -9,7 +9,7 @@ const btnPrimary =
 export function SettingsSecurityCard() {
   return (
     <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm">
-      <div className="flex items-center gap-2.5 border-b border-[var(--border)] pb-4">
+      <div className="flex items-center gap-2.5 border-b border-[var(--border)] pb-5">
         <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-[var(--sage-50)] text-[var(--sage-700)]">
           <svg
             viewBox="0 0 24 24"
@@ -21,12 +21,12 @@ export function SettingsSecurityCard() {
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
         </span>
-        <h2 className="card-title text-[1.35rem] text-[var(--ink)]">
+        <h2 className="card-title text-[1.45rem] text-[var(--ink)]">
           Sikkerhet
         </h2>
       </div>
 
-      <form action={updatePassword} className="mt-4 space-y-3">
+      <form action={updatePassword} className="mt-5 space-y-3">
         <div className="space-y-1.5">
           <label
             htmlFor="new_password"
