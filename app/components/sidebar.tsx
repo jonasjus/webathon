@@ -1,15 +1,14 @@
 import Link from "next/link";
 import { signOut } from "../login/actions";
 import { Avatar } from "./avatar";
-import { AvatarUpload } from "./avatar-upload";
 
 const navigation: ReadonlyArray<{ label: string; href?: string }> = [
   { label: "Hjem", href: "/" },
   { label: "Aktivitetsstrøm", href: "/" },
-  { label: "Mine aktiviteter" },
+  { label: "Mine aktiviteter", href: "/mine-aktiviteter" },
   { label: "Meldinger" },
   { label: "Kart" },
-  { label: "Innstillinger" },
+  { label: "Innstillinger", href: "/instillinger" },
 ];
 
 interface SidebarUser {
@@ -86,9 +85,8 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
         {user ? (
           <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] p-4">
             <div className="flex items-center gap-3">
-              <AvatarUpload
-                userId={user.id}
-                currentSrc={user.avatarUrl}
+              <Avatar
+                src={user.avatarUrl}
                 initials={user.initials}
                 color={user.avatarColor}
               />

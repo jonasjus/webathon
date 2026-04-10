@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import { AvatarUpload } from "../components/avatar-upload";
+import { DeleteAccountForm } from "../components/delete-account-form";
 import { Sidebar } from "../components/sidebar";
 import { createClient } from "../lib/supabase/server";
 import {
-  deleteAccount,
   updateDisplayName,
   updatePassword,
 } from "./actions";
@@ -188,38 +188,29 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
             </section>
           </div>
 
-          <section className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-5">
-            <h2 className="text-lg font-semibold text-red-800">Slett konto</h2>
-            <p className="mt-1 max-w-2xl text-sm text-red-700">
-              Dette sletter brukeren din permanent, inkludert aktiviteter og
-              deltakelser som er knyttet til kontoen.
-            </p>
-
-            <form action={deleteAccount} className="mt-5 flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label
-                  htmlFor="confirmation"
-                  className="text-sm font-medium text-red-900"
+          <section className="mt-4 rounded-2xl border border-red-200 bg-[color:rgba(239,68,68,0.04)] p-5">
+            <h2 className="text-lg font-semibold text-red-950">Slett konto</h2>
+            <div className="mt-2 flex items-start gap-3">
+              <span className="mt-0.5 inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[color:rgba(239,68,68,0.1)] text-red-700">
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  className="h-4 w-4 fill-none stroke-current"
+                  strokeWidth="1.9"
                 >
-                  Skriv SLETT for å bekrefte
-                </label>
-                <input
-                  id="confirmation"
-                  name="confirmation"
-                  type="text"
-                  required
-                  placeholder="SLETT"
-                  className="max-w-sm rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm text-[var(--ink)] outline-none placeholder:text-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-300 focus:ring-offset-2"
-                />
-              </div>
+                  <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.72 3h16.92A2 2 0 0 0 22.18 18L13.71 3.86a2 2 0 0 0-3.42 0Z" />
+                  <path d="M12 9v4" />
+                  <path d="M12 17h.01" />
+                </svg>
+              </span>
+              <p className="max-w-2xl text-sm leading-6 text-gray-700">
+                Dette sletter brukeren din <strong>permanent</strong>,
+                inkludert aktiviteter og deltakelser som er knyttet til
+                kontoen.
+              </p>
+            </div>
 
-              <button
-                type="submit"
-                className="inline-flex h-11 w-fit items-center justify-center rounded-xl bg-red-600 px-4 text-sm font-semibold text-white transition hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2"
-              >
-                Slett bruker
-              </button>
-            </form>
+            <DeleteAccountForm />
           </section>
         </section>
       </div>
