@@ -1,152 +1,121 @@
 "use client";
 
 import { useState } from "react";
+import type { Activity } from "../lib/mock-data";
+import { getCategoryAppearance } from "./category-tag";
 
-type MapSpot = {
-  id: string;
-  name: string;
-  x: number;
-  y: number;
-  players: string;
-  nextUp: string;
-};
+interface InteractiveMapProps {
+  activities: Activity[];
+}
 
-const spots: MapSpot[] = [
-  {
-    id: "majorstuen",
-    name: "Majorstuen",
-    x: 74,
-    y: 76,
-    players: "12 aktive spillere",
-    nextUp: "Padel mix kl. 18:30",
-  },
-  {
-    id: "bjorvika",
-    name: "Bjørvika",
-    x: 148,
-    y: 128,
-    players: "8 aktive spillere",
-    nextUp: "Morgentur kl. 07:15",
-  },
-  {
-    id: "nydalen",
-    name: "Nydalen",
-    x: 118,
-    y: 40,
-    players: "5 aktive spillere",
-    nextUp: "Intervallgruppe kl. 19:00",
-  },
-];
-
-export function InteractiveMap() {
-  const [selectedSpotId, setSelectedSpotId] = useState(spots[0].id);
-  const selectedSpot =
-    spots.find((spot) => spot.id === selectedSpotId) ?? spots[0];
+export function InteractiveMap({ activities }: InteractiveMapProps) {
+  const [selectedActivityId, setSelectedActivityId] = useState(activities[0]?.id);
+  const selectedActivity =
+    activities.find((activity) => activity.id === selectedActivityId) ??
+    activities[0];
 
   return (
-    <div className="rounded-[28px] border border-white/70 bg-[rgba(244,248,243,0.92)] p-4 shadow-[0_24px_60px_rgba(43,62,54,0.10)]">
+    <section className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--muted)]">
-            Kartoversikt
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">
+            Kart
           </p>
           <h3 className="mt-1 text-lg font-semibold text-[var(--ink)]">
-            Nære aktiviteter
+            I nærheten av deg
           </h3>
         </div>
-        <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-[var(--muted)]">
-          Live
+        <span className="rounded-full bg-[var(--surface-muted)] px-3 py-1 text-xs font-medium text-[var(--ink-muted)]">
+          {activities.length} økter
         </span>
       </div>
 
-      <div className="relative overflow-hidden rounded-[24px] bg-[radial-gradient(circle_at_top_left,_rgba(135,191,149,0.34),_transparent_48%),linear-gradient(135deg,_#fefefe_0%,_#eef5ef_100%)] p-4">
-        <svg
-          viewBox="0 0 220 170"
-          className="h-[180px] w-full"
-          role="img"
-          aria-label="Interaktivt kart over aktivitetsområder"
-        >
-          <path
-            d="M18 36C44 24 63 17 94 26C122 34 143 24 166 38C184 48 191 61 202 86"
-            fill="none"
-            stroke="rgba(108,150,120,0.34)"
-            strokeWidth="16"
-            strokeLinecap="round"
-          />
-          <path
-            d="M28 120C56 98 82 88 108 97C128 104 142 120 168 118C184 116 197 109 208 94"
-            fill="none"
-            stroke="rgba(170,212,181,0.45)"
-            strokeWidth="18"
-            strokeLinecap="round"
-          />
-          <path
-            d="M78 18C91 36 90 54 83 71C77 84 66 97 52 112"
-            fill="none"
-            stroke="rgba(222,234,223,0.95)"
-            strokeWidth="12"
-            strokeLinecap="round"
-          />
+      <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] p-3">
+        <div className="relative h-56 overflow-hidden rounded-xl bg-[var(--surface-muted)]">
+          <svg
+            viewBox="0 0 100 100"
+            className="h-full w-full"
+            role="img"
+            aria-label="Interaktivt kart over aktiviteter i Oslo"
+          >
+            <path
+              d="M18 14C29 11 44 14 55 18C64 22 72 29 79 38C83 43 88 49 89 58C89 67 82 74 74 77C63 82 48 83 38 81C29 80 21 75 16 68C11 61 10 52 11 44C12 34 10 24 18 14Z"
+              fill="white"
+              stroke="rgba(108, 126, 109, 0.22)"
+              strokeWidth="1.2"
+            />
+            <path
+              d="M68 8C77 11 84 18 87 27C90 36 89 47 85 55C82 60 78 64 72 65C70 58 70 49 69 41C67 31 67 20 68 8Z"
+              fill="rgba(238, 242, 232, 0.95)"
+            />
+            <path
+              d="M30 28C36 34 38 41 38 49C38 58 35 66 29 72"
+              fill="none"
+              stroke="rgba(108, 126, 109, 0.18)"
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+            <path
+              d="M53 19C56 28 57 39 55 48C53 58 49 68 44 77"
+              fill="none"
+              stroke="rgba(108, 126, 109, 0.15)"
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+          </svg>
 
-          {spots.map((spot) => {
-            const isSelected = spot.id === selectedSpot.id;
+          {activities.map((activity) => {
+            const isSelected = activity.id === selectedActivity?.id;
+            const appearance = getCategoryAppearance(activity.category);
 
             return (
-              <g key={spot.id}>
-                <circle
-                  cx={spot.x}
-                  cy={spot.y}
-                  r={isSelected ? 14 : 10}
-                  fill={isSelected ? "rgba(109, 149, 119, 0.22)" : "rgba(255,255,255,0.82)"}
+              <button
+                key={activity.id}
+                type="button"
+                onMouseEnter={() => setSelectedActivityId(activity.id)}
+                onFocus={() => setSelectedActivityId(activity.id)}
+                onClick={() => setSelectedActivityId(activity.id)}
+                aria-label={`Vis aktivitet: ${activity.title}`}
+                className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface-muted)]"
+                style={{
+                  left: `${activity.mapPin.x}%`,
+                  top: `${activity.mapPin.y}%`,
+                }}
+              >
+                <span
+                  className={`flex h-4 w-4 items-center justify-center rounded-full border-2 border-white shadow-sm transition ${
+                    isSelected ? "scale-125" : "scale-100"
+                  }`}
+                  style={{ backgroundColor: appearance.color }}
                 />
-                <circle
-                  cx={spot.x}
-                  cy={spot.y}
-                  r={isSelected ? 7 : 5}
-                  fill={isSelected ? "#6d9577" : "#3e5a47"}
-                />
-              </g>
+                {isSelected ? (
+                  <span className="pointer-events-none absolute left-1/2 top-[-0.9rem] w-max -translate-x-1/2 rounded-full bg-[var(--ink)] px-2.5 py-1 text-[11px] font-medium text-white shadow-sm">
+                    {activity.title}
+                  </span>
+                ) : null}
+              </button>
             );
           })}
-        </svg>
+        </div>
 
-        <div className="mt-3 rounded-[20px] bg-white/88 p-3 shadow-[0_10px_30px_rgba(37,57,47,0.08)]">
+        <div className="mt-3 rounded-xl bg-white p-3">
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-semibold text-[var(--ink)]">
-                {selectedSpot.name}
+                {selectedActivity?.title}
               </p>
-              <p className="mt-1 text-xs text-[var(--muted)]">
-                {selectedSpot.players}
+              <p className="mt-1 text-xs text-[var(--ink-muted)]">
+                {selectedActivity?.location} · {selectedActivity?.date} kl.{" "}
+                {selectedActivity?.time}
               </p>
             </div>
-            <span className="rounded-full bg-[var(--sage-soft)] px-3 py-1 text-xs font-medium text-[var(--sage-strong)]">
-              {selectedSpot.nextUp}
+            <span className="rounded-full bg-[var(--sage-50)] px-3 py-1 text-xs font-medium text-[var(--sage-700)]">
+              {selectedActivity?.participantsCurrent}/
+              {selectedActivity?.participantsMax} påmeldte
             </span>
           </div>
         </div>
       </div>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        {spots.map((spot) => {
-          const isSelected = spot.id === selectedSpot.id;
-
-          return (
-            <button
-              key={spot.id}
-              type="button"
-              onClick={() => setSelectedSpotId(spot.id)}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                isSelected
-                  ? "bg-[var(--sage)] text-white shadow-[0_12px_30px_rgba(60,117,83,0.30)]"
-                  : "bg-white text-[var(--ink)] hover:bg-[var(--sage-soft)]"
-              }`}
-            >
-              {spot.name}
-            </button>
-          );
-        })}
-      </div>
-    </div>
+    </section>
   );
 }

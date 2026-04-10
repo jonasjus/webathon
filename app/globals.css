@@ -1,27 +1,47 @@
 @import "tailwindcss";
 
 :root {
-  --background: #edf3ee;
-  --foreground: #213128;
-  --surface: #f4f7f3;
-  --ink: #23342c;
-  --muted: #4a5e53;
-  --sage: #3c7553;
-  --sage-strong: #245c37;
-  --sage-soft: #e3efe5;
-  --sand: #f6e7d7;
+  --canvas: #f5f7f2;
+  --surface: #ffffff;
+  --surface-muted: #eef2e8;
+  --border: #dce3d2;
+  --ink: #0f1b12;
+  --ink-muted: #475a49;
+  --ink-subtle: #6c7e6d;
+  --sage-50: #edf4e1;
+  --sage-500: #7aa060;
+  --sage-600: #5f8747;
+  --sage-700: #456831;
+  --accent-coral: #f08a6e;
+  --accent-sky: #5fa8d3;
+  --accent-amber: #f1b24a;
+  --accent-plum: #8e6bb1;
+  --shadow-card:
+    0 1px 2px rgba(15, 27, 18, 0.04),
+    0 8px 24px -16px rgba(15, 27, 18, 0.12);
+  --shadow-card-strong:
+    0 10px 30px -18px rgba(15, 27, 18, 0.16),
+    0 2px 6px rgba(15, 27, 18, 0.05);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--canvas);
+  --color-foreground: var(--ink);
+  --color-canvas: var(--canvas);
   --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
   --color-ink: var(--ink);
-  --color-muted: var(--muted);
-  --color-sage: var(--sage);
-  --color-sage-strong: var(--sage-strong);
-  --color-sage-soft: var(--sage-soft);
-  --color-sand: var(--sand);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-sage-50: var(--sage-50);
+  --color-sage-500: var(--sage-500);
+  --color-sage-600: var(--sage-600);
+  --color-sage-700: var(--sage-700);
+  --color-accent-coral: var(--accent-coral);
+  --color-accent-sky: var(--accent-sky);
+  --color-accent-amber: var(--accent-amber);
+  --color-accent-plum: var(--accent-plum);
   --font-sans: var(--font-manrope);
   --font-mono: var(--font-geist-mono);
 }
@@ -35,13 +55,10 @@ html {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
   font-family: var(--font-manrope), sans-serif;
-  background-image:
-    radial-gradient(circle at top left, rgba(126, 169, 137, 0.18), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(251, 205, 171, 0.22), transparent 28%),
-    linear-gradient(180deg, #f5f8f5 0%, #edf3ee 100%);
 }
 
 a,
@@ -50,5 +67,5 @@ button {
 }
 
 ::selection {
-  background: rgba(124, 168, 135, 0.22);
+  background: rgba(122, 160, 96, 0.22);
 }
