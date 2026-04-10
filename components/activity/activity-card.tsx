@@ -62,6 +62,12 @@ export function ActivityCard({
   const accentSurface = withAlpha(appearance.color, 0.12);
   const accentBorder = withAlpha(appearance.color, 0.24);
   const accentInk = withAlpha(appearance.color, 0.88);
+  const dateTimeLabel = isLoggedIn
+    ? `${activity.date} · ${activity.time}`
+    : "Tidspunkt vises ved innlogging";
+  const locationLabel = isLoggedIn
+    ? activity.location
+    : "Sted vises ved innlogging";
   const primaryAction = isOwnActivity ? (
     <span className="inline-flex h-11 items-center rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] px-5 text-sm font-medium text-[var(--ink-muted)]">
       Din aktivitet
@@ -135,10 +141,10 @@ export function ActivityCard({
 
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <MetaItem compact icon={<CalendarDays className="h-3.5 w-3.5" />}>
-                  {activity.date} · {activity.time}
+                  {dateTimeLabel}
                 </MetaItem>
                 <MetaItem compact icon={<MapPin className="h-3.5 w-3.5" />}>
-                  {activity.location}
+                  {locationLabel}
                 </MetaItem>
                 <MetaItem compact icon={<Users2 className="h-3.5 w-3.5" />}>
                   {activity.participantsCurrent}/{activity.participantsMax}
@@ -203,9 +209,9 @@ export function ActivityCard({
 
           <div className="mt-5 ml-20 flex flex-wrap items-center gap-3">
             <MetaItem icon={<CalendarDays className="h-4 w-4" />}>
-              {activity.date} · {activity.time}
+              {dateTimeLabel}
             </MetaItem>
-            <MetaItem icon={<MapPin className="h-4 w-4" />}>{activity.location}</MetaItem>
+            <MetaItem icon={<MapPin className="h-4 w-4" />}>{locationLabel}</MetaItem>
             {daysUntil !== undefined ? <CountdownBadge daysUntil={daysUntil} /> : null}
           </div>
 
