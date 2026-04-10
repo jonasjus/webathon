@@ -1,7 +1,11 @@
 import "server-only";
 import { cache } from "react";
 import { createClient } from "./supabase/server";
-import type { Activity, SportCategory } from "./supabase/types";
+import type {
+  Activity,
+  ActivityParticipantPreview,
+  SportCategory,
+} from "./supabase/types";
 import { formatNorwegianDate, formatNorwegianTime } from "./date-time";
 
 // ---------------------------------------------------------------------------
@@ -19,13 +23,55 @@ interface ActivityQueryRow {
   category: string;
   map_pin_x: number;
   map_pin_y: number;
-  profiles: {
+  host: {
     display_name: string;
     initials: string;
     avatar_color: string;
     avatar_url: string | null;
   } | null;
-  activity_participants: { user_id: string }[];
+  activity_participants: {
+    user_id: string;
+    joined_at: string;
+    participant: {
+      id: string;
+      initials: string;
+      avatar_color: string;
+      avatar_url: string | null;
+    } | null;
+  }[];
+}
+
+function normalizeSingle<T>(value: T | T[] | null | undefined): T | null {
+  if (Array.isArray(value)) {
+    return value[0] ?? null;
+  }
+
+  return value ?? null;
+}
+
+function getParticipantAvatars(
+  participants: ActivityQueryRow["activity_participants"]
+): ActivityParticipantPreview[] {
+  return (participants ?? [])
+    .slice()
+    .sort((left, right) => left.joined_at.localeCompare(right.joined_at))
+    .flatMap((participantRow) => {
+      const participant = normalizeSingle(participantRow.participant);
+
+      if (!participant) {
+        return [];
+      }
+
+      return [
+        {
+          id: participant.id,
+          initials: participant.initials,
+          avatarColor: participant.avatar_color,
+          avatarUrl: participant.avatar_url,
+        },
+      ];
+    })
+    .slice(0, 3);
 }
 
 // ---------------------------------------------------------------------------
@@ -45,8 +91,12 @@ export const getActivities = cache(async (): Promise<Activity[]> => {
       `
       id, title, host_user_id, location, starts_at, description,
       participants_max, category, map_pin_x, map_pin_y,
-      profiles!host_user_id ( display_name, initials, avatar_color, avatar_url ),
-      activity_participants ( user_id )
+      host:profiles!host_user_id ( display_name, initials, avatar_color, avatar_url ),
+      activity_participants (
+        user_id,
+        joined_at,
+        participant:profiles!user_id ( id, initials, avatar_color, avatar_url )
+      )
     `
     )
     .order("starts_at", { ascending: true });
@@ -56,8 +106,9 @@ export const getActivities = cache(async (): Promise<Activity[]> => {
   const rows = (data ?? []) as unknown as ActivityQueryRow[];
 
   return rows.map((row) => {
-    const profile = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
+    const profile = normalizeSingle(row.host);
     const participants = row.activity_participants ?? [];
+    const participantAvatars = getParticipantAvatars(participants);
 
     return {
       id: row.id,
@@ -79,6 +130,7 @@ export const getActivities = cache(async (): Promise<Activity[]> => {
         : false,
       hostUserId: row.host_user_id,
       hostAvatarUrl: profile?.avatar_url ?? null,
+      participantAvatars,
     };
   });
 });

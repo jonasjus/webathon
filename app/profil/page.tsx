@@ -112,7 +112,7 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--ink-subtle)]">
                   Preferanser
                 </p>
-                <p className="mt-3 text-sm leading-6 text-[var(--ink-muted)]">
+                <p className="card-copy mt-3 text-[15px]">
                   Her ser du hva slags aktiviteter du oftest trekkes mot, og hvor du raskest kan justere profilen din.
                 </p>
 
@@ -164,10 +164,10 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
           <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_380px]">
             <div className="space-y-6">
               <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
-                <h2 className="text-2xl font-semibold tracking-tight text-[var(--ink)]">
+                <h2 className="card-title text-[2rem] text-[var(--ink)]">
                   Din aktivitetsprofil
                 </h2>
-                <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
+                <p className="card-copy mt-3 text-[15px]">
                   En rask oversikt over hvordan du bruker Puls akkurat nå.
                 </p>
 
@@ -203,10 +203,10 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
                   >
                     {nextActivity ? (
                       <div className="mt-3 space-y-1">
-                        <p className="text-sm font-semibold text-[var(--ink)]">
+                        <p className="card-title text-base text-[var(--ink)]">
                           {nextActivity.title}
                         </p>
-                        <p className="text-sm text-[var(--ink-muted)]">
+                        <p className="card-copy text-sm">
                           {nextActivity.location}
                         </p>
                       </div>
@@ -232,7 +232,7 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
                     <p className="text-sm font-medium text-[var(--ink-muted)]">
                       Kommende aktiviteter
                     </p>
-                    <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[var(--ink)]">
+                    <h2 className="card-title mt-1 text-[2rem] text-[var(--ink)]">
                       Din neste plan
                     </h2>
                   </div>
@@ -246,10 +246,10 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
 
                 {myActivities.length === 0 ? (
                   <div className="mt-6 rounded-[28px] border border-dashed border-[var(--border)] bg-[var(--surface-muted)] px-6 py-12 text-center">
-                    <h3 className="text-xl font-semibold text-[var(--ink)]">
+                    <h3 className="card-title text-[1.7rem] text-[var(--ink)]">
                       Profilen din venter på første aktivitet
                     </h3>
-                    <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
+                    <p className="card-copy mt-3 text-[15px]">
                       Bli med på en aktivitet fra hjem-siden, eller opprett en ny for å fylle ut profilen din.
                     </p>
                   </div>
@@ -269,10 +269,10 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
 
             <div className="space-y-6">
               <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]">
-                <h2 className="text-lg font-semibold text-[var(--ink)]">
+                <h2 className="card-title text-[1.45rem] text-[var(--ink)]">
                   Profilbilde
                 </h2>
-                <p className="mt-1 text-sm leading-6 text-[var(--ink-muted)]">
+                <p className="card-copy mt-2 text-[15px]">
                   Bytt avataren din direkte her slik at andre kjenner deg igjen i aktivitetene og meldingene.
                 </p>
                 <div className="mt-5">
@@ -299,8 +299,8 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
               />
 
               <section className="rounded-[32px] border border-red-200 bg-[color:rgba(239,68,68,0.04)] p-5 shadow-[var(--shadow-card)]">
-                <h2 className="text-lg font-semibold text-red-950">Slett konto</h2>
-                <p className="mt-2 text-sm leading-6 text-gray-700">
+                <h2 className="card-title text-[1.45rem] text-red-950">Slett konto</h2>
+                <p className="mt-3 text-[15px] leading-7 text-gray-700">
                   Dette fjerner kontoen din permanent, inkludert aktiviteter, deltakelser og profildata.
                 </p>
                 <div className="mt-5">

@@ -1,7 +1,8 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useTransition, useRef, useEffect, useState, useId } from "react";
+import { useEffect, useId, useRef, useState, useTransition } from "react";
+import { categoryOptions } from "@/components/activity/category-tag";
 import { createActivity } from "@/lib/actions/activity";
 import type { ActivityCategory } from "@/lib/supabase/types";
 
@@ -9,62 +10,7 @@ interface CreateActivityFormProps {
   onClose: () => void;
 }
 
-type CategoryOption = {
-  value: ActivityCategory;
-  label: string;
-  group: string;
-};
-
-const categoryOptions: CategoryOption[] = [
-  // Sport & Trening
-  { value: "fotball",       label: "Fotball",       group: "Sport & Trening" },
-  { value: "basketball",    label: "Basketball",    group: "Sport & Trening" },
-  { value: "volleyball",    label: "Volleyball",    group: "Sport & Trening" },
-  { value: "tennis",        label: "Tennis",        group: "Sport & Trening" },
-  { value: "bordtennis",    label: "Bordtennis",    group: "Sport & Trening" },
-  { value: "badminton",     label: "Badminton",     group: "Sport & Trening" },
-  { value: "padel",         label: "Padel",         group: "Sport & Trening" },
-  { value: "squash",        label: "Squash",        group: "Sport & Trening" },
-  { value: "hockey",        label: "Hockey",        group: "Sport & Trening" },
-  { value: "golf",          label: "Golf",          group: "Sport & Trening" },
-  { value: "minigolf",      label: "Minigolf",      group: "Sport & Trening" },
-  { value: "løping",        label: "Løping",        group: "Sport & Trening" },
-  { value: "sykling",       label: "Sykling",       group: "Sport & Trening" },
-  { value: "svømming",      label: "Svømming",      group: "Sport & Trening" },
-  { value: "ski",           label: "Ski",           group: "Sport & Trening" },
-  { value: "snowboard",     label: "Snowboard",     group: "Sport & Trening" },
-  { value: "klatring",      label: "Klatring",      group: "Sport & Trening" },
-  { value: "yoga",          label: "Yoga",          group: "Sport & Trening" },
-  { value: "crossfit",      label: "CrossFit",      group: "Sport & Trening" },
-  { value: "styrketrening", label: "Styrketrening", group: "Sport & Trening" },
-  { value: "dans",          label: "Dans",          group: "Sport & Trening" },
-  { value: "kampsport",     label: "Kampsport",     group: "Sport & Trening" },
-  { value: "friluftsliv",   label: "Friluftsliv",   group: "Sport & Trening" },
-  // Sosialt & Underholdning
-  { value: "bar",           label: "Bar",           group: "Sosialt & Underholdning" },
-  { value: "kaffe",         label: "Kaffe",         group: "Sosialt & Underholdning" },
-  { value: "middag",        label: "Middag",        group: "Sosialt & Underholdning" },
-  { value: "grillfest",     label: "Grillfest",     group: "Sosialt & Underholdning" },
-  { value: "matlaging",     label: "Matlaging",     group: "Sosialt & Underholdning" },
-  { value: "piknik",        label: "Piknik",        group: "Sosialt & Underholdning" },
-  { value: "vandring",      label: "Vandring",      group: "Sosialt & Underholdning" },
-  { value: "tur",           label: "Tur",           group: "Sosialt & Underholdning" },
-  { value: "brettspill",    label: "Brettspill",    group: "Sosialt & Underholdning" },
-  { value: "sjakk",         label: "Sjakk",         group: "Sosialt & Underholdning" },
-  { value: "gaming",        label: "Gaming",        group: "Sosialt & Underholdning" },
-  { value: "quiz",          label: "Quiz",          group: "Sosialt & Underholdning" },
-  { value: "boklubb",       label: "Boklubb",       group: "Sosialt & Underholdning" },
-  { value: "kino",          label: "Kino",          group: "Sosialt & Underholdning" },
-  { value: "museum",        label: "Museum",        group: "Sosialt & Underholdning" },
-  { value: "teater",        label: "Teater",        group: "Sosialt & Underholdning" },
-  { value: "konsert",       label: "Konsert",       group: "Sosialt & Underholdning" },
-  { value: "festival",      label: "Festival",      group: "Sosialt & Underholdning" },
-  { value: "karaoke",       label: "Karaoke",       group: "Sosialt & Underholdning" },
-  { value: "escape-room",   label: "Escape Room",   group: "Sosialt & Underholdning" },
-  { value: "spa",           label: "Spa",           group: "Sosialt & Underholdning" },
-  // Annet
-  { value: "annet",         label: "Annet",         group: "Annet" },
-];
+type CategoryOption = (typeof categoryOptions)[number];
 
 function CategorySearch({
   value,
@@ -72,7 +18,7 @@ function CategorySearch({
   inputClass,
 }: {
   value: ActivityCategory | "";
-  onChange: (v: ActivityCategory) => void;
+  onChange: (value: ActivityCategory) => void;
   inputClass: string;
 }) {
   const [query, setQuery] = useState("");
@@ -81,34 +27,36 @@ function CategorySearch({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const selectedLabel =
-    value ? (categoryOptions.find((o) => o.value === value)?.label ?? value) : "";
+    value ? (categoryOptions.find((option) => option.value === value)?.label ?? value) : "";
 
   const filtered = query.trim()
-    ? categoryOptions.filter((o) =>
-        o.label.toLowerCase().includes(query.toLowerCase())
+    ? categoryOptions.filter((option) =>
+        option.label.toLowerCase().includes(query.toLowerCase())
       )
     : categoryOptions;
 
-  // Group results
   const grouped: Record<string, CategoryOption[]> = {};
-  for (const opt of filtered) {
-    (grouped[opt.group] ??= []).push(opt);
+  for (const option of filtered) {
+    (grouped[option.group] ??= []).push(option);
   }
 
-  function handleSelect(opt: CategoryOption) {
-    onChange(opt.value);
+  function handleSelect(option: CategoryOption) {
+    onChange(option.value);
     setQuery("");
     setOpen(false);
   }
 
-  // Close on outside click
   useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+    function handleClick(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setOpen(false);
         setQuery("");
       }
     }
+
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
@@ -117,6 +65,7 @@ function CategorySearch({
     <div ref={containerRef} className="relative">
       <input
         type="text"
+        role="combobox"
         autoComplete="off"
         placeholder={value ? selectedLabel : "Søk etter kategori…"}
         value={open ? query : selectedLabel}
@@ -124,20 +73,20 @@ function CategorySearch({
           setOpen(true);
           setQuery("");
         }}
-        onChange={(e) => {
-          setQuery(e.target.value);
+        onChange={(event) => {
+          setQuery(event.target.value);
           setOpen(true);
         }}
         className={inputClass}
+        aria-haspopup="listbox"
         aria-expanded={open}
         aria-autocomplete="list"
         aria-controls={listId}
       />
 
-      {/* Hidden real input for form submission */}
       <input type="hidden" name="category" value={value} required />
 
-      {open && (
+      {open ? (
         <div
           id={listId}
           role="listbox"
@@ -148,37 +97,39 @@ function CategorySearch({
             <button
               type="button"
               className="w-full px-4 py-3 text-left text-sm text-[var(--ink-muted)]"
-              onClick={() => handleSelect({ value: "annet", label: "Annet", group: "Annet" })}
+              onClick={() =>
+                handleSelect({ value: "annet", label: "Annet", group: "Annet" })
+              }
             >
               Ingen treff — velg &ldquo;Annet&rdquo;
             </button>
           ) : (
-            Object.entries(grouped).map(([group, opts]) => (
+            Object.entries(grouped).map(([group, options]) => (
               <div key={group}>
                 <div className="sticky top-0 bg-[var(--surface-muted)] px-4 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-[var(--ink-subtle)]">
                   {group}
                 </div>
-                {opts.map((opt) => (
+                {options.map((option) => (
                   <button
-                    key={opt.value}
+                    key={option.value}
                     type="button"
                     role="option"
-                    aria-selected={opt.value === value}
-                    onClick={() => handleSelect(opt)}
+                    aria-selected={option.value === value}
+                    onClick={() => handleSelect(option)}
                     className={`w-full px-4 py-2.5 text-left text-sm transition hover:bg-[var(--surface-muted)] ${
-                      opt.value === value
+                      option.value === value
                         ? "font-semibold text-[var(--sage-700)]"
                         : "text-[var(--ink)]"
                     }`}
                   >
-                    {opt.label}
+                    {option.label}
                   </button>
                 ))}
               </div>
             ))
           )}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -189,26 +140,28 @@ export function CreateActivityForm({ onClose }: CreateActivityFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    function handleKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
+    function handleKey(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
     }
+
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
   }, [onClose]);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     if (!category) return;
-    const fd = new FormData(e.currentTarget);
+
+    const formData = new FormData(event.currentTarget);
 
     startTransition(async () => {
       await createActivity({
-        title: fd.get("title") as string,
-        location: fd.get("location") as string,
-        startsAt: fd.get("starts_at") as string,
-        description: fd.get("description") as string,
-        participantsMax: Number(fd.get("participants_max")),
-        category: category as ActivityCategory,
+        title: formData.get("title") as string,
+        location: formData.get("location") as string,
+        startsAt: formData.get("starts_at") as string,
+        description: formData.get("description") as string,
+        participantsMax: Number(formData.get("participants_max")),
+        category,
         mapPinX: 50,
         mapPinY: 50,
       });
@@ -225,14 +178,12 @@ export function CreateActivityForm({ onClose }: CreateActivityFormProps) {
       role="dialog"
       aria-modal="true"
     >
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Modal card */}
-      <div className="relative w-full max-w-lg overflow-y-auto max-h-[90vh] rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_24px_64px_rgba(0,0,0,0.18)] sm:p-8">
+      <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_24px_64px_rgba(0,0,0,0.18)] sm:p-8">
         <div className="mb-6 flex items-center justify-between">
           <h3 className="text-xl font-semibold text-[var(--ink)]">
             Ny aktivitet
@@ -244,7 +195,12 @@ export function CreateActivityForm({ onClose }: CreateActivityFormProps) {
             aria-label="Lukk"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M12 4L4 12M4 4l8 8" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
+              <path
+                d="M12 4L4 12M4 4l8 8"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+              />
             </svg>
           </button>
         </div>
@@ -290,7 +246,9 @@ export function CreateActivityForm({ onClose }: CreateActivityFormProps) {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-[var(--ink)]">Maks deltakere</label>
+            <label className="text-sm font-medium text-[var(--ink)]">
+              Maks deltakere
+            </label>
             <input
               name="participants_max"
               type="number"
@@ -303,7 +261,9 @@ export function CreateActivityForm({ onClose }: CreateActivityFormProps) {
           </div>
 
           <div className="flex flex-col gap-1.5 sm:col-span-2">
-            <label className="text-sm font-medium text-[var(--ink)]">Beskrivelse</label>
+            <label className="text-sm font-medium text-[var(--ink)]">
+              Beskrivelse
+            </label>
             <textarea
               name="description"
               required

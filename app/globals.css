@@ -6,6 +6,7 @@
   --surface-muted: #eef2e8;
   --border: #dce3d2;
   --ink: #0f1b12;
+  --ink-soft: #314338;
   --ink-muted: #475a49;
   --ink-subtle: #6c7e6d;
   --sage-50: #edf4e1;
@@ -32,6 +33,7 @@
   --color-surface-muted: var(--surface-muted);
   --color-border: var(--border);
   --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
   --color-ink-muted: var(--ink-muted);
   --color-ink-subtle: var(--ink-subtle);
   --color-sage-50: var(--sage-50);
@@ -42,6 +44,7 @@
   --color-accent-sky: var(--accent-sky);
   --color-accent-amber: var(--accent-amber);
   --color-accent-plum: var(--accent-plum);
+  --font-display: var(--font-newsreader);
   --font-sans: var(--font-manrope);
   --font-mono: var(--font-geist-mono);
 }
@@ -52,6 +55,7 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -68,4 +72,21 @@ button {
 
 ::selection {
   background: rgba(122, 160, 96, 0.22);
+}
+
+.card-title {
+  font-family: var(--font-newsreader), serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.card-copy {
+  color: var(--ink-soft);
+  font-weight: 450;
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
 }

@@ -78,6 +78,14 @@ export interface Activity {
   isJoined: boolean;
   hostUserId: string;
   hostAvatarUrl: string | null;
+  participantAvatars: ActivityParticipantPreview[];
+}
+
+export interface ActivityParticipantPreview {
+  id: string;
+  initials: string;
+  avatarColor: string;
+  avatarUrl: string | null;
 }
 
 export interface ChatParticipant {

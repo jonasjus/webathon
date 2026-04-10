@@ -27,7 +27,7 @@ export function SettingsProfileCard({
             <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
           </svg>
         </span>
-        <h2 className="text-sm font-semibold text-[var(--ink)]">Profil</h2>
+        <h2 className="card-title text-[1.35rem] text-[var(--ink)]">Profil</h2>
       </div>
 
       <form action={updateDisplayName} className="mt-4 space-y-3">

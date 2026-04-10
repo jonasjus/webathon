@@ -3,17 +3,31 @@ import { getActivities } from "@/lib/activities";
 import { buildAppUser } from "@/lib/current-user";
 import { createClient } from "@/lib/supabase/server";
 import type { Activity } from "@/lib/supabase/types";
-import { DashboardStat } from "./_components/dashboard-stat";
-import { CreateActivityCta } from "./_components/create-activity-cta";
 import { ActivityFeed } from "./_components/activity-feed";
+import { CreateActivityCta } from "./_components/create-activity-cta";
+import { DashboardStat } from "./_components/dashboard-stat";
 
 export default async function HomePage() {
   const supabase = await createClient();
-  const [activitiesResult, { data: { user } }] = await Promise.all([
+  const [
+    activitiesResult,
+    {
+      data: { user },
+    },
+    userCountResult,
+  ] = await Promise.all([
     getActivities()
       .then((data) => ({ ok: true as const, data }))
       .catch(() => ({ ok: false as const, data: [] as Activity[] })),
     supabase.auth.getUser(),
+    supabase
+      .from("profiles")
+      .select("id", { head: true, count: "exact" })
+      .then(({ count, error }) => ({
+        ok: !error,
+        count: count ?? 0,
+        error,
+      })),
   ]);
 
   const activities = activitiesResult.data;
@@ -22,8 +36,14 @@ export default async function HomePage() {
       "[Puls] Supabase fetch failed. Check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local"
     );
   }
+  if (!userCountResult.ok) {
+    console.error(
+      `[Puls] Profile count failed: ${userCountResult.error?.message ?? "unknown error"}`
+    );
+  }
 
   const currentUser = user ? buildAppUser(user) : null;
+  const usersInApp = userCountResult.count;
   const firstName = currentUser?.displayName.split(" ")[0] ?? "deg";
   const myActivities = currentUser
     ? activities.filter(
@@ -90,15 +110,15 @@ export default async function HomePage() {
                     }
                   />
                   <DashboardStat
-                    label={currentUser ? "I appen nå" : "Største gruppe"}
+                    label={currentUser ? "Brukere i appen" : "Største gruppe"}
                     value={
                       currentUser
-                        ? activities.length
+                        ? usersInApp
                         : activities.reduce(
                             (max, activity) =>
                               Math.max(max, activity.participantsCurrent),
                             0
-                      )
+                          )
                     }
                   />
                 </div>

@@ -141,7 +141,7 @@ export function MessagesWorkspace({
     }
   }
 
-  function applyIncomingMessage(message: ActivityChatMessage) {
+  const applyIncomingMessage = useCallback((message: ActivityChatMessage) => {
     setMessagesByActivityId((current) => {
       const existing = current[message.activityId] ?? [];
       if (existing.some((entry) => entry.id === message.id)) return current;
@@ -174,7 +174,7 @@ export function MessagesWorkspace({
       }
       return currentSelected;
     });
-  }
+  }, [currentUserId]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -272,7 +272,7 @@ export function MessagesWorkspace({
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [currentUser, summaries, supabase]);
+  }, [applyIncomingMessage, currentUser, summaries, supabase]);
 
   async function sendMessage() {
     const body = draft.trim();
@@ -327,16 +327,20 @@ export function MessagesWorkspace({
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="overflow-hidden rounded-[36px] border border-[var(--border)] bg-[var(--surface-muted)] px-6 py-6 shadow-[0_28px_72px_rgba(67,92,56,0.10)] sm:px-8 sm:py-7">
+      <section className="overflow-hidden rounded-[36px] border border-[var(--border)] bg-[var(--surface-muted)] p-6 shadow-[0_28px_72px_rgba(67,92,56,0.10)] sm:p-8">
+        <div className="max-w-5xl">
+          <div>
         <p className="inline-flex rounded-full border border-white/80 bg-white/72 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm backdrop-blur-sm">
           Meldinger
         </p>
-        <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
+        <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
           Dine gruppechatter
         </h1>
-        <p className="mt-3 text-sm leading-6 text-[var(--ink-muted)] sm:text-base">
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">
           Gruppechatter for aktivitetene du er med på eller arrangerer.
         </p>
+          </div>
+        </div>
       </section>
 
     <section className="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">

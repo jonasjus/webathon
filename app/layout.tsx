@@ -1,10 +1,15 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
-import { Geist_Mono, Manrope } from "next/font/google";
+import { Geist_Mono, Manrope, Newsreader } from "next/font/google";
 import "./globals.css";
 
 const manrope = Manrope({
   variable: "--font-manrope",
+  subsets: ["latin"],
+});
+
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
   subsets: ["latin"],
 });
 
@@ -26,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="nb"
-      className={`${manrope.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${manrope.variable} ${newsreader.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

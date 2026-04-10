@@ -19,8 +19,8 @@ export function DisplayNamePanel({
     <section
       className={`rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)] ${className}`.trim()}
     >
-      <h2 className="text-lg font-semibold text-[var(--ink)]">{title}</h2>
-      <p className="mt-1 text-sm text-[var(--ink-muted)]">{description}</p>
+      <h2 className="card-title text-[1.55rem] text-[var(--ink)]">{title}</h2>
+      <p className="card-copy mt-2 text-[15px]">{description}</p>
 
       <form action={updateDisplayName} className="mt-5 space-y-4">
         <input type="hidden" name="redirect_to" value={redirectPath} />
@@ -74,8 +74,8 @@ export function PasswordPanel({
     <section
       className={`rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)] ${className}`.trim()}
     >
-      <h2 className="text-lg font-semibold text-[var(--ink)]">{title}</h2>
-      <p className="mt-1 text-sm text-[var(--ink-muted)]">{description}</p>
+      <h2 className="card-title text-[1.55rem] text-[var(--ink)]">{title}</h2>
+      <p className="card-copy mt-2 text-[15px]">{description}</p>
 
       <form action={updatePassword} className="mt-5 space-y-4">
         <input type="hidden" name="redirect_to" value={redirectPath} />

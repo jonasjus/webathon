@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { ActivityCard } from "@/components/activity/activity-card";
+import { ActivityBrowser } from "@/components/activity/activity-browser";
 import { Sidebar } from "@/components/layout/sidebar";
 import { getActivities } from "@/lib/activities";
 import { buildAppUser } from "@/lib/current-user";
@@ -26,10 +26,6 @@ export default async function MyActivitiesPage() {
   const myActivities = activities.filter(
     (activity) => activity.hostUserId === user.id || activity.isJoined
   );
-  const now = Date.now();
-  function daysUntil(startsAt: string) {
-    return Math.max(0, Math.floor((new Date(startsAt).getTime() - now) / 86_400_000));
-  }
 
   return (
     <main className="min-h-screen bg-[var(--canvas)] px-4 py-6 sm:px-6 xl:px-8">
@@ -55,29 +51,22 @@ export default async function MyActivitiesPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
-          {myActivities.length === 0 ? (
-            <div className="flex min-h-[360px] flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface-muted)] px-6 text-center">
-              <h2 className="text-xl font-semibold text-[var(--ink)]">
-                Ingen aktiviteter enda
-              </h2>
-              <p className="mt-2 max-w-md text-sm leading-6 text-[var(--ink-muted)]">
-                Når du blir med på en aktivitet eller oppretter en selv, dukker den opp her.
-              </p>
-            </div>
-          ) : (
-            <div className="mt-6 space-y-4">
-              {myActivities.map((activity) => (
-                <ActivityCard
-                  key={activity.id}
-                  activity={activity}
-                  isLoggedIn
-                  currentUserId={user.id}
-                  daysUntil={daysUntil(activity.startsAt)}
-                />
-              ))}
-            </div>
-          )}
+          <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
+            <ActivityBrowser
+              activities={myActivities}
+              isLoggedIn
+              currentUserId={user.id}
+              initialView="compact"
+              showCountdown
+              emptyStateCopy={{
+                baseTitle: "Ingen aktiviteter enda",
+                baseDescription:
+                  "Når du blir med på en aktivitet eller oppretter en selv, dukker den opp her.",
+                filteredTitle: "Ingen aktiviteter matcher",
+                filteredDescription:
+                  "Ingen av aktivitetene dine matcher søket eller filtrene akkurat nå.",
+              }}
+            />
           </section>
         </div>
       </div>

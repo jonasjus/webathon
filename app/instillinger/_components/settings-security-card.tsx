@@ -21,7 +21,9 @@ export function SettingsSecurityCard() {
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
         </span>
-        <h2 className="text-sm font-semibold text-[var(--ink)]">Sikkerhet</h2>
+        <h2 className="card-title text-[1.35rem] text-[var(--ink)]">
+          Sikkerhet
+        </h2>
       </div>
 
       <form action={updatePassword} className="mt-4 space-y-3">
