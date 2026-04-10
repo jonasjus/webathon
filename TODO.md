@@ -23,4 +23,5 @@
         - Navn
         - Bio
         - Interesser
+    - Endre på allerede opprettet aktivitet
     
