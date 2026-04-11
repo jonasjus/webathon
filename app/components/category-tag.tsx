@@ -5,6 +5,11 @@ type CategoryAppearance = {
   color: string;
 };
 
+const defaultAppearance: CategoryAppearance = {
+  label: "Aktivitet",
+  color: "#7AA060",
+};
+
 const categoryAppearance: Record<SportCategory, CategoryAppearance> = {
   fotball: { label: "Fotball", color: "#5FA8D3" },
   løping: { label: "Løping", color: "#F08A6E" },
@@ -18,8 +23,10 @@ interface CategoryTagProps {
   category: SportCategory;
 }
 
-export function getCategoryAppearance(category: SportCategory) {
-  return categoryAppearance[category];
+export function getCategoryAppearance(category: SportCategory | string | null | undefined) {
+  return category && category in categoryAppearance
+    ? categoryAppearance[category as SportCategory]
+    : defaultAppearance;
 }
 
 export function CategoryTag({ category }: CategoryTagProps) {
