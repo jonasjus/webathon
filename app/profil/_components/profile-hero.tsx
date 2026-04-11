@@ -124,7 +124,10 @@ export function ProfileHero({
             className="absolute inset-0"
             style={{ background: bannerBackground }}
           />
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(15,27,18,0.22),rgba(15,27,18,0.06)_48%,rgba(255,255,255,0.16))]" />
+          <div
+            className="absolute inset-0"
+            style={{ background: "var(--hero-overlay)" }}
+          />
 
           <div className="relative flex w-full flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
