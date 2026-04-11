@@ -14,6 +14,7 @@ import {
   getActivityCategoryAppearance,
 } from "./category-tag";
 import { ActivityCard } from "./activity-card";
+import { ActivityDetailDialog } from "./activity-detail-dialog";
 
 type FilterId = "alle" | "helg" | "ledige";
 type ActivityView = "compact" | "detailed";
@@ -29,6 +30,7 @@ interface ActivityBrowserProps {
   activities: Activity[];
   isLoggedIn: boolean;
   currentUserId?: string | null;
+  enableDetailsDialog?: boolean;
   initialView?: ActivityView;
   showCountdown?: boolean;
   emptyStateCopy?: Partial<EmptyStateCopy>;
@@ -91,6 +93,7 @@ export function ActivityBrowser({
   activities,
   isLoggedIn,
   currentUserId,
+  enableDetailsDialog = false,
   initialView = "detailed",
   showCountdown = false,
   emptyStateCopy,
@@ -103,9 +106,13 @@ export function ActivityBrowser({
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [view, setView] = useState<ActivityView>(initialView);
+  const [selectedActivityId, setSelectedActivityId] = useState<string>();
   const [referenceDate] = useState(() => new Date().toISOString());
   const deferredQuery = useDeferredValue(query);
   const normalizedQuery = normalizeSearchValue(deferredQuery);
+  const selectedActivity = selectedActivityId
+    ? activities.find((activity) => activity.id === selectedActivityId) ?? null
+    : null;
 
   const availableCategories = activityCategoryOptions.filter((option) =>
     activities.some((activity) => activity.category === option.value)
@@ -305,6 +312,11 @@ export function ActivityBrowser({
                 activity={activity}
                 isLoggedIn={isLoggedIn}
                 currentUserId={currentUserId}
+                onOpenDetails={
+                  enableDetailsDialog
+                    ? () => setSelectedActivityId(activity.id)
+                    : undefined
+                }
                 daysUntil={
                   showCountdown
                     ? getDaysUntil(activity.startsAt, referenceDate)
@@ -316,6 +328,15 @@ export function ActivityBrowser({
           </div>
         )}
       </div>
+
+      {enableDetailsDialog && selectedActivity ? (
+        <ActivityDetailDialog
+          activity={selectedActivity}
+          currentUserId={currentUserId}
+          isLoggedIn={isLoggedIn}
+          onClose={() => setSelectedActivityId(undefined)}
+        />
+      ) : null}
     </div>
   );
 }

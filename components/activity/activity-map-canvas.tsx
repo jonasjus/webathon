@@ -39,7 +39,7 @@ export function ActivityMapCanvas({
     >
       <TileLayer attribution={MAP_TILE_ATTRIBUTION} url={MAP_TILE_URL} />
 
-      {activities.map((activity) => {
+      {isLoggedIn && activities.map((activity) => {
         const appearance = getActivityCategoryAppearance(activity.category);
         const isSelected = activity.id === selectedActivityId;
 
@@ -62,7 +62,6 @@ export function ActivityMapCanvas({
               <MapPopupCard
                 activity={activity}
                 currentUserId={currentUserId}
-                isLoggedIn={isLoggedIn}
               />
             </Popup>
           </Marker>

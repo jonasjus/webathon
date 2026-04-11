@@ -6,7 +6,6 @@ import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { Avatar } from "@/components/account/avatar";
 import { formatChatTimestamp, isActivityChatActive } from "@/lib/date-time";
 import {
-  getUnreadActivityIds,
   markActivityRead,
   markActivityUnread,
   retainUnreadActivityIds,
@@ -107,7 +106,7 @@ export function MessagesWorkspace({
   );
   const [selectionNotice, setSelectionNotice] = useState(initialSelectionNotice);
   const [unreadActivityIds, setUnreadActivityIds] = useState<Set<string>>(
-    () => getUnreadActivityIds()
+    () => new Set()
   );
   const [draft, setDraft] = useState("");
   const [composerError, setComposerError] = useState<string | null>(null);

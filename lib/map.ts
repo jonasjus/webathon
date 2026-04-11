@@ -12,7 +12,8 @@ export const BERGEN_CENTER: MapCoordinates = {
   lng: 5.32415,
 };
 
-export const ACTIVITY_MAP_DEFAULT_ZOOM = 6;
+export const ACTIVITY_MAP_DEFAULT_ZOOM = 11;
+export const ACTIVITY_DETAIL_MAP_ZOOM = 16;
 export const LOCATION_PICKER_DEFAULT_ZOOM = 11;
 export const LOCATION_PICKER_SELECTED_ZOOM = 14;
 

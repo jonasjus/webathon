@@ -36,6 +36,7 @@ export function ActivityFeed({
           activities={activities}
           isLoggedIn={isLoggedIn}
           currentUserId={currentUserId}
+          enableDetailsDialog
           initialView="detailed"
           emptyStateCopy={{
             baseTitle: "Ingen arrangementer",

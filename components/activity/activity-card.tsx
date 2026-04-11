@@ -1,4 +1,6 @@
-import type { ReactNode } from "react";
+"use client";
+
+import type { KeyboardEvent, MouseEvent, PointerEvent, ReactNode } from "react";
 import {
   CalendarDays,
   Clock3,
@@ -14,6 +16,7 @@ import {
 } from "./category-tag";
 import { HostProfileTrigger } from "./host-profile-trigger";
 import { JoinButton } from "./join-button";
+import { EditActivityButton } from "./edit-activity-button";
 import { ParticipantStack } from "./participant-stack";
 import { getShortLocationLabel } from "@/lib/location-label";
 
@@ -24,7 +27,27 @@ interface ActivityCardProps {
   isLoggedIn: boolean;
   currentUserId?: string | null;
   daysUntil?: number;
+  onOpenDetails?: () => void;
   variant?: ActivityCardVariant;
+}
+
+function isNestedInteractiveTarget(
+  target: EventTarget | null,
+  currentTarget: HTMLElement
+): boolean {
+  if (!(target instanceof HTMLElement)) {
+    return false;
+  }
+
+  const interactiveAncestor = target.closest(
+    "button, a, input, select, textarea, [role='button']"
+  );
+
+  return (
+    !!interactiveAncestor &&
+    interactiveAncestor !== currentTarget &&
+    currentTarget.contains(interactiveAncestor)
+  );
 }
 
 function getUrgencyStyles(days: number | undefined): string {
@@ -49,15 +72,26 @@ function getCountdownBadgeStyles(days: number): string {
   return "bg-[var(--surface-muted)] text-[var(--ink-muted)]";
 }
 
+function stopActionPropagation(
+  event:
+    | KeyboardEvent<HTMLDivElement>
+    | MouseEvent<HTMLDivElement>
+    | PointerEvent<HTMLDivElement>
+) {
+  event.stopPropagation();
+}
+
 export function ActivityCard({
   activity,
   isLoggedIn,
   currentUserId,
   daysUntil,
+  onOpenDetails,
   variant = "detailed",
 }: ActivityCardProps) {
   const isOwnActivity = !!currentUserId && currentUserId === activity.hostUserId;
   const canOpenChat = isOwnActivity || activity.isJoined;
+  const canOpenDetails = typeof onOpenDetails === "function";
   const appearance = getActivityCategoryAppearance(activity.category);
   const urgencyStyles = getUrgencyStyles(daysUntil);
   const accentSurface = withAlpha(appearance.color, 0.12);
@@ -69,35 +103,85 @@ export function ActivityCard({
   const locationLabel = isLoggedIn
     ? getShortLocationLabel(activity.location)
     : "Sted vises ved innlogging";
-  const primaryAction = isOwnActivity ? (
-    <span className="inline-flex h-11 items-center rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] px-5 text-sm font-medium text-[var(--ink-muted)]">
-      Ditt arrangement
-    </span>
+
+  function handleCardClick(event: MouseEvent<HTMLElement>) {
+    if (!canOpenDetails) {
+      return;
+    }
+
+    if (isNestedInteractiveTarget(event.target, event.currentTarget)) {
+      return;
+    }
+
+    onOpenDetails?.();
+  }
+
+  function handleCardKeyDown(event: KeyboardEvent<HTMLElement>) {
+    if (!canOpenDetails) {
+      return;
+    }
+
+    if (
+      event.target !== event.currentTarget ||
+      isNestedInteractiveTarget(event.target, event.currentTarget)
+    ) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onOpenDetails?.();
+    }
+  }
+
+  const interactiveCardProps = canOpenDetails
+    ? {
+        "aria-haspopup": "dialog" as const,
+        "aria-label": `Se detaljer for ${activity.title}`,
+        onClick: handleCardClick,
+        onKeyDown: handleCardKeyDown,
+        role: "button" as const,
+        tabIndex: 0,
+      }
+    : {};
+  const interactiveCardClasses = canOpenDetails
+    ? "activity-card--interactive cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+    : "";
+  const chatLink = canOpenChat ? (
+    <Link
+      href={`/meldinger?activityId=${activity.id}`}
+      className="inline-flex h-10 w-full items-center justify-center rounded-xl bg-[rgba(122,160,96,0.12)] px-5 text-sm font-semibold text-[var(--sage-700)] transition hover:bg-[rgba(122,160,96,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+    >
+      chat
+    </Link>
+  ) : null;
+
+  const action = isOwnActivity ? (
+    <div className="flex items-start gap-2">
+      <EditActivityButton activity={activity} />
+      <div className="grid min-w-0 gap-2">
+        <span className="inline-flex h-11 w-full items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] px-5 text-sm font-medium text-[var(--ink-muted)]">
+          Ditt arrangement
+        </span>
+        {chatLink}
+      </div>
+    </div>
   ) : (
-    <JoinButton
-      activityId={activity.id}
-      isJoined={activity.isJoined}
-      isLoggedIn={isLoggedIn}
-    />
-  );
-  const action = (
     <div className="inline-grid gap-2">
-      {primaryAction}
-      {canOpenChat ? (
-        <Link
-          href={`/meldinger?activityId=${activity.id}`}
-          className="inline-flex h-10 w-full items-center justify-center rounded-xl bg-[rgba(122,160,96,0.12)] px-5 text-sm font-semibold text-[var(--sage-700)] transition hover:bg-[rgba(122,160,96,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
-        >
-          chat
-        </Link>
-      ) : null}
+      <JoinButton
+        activityId={activity.id}
+        isJoined={activity.isJoined}
+        isLoggedIn={isLoggedIn}
+      />
+      {chatLink}
     </div>
   );
 
   if (variant === "compact") {
     return (
       <article
-        className={`rounded-[24px] border px-4 py-4 shadow-[var(--shadow-card)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-strong)] ${urgencyStyles}`}
+        {...interactiveCardProps}
+        className={`rounded-[24px] border px-4 py-4 shadow-[var(--shadow-card)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-strong)] ${interactiveCardClasses} ${urgencyStyles}`}
       >
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 flex-1 items-start gap-3">
@@ -157,7 +241,15 @@ export function ActivityCard({
             </div>
           </div>
 
-          <div className="sm:flex-shrink-0">{action}</div>
+          <div
+            className="sm:flex-shrink-0"
+            onClick={stopActionPropagation}
+            onKeyDown={stopActionPropagation}
+            onMouseDown={stopActionPropagation}
+            onPointerDown={stopActionPropagation}
+          >
+            {action}
+          </div>
         </div>
       </article>
     );
@@ -165,7 +257,8 @@ export function ActivityCard({
 
   return (
     <article
-      className={`rounded-[28px] border p-5 shadow-[var(--shadow-card)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-strong)] ${urgencyStyles}`}
+      {...interactiveCardProps}
+      className={`rounded-[28px] border p-5 shadow-[var(--shadow-card)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-strong)] ${interactiveCardClasses} ${urgencyStyles}`}
     >
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0 flex-1">
@@ -231,7 +324,15 @@ export function ActivityCard({
           </div>
         </div>
 
-        <div className="lg:flex-shrink-0 lg:pl-6 lg:pt-1">{action}</div>
+        <div
+          className="lg:flex-shrink-0 lg:pl-6 lg:pt-1"
+          onClick={stopActionPropagation}
+          onKeyDown={stopActionPropagation}
+          onMouseDown={stopActionPropagation}
+          onPointerDown={stopActionPropagation}
+        >
+          {action}
+        </div>
       </div>
     </article>
   );
