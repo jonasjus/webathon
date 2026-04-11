@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { isActivityChatActive } from "@/lib/date-time";
 import {
-  getUnreadActivityIds,
   markActivityUnread,
   retainUnreadActivityIds,
   subscribeToUnreadActivityIds,
@@ -29,7 +28,7 @@ export function SidebarMessagesIndicator({
 }: SidebarMessagesIndicatorProps) {
   const pathname = usePathname();
   const [supabase] = useState(() => createClient());
-  const [hasUnread, setHasUnread] = useState(() => getUnreadActivityIds().size > 0);
+  const [hasUnread, setHasUnread] = useState(false);
 
   useEffect(() => subscribeToUnreadActivityIds((activityIds) => {
     setHasUnread(activityIds.size > 0);
