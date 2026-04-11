@@ -45,18 +45,17 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
   );
 
   return (
-    <aside className="flex h-full min-h-0 flex-col border-b border-[var(--border)] bg-[var(--sidebar-surface)] px-4 py-4 xl:border-b-0 xl:border-r xl:px-5 xl:py-6 xl:pr-6">
-      <div className="flex items-center gap-0 border-b border-[var(--border)] pb-5">
+    <aside className="flex h-full min-h-0 flex-col border-b border-[var(--border)] bg-[var(--sidebar-surface)] px-4 py-4 xl:border-b-0 xl:border-r xl:px-4 xl:py-5 xl:pr-5">
+      <div className="w-full border-b border-[var(--border)] pb-5">
         <Image
-          src="/venue_logo.png"
+          src="/full_venue_logo_cropped.png"
           alt="Venue logo"
-          width={120}
-          height={120}
-          className="h-24 w-24 object-contain"
+          width={1024}
+          height={1024}
+          sizes="(min-width: 1280px) 248px, 100vw"
+          priority
+          className="mx-auto h-auto w-[92%] object-contain"
         />
-        <h1 className="font-brand text-[clamp(1.65rem,3.4vh,2rem)] font-semibold tracking-[-0.05em] text-[var(--ink)]">
-          VENUE
-        </h1>
       </div>
 
       <nav

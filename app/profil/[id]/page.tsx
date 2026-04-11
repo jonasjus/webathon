@@ -82,7 +82,7 @@ export default async function ProfileByIdPage({
 
   return (
     <main className="min-h-screen bg-[var(--canvas)] px-4 py-6 sm:px-6 xl:p-0">
-      <div className="mx-auto grid max-w-[1440px] gap-6 xl:max-w-none xl:gap-0 xl:grid-cols-[248px_minmax(0,1fr)]">
+      <div className="mx-auto grid max-w-[1440px] gap-6 xl:max-w-none xl:gap-0 xl:grid-cols-[225px_minmax(0,1fr)]">
         <div className="xl:sticky xl:top-0 xl:h-screen">
           <Sidebar activeItem="Profil" user={currentUser} />
         </div>

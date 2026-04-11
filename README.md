@@ -16,9 +16,11 @@
 
 ## Beskrivelse
 
-En nettside hvor man kan se og melde seg opp til offentlige arrangementer. Man kan filtrere arrangementer etter type og sted. Melder man seg opp til et arrangement blir man automatisk med i en gruppechat(?) for det arrangementet. ...
+Venue er en plattform for å opprette og delta på offentlige arrangementer. Hvem som helst kan starte hva som helst, og delta på alt. Man kan filtrere arrangementer etter type og sted, og det vil være noe å finne for alle. Melder man seg opp til et arrangement blir man automatisk med i en gruppechat for det arrangementet, men dette er ikke enda et sosialt medie! Venue handler hovedsakelig om å få folk opp av sofaen, av mobilen, og ut for å møte nye mennesker.
 
-Venue er et sted der man kan finne og melde seg opp til ulike arrangementer. Disse kan filteres etter type og sted slik at man kan finne arrangementer som passer akkurat deg.
+Arrangementer kan bli funnet på to måter. Enten ved bruk av aktivitetsstrømmen, som er det første som møter deg ved oppstart, eller på kartet som du finner på sidebaren på venstresiden av skjermen. I aktivitetsstrømmen kan du filtere på kategori og tidspunkt, samt søke etter beskrivende ord. Velger du heller å bruke kartet, så får du opp et kart over nærområdet/byen din med arrangementer plassert som pins der de vil finne sted.
+
+I tillegg til info om arrangementet skal du kunne se litt grunnleggende informasjon om hosten og de andre deltakerne. Her er det en liten biografi hvor brukere kan skrive litt om seg selv, og en liste over interesser du kan huke av på ettersom hva som passer deg.
 
 ---
 
