@@ -127,6 +127,7 @@ export function ActivityCard({
                       host={activity.host}
                       initials={activity.hostInitials}
                       color={activity.hostColor}
+                      hostUserId={activity.hostUserId}
                       compact
                     />
                     {daysUntil !== undefined ? (
@@ -193,6 +194,7 @@ export function ActivityCard({
                       host={activity.host}
                       initials={activity.hostInitials}
                       color={activity.hostColor}
+                      hostUserId={activity.hostUserId}
                     />
                   </div>
                   <h3 className="card-title mt-3 text-[1.9rem] text-[var(--ink)]">
@@ -289,6 +291,7 @@ interface HostInlineProps {
   host: string;
   initials: string;
   color: string;
+  hostUserId: string;
   compact?: boolean;
 }
 
@@ -297,11 +300,13 @@ function HostInline({
   host,
   initials,
   color,
+  hostUserId,
   compact = false,
 }: HostInlineProps) {
   return (
-    <span
-      className={`inline-flex items-center gap-2 rounded-full bg-[var(--sage-50)] font-medium text-[var(--sage-700)] ${compact ? "px-2 py-1 text-xs" : "px-2.5 py-1.5 text-sm"}`}
+    <Link
+      href={`/profil/${hostUserId}`}
+      className={`inline-flex items-center gap-2 rounded-full bg-[var(--sage-50)] font-medium text-[var(--sage-700)] transition hover:bg-[var(--sage-100)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${compact ? "px-2 py-1 text-xs" : "px-2.5 py-1.5 text-sm"}`}
     >
       <Avatar
         src={avatarUrl}
@@ -313,7 +318,7 @@ function HostInline({
       <span>
         Arrangør <span className="font-semibold">{host}</span>
       </span>
-    </span>
+    </Link>
   );
 }
 

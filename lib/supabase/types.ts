@@ -8,6 +8,9 @@ export interface ProfileRow {
   initials: string;
   avatar_color: string;
   avatar_url: string | null;
+  bio: string | null;
+  banner_theme: string | null;
+  favorite_categories: ActivityCategory[];
   created_at: string;
 }
 
@@ -124,7 +127,11 @@ export interface Database {
     Tables: {
       profiles: {
         Row: ProfileRow;
-        Insert: Omit<ProfileRow, "created_at">;
+        Insert: Omit<ProfileRow, "created_at"> & {
+          bio?: string | null;
+          banner_theme?: string | null;
+          favorite_categories?: ActivityCategory[];
+        };
         Update: Partial<Omit<ProfileRow, "id" | "created_at">>;
       };
       activities: {

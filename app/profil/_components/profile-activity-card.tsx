@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { CalendarDays, MapPin } from "lucide-react";
+import Link from "next/link";
 import { Avatar } from "@/components/account/avatar";
 import {
   CategoryIcon,
@@ -58,24 +59,31 @@ export function ProfileActivityCard({
             <MetaItem icon={<MapPin className="h-4 w-4" />}>
               {activity.location}
             </MetaItem>
-            <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--ink-muted)]">
-              <Avatar
-                src={activity.hostAvatarUrl}
-                initials={activity.hostInitials}
-                color={activity.hostColor}
-                size={22}
-              />
-              <span>
-                {isHost ? (
-                  "Du arrangerer"
-                ) : (
-                  <>
-                    Arrangør{" "}
-                    <span className="font-medium text-[var(--ink)]">{activity.host}</span>
-                  </>
-                )}
+            {isHost ? (
+              <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--ink-muted)]">
+                <Avatar
+                  src={activity.hostAvatarUrl}
+                  initials={activity.hostInitials}
+                  color={activity.hostColor}
+                  size={22}
+                />
+                Du arrangerer
               </span>
-            </span>
+            ) : (
+              <Link
+                href={`/profil/${activity.hostUserId}`}
+                className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--ink-muted)] transition hover:border-[var(--sage-400)] hover:bg-[var(--sage-50)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+              >
+                <Avatar
+                  src={activity.hostAvatarUrl}
+                  initials={activity.hostInitials}
+                  color={activity.hostColor}
+                  size={22}
+                />
+                Arrangør{" "}
+                <span className="font-medium text-[var(--ink)]">{activity.host}</span>
+              </Link>
+            )}
           </div>
         </div>
       </div>

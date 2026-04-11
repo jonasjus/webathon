@@ -11,6 +11,7 @@ interface AvatarUploadProps {
   currentSrc?: string | null;
   initials: string;
   color: string;
+  variant?: "card" | "icon";
 }
 
 export function AvatarUpload({
@@ -18,6 +19,7 @@ export function AvatarUpload({
   currentSrc,
   initials,
   color,
+  variant = "card",
 }: AvatarUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -61,6 +63,29 @@ export function AvatarUpload({
       setUploading(false);
       event.target.value = "";
     }
+  }
+
+  if (variant === "icon") {
+    return (
+      <>
+        <button
+          type="button"
+          title="Endre profilbilde"
+          disabled={uploading}
+          onClick={() => inputRef.current?.click()}
+          className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[var(--surface)] bg-[var(--sage-500)] text-white shadow-sm transition hover:bg-[var(--sage-600)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-70"
+        >
+          {uploading ? <SpinnerIcon /> : <CameraIcon />}
+        </button>
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          className="sr-only"
+          onChange={handleFileChange}
+        />
+      </>
+    );
   }
 
   return (
@@ -115,6 +140,21 @@ export function AvatarUpload({
         onChange={handleFileChange}
       />
     </div>
+  );
+}
+
+function CameraIcon() {
+  return (
+    <svg
+      className="h-4 w-4"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+      <circle cx="12" cy="13" r="4" />
+    </svg>
   );
 }
 

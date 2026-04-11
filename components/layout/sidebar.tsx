@@ -11,13 +11,13 @@ import {
 import { Avatar } from "@/components/account/avatar";
 import { signOut } from "@/lib/actions/auth";
 
-const navigation: ReadonlyArray<{
+const baseNavigation: ReadonlyArray<{
   label: string;
   href?: string;
   icon: LucideIcon;
 }> = [
   { label: "Hjem", href: "/", icon: Home },
-  { label: "Profil", href: "/profil", icon: User },
+  { label: "Profil", icon: User },
   { label: "Mine aktiviteter", href: "/mine-aktiviteter", icon: Calendar },
   { label: "Meldinger", href: "/meldinger", icon: MessageCircle },
   { label: "Kart", icon: Map },
@@ -38,6 +38,11 @@ interface SidebarProps {
 }
 
 export function Sidebar({ activeItem, user }: SidebarProps) {
+  const profileHref = user?.id ? `/profil/${user.id}` : "/profil";
+  const navigation = baseNavigation.map((item) =>
+    item.label === "Profil" ? { ...item, href: profileHref } : item
+  );
+
   return (
     <aside className="flex h-full flex-col rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]">
       <div className="rounded-[24px] bg-[linear-gradient(160deg,rgba(122,160,96,0.18),rgba(95,168,211,0.14),rgba(255,255,255,0.95))] p-4">
@@ -120,7 +125,7 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
 
             <div className="mt-4 flex items-center justify-between gap-3">
               <Link
-                href="/profil"
+                href={profileHref}
                 className="text-sm font-medium text-[var(--sage-700)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
               >
                 Åpne profil
