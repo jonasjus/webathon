@@ -44,9 +44,13 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
   const navigation = baseNavigation.map((item) =>
     item.label === "Profil" ? { ...item, href: profileHref } : item
   );
+  const sidebarScale = "clamp(0.72, calc((100vh - 3rem) / 920), 1)";
 
   return (
-    <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]">
+    <aside
+      className="flex h-full min-h-0 flex-col overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)] xl:origin-top xl:[transform:scale(var(--sidebar-scale))]"
+      style={{ "--sidebar-scale": sidebarScale } as React.CSSProperties}
+    >
       <div className="rounded-[24px] bg-[linear-gradient(160deg,rgba(122,160,96,0.18),rgba(95,168,211,0.14),rgba(255,255,255,0.95))] p-4">
         <div className="flex flex-col items-center gap-4 py-2 text-center">
           <div className="flex h-20 w-20 items-center justify-center rounded-[24px] border border-white/80 bg-white/80 p-2 shadow-sm">
@@ -66,7 +70,7 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
       </div>
 
       <nav
-        className="mt-[clamp(1rem,2.4vh,2rem)] flex-1 space-y-[clamp(0.375rem,0.9vh,0.5rem)] overflow-y-auto pr-1"
+        className="mt-[clamp(1rem,2.4vh,2rem)] flex-1 space-y-[clamp(0.375rem,0.9vh,0.5rem)] overflow-hidden pr-1"
         aria-label="Hovednavigasjon"
       >
         {navigation.map((item) => {
