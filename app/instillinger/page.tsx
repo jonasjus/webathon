@@ -47,16 +47,20 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
           />
         </div>
 
-        <div className="flex min-h-[calc(100vh-3rem)] items-start pt-[16vh]">
-          <div className="mx-auto w-full max-w-4xl space-y-4">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-6">
+          <section className="overflow-hidden rounded-[36px] border border-[var(--border)] bg-[var(--surface-muted)] p-6 shadow-[var(--section-hero-shadow)] sm:p-8">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-[var(--ink-muted)]">
+                <p className="inline-flex rounded-full border border-[var(--hero-pill-border)] bg-[var(--hero-pill-bg)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm">
                   Konto, sikkerhet og utseende
                 </p>
-                <h1 className="mt-1 text-2xl font-semibold tracking-tight text-[var(--ink)]">
+                <h1 className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
                   Innstillinger
                 </h1>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">
+                  Oppdater profilen din, bytt passord og styr hvordan appen ser
+                  ut, alt fra ett sted.
+                </p>
               </div>
 
               <SettingsIdentityChip
@@ -67,51 +71,55 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
                 avatarUrl={avatarUrl}
               />
             </div>
+          </section>
 
-            {error && (
-              <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                {decodeURIComponent(error)}
-              </p>
-            )}
-            {success && (
-              <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-                {decodeURIComponent(success)}
-              </p>
-            )}
+          {error && (
+            <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {decodeURIComponent(error)}
+            </p>
+          )}
+          {success && (
+            <p className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+              {decodeURIComponent(success)}
+            </p>
+          )}
 
-            <div className="grid gap-4 lg:grid-cols-2">
+          <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
+            <div className="grid gap-4 xl:grid-cols-3">
               <SettingsProfileCard displayName={displayName} />
               <SettingsSecurityCard />
               <SettingsThemeCard />
             </div>
+          </section>
 
-            <div className="rounded-2xl border border-[color:rgba(239,68,68,0.18)] bg-[color:rgba(239,68,68,0.08)] p-5 shadow-sm">
-              <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-8">
-                <div className="flex min-w-0 flex-1 items-start gap-3">
-                  <span className="mt-0.5 inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-[color:rgba(239,68,68,0.16)] text-red-400">
-                    <svg
-                      viewBox="0 0 24 24"
-                      className="h-3.5 w-3.5 fill-none stroke-current"
-                      strokeWidth="2"
-                      aria-hidden="true"
-                    >
-                      <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.72 3h16.92A2 2 0 0 0 22.18 18L13.71 3.86a2 2 0 0 0-3.42 0Z" />
-                      <path d="M12 9v4M12 17h.01" />
-                    </svg>
-                  </span>
-                  <div>
-                    <h2 className="card-title text-[1.45rem] text-red-200">Slett konto</h2>
-                    <p className="mt-3 text-sm leading-6 text-[var(--ink-muted)]">
-                      Dette sletter brukeren din <strong>permanent</strong>,
-                      inkludert arrangementer og deltakelser.
-                    </p>
-                  </div>
+          <section className="rounded-[32px] border border-[color:rgba(239,68,68,0.18)] bg-[color:rgba(239,68,68,0.08)] p-6 shadow-[var(--shadow-card)]">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-8">
+              <div className="flex min-w-0 flex-1 items-start gap-3">
+                <span className="mt-0.5 inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-[color:rgba(239,68,68,0.16)] text-red-400">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-3.5 w-3.5 fill-none stroke-current"
+                    strokeWidth="2"
+                    aria-hidden="true"
+                  >
+                    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.72 3h16.92A2 2 0 0 0 22.18 18L13.71 3.86a2 2 0 0 0-3.42 0Z" />
+                    <path d="M12 9v4M12 17h.01" />
+                  </svg>
+                </span>
+                <div>
+                  <h2 className="card-title text-[1.45rem] text-red-200">
+                    Slett konto
+                  </h2>
+                  <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--ink-muted)]">
+                    Dette sletter brukeren din <strong>permanent</strong>,
+                    inkludert arrangementer og deltakelser.
+                  </p>
                 </div>
-
-                <DeleteAccountForm redirectPath="/instillinger" />
               </div>
+
+              <DeleteAccountForm redirectPath="/instillinger" />
             </div>
-          </div>
+          </section>
         </div>
       </div>
     </main>
