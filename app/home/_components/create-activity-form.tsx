@@ -1,8 +1,10 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { activityCategoryOptions } from "@/components/activity/category-tag";
+import { LocationPicker } from "@/components/activity/location-picker";
+import type { MapCoordinates } from "@/lib/map";
 import { createActivity } from "@/lib/actions/activity";
 import type { ActivityCategory } from "@/lib/supabase/types";
 
@@ -13,7 +15,9 @@ interface CreateActivityFormProps {
 export function CreateActivityForm({ onClose }: CreateActivityFormProps) {
   const [isPending, startTransition] = useTransition();
   const [category, setCategory] = useState<ActivityCategory | "">("");
-  const formRef = useRef<HTMLFormElement>(null);
+  const [location, setLocation] = useState("");
+  const [coordinates, setCoordinates] = useState<MapCoordinates | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     function handleKey(event: KeyboardEvent) {
@@ -29,19 +33,28 @@ export function CreateActivityForm({ onClose }: CreateActivityFormProps) {
     if (!category) return;
 
     const formData = new FormData(event.currentTarget);
+    setSubmitError(null);
 
     startTransition(async () => {
-      await createActivity({
-        title: formData.get("title") as string,
-        location: formData.get("location") as string,
-        startsAt: formData.get("starts_at") as string,
-        description: formData.get("description") as string,
-        participantsMax: Number(formData.get("participants_max")),
-        category,
-        mapPinX: 50,
-        mapPinY: 50,
-      });
-      onClose();
+      try {
+        await createActivity({
+          title: formData.get("title") as string,
+          location,
+          startsAt: formData.get("starts_at") as string,
+          description: formData.get("description") as string,
+          participantsMax: Number(formData.get("participants_max")),
+          category,
+          latitude: coordinates?.lat ?? null,
+          longitude: coordinates?.lng ?? null,
+        });
+        onClose();
+      } catch (error) {
+        setSubmitError(
+          error instanceof Error
+            ? error.message
+            : "Kunne ikke opprette arrangementet."
+        );
+      }
     });
   }
 
@@ -59,7 +72,7 @@ export function CreateActivityForm({ onClose }: CreateActivityFormProps) {
         onClick={onClose}
       />
 
-      <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_24px_64px_rgba(0,0,0,0.18)] sm:p-8">
+      <div className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_24px_64px_rgba(0,0,0,0.18)] sm:p-8">
         <div className="mb-6 flex items-center justify-between">
           <h3 className="text-xl font-semibold text-[var(--ink)]">
             Nytt arrangement
@@ -81,23 +94,13 @@ export function CreateActivityForm({ onClose }: CreateActivityFormProps) {
           </button>
         </div>
 
-        <form ref={formRef} onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
+        <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5 sm:col-span-2">
             <label className="text-sm font-medium text-[var(--ink)]">Tittel</label>
             <input
               name="title"
               required
               placeholder="Søndagsfotball på Frogner"
-              className={inputClass}
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-[var(--ink)]">Sted</label>
-            <input
-              name="location"
-              required
-              placeholder="Frognerparken"
               className={inputClass}
             />
           </div>
@@ -156,6 +159,21 @@ export function CreateActivityForm({ onClose }: CreateActivityFormProps) {
               className={`${inputClass} resize-none`}
             />
           </div>
+
+          <div className="sm:col-span-2">
+            <LocationPicker
+              value={location}
+              onValueChange={setLocation}
+              coordinates={coordinates}
+              onCoordinatesChange={setCoordinates}
+              disabled={isPending}
+              inputClassName={inputClass}
+            />
+          </div>
+
+          {submitError ? (
+            <p className="sm:col-span-2 text-sm text-[#a64532]">{submitError}</p>
+          ) : null}
 
           <div className="flex items-center gap-3 sm:col-span-2">
             <button

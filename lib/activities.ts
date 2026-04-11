@@ -22,8 +22,8 @@ interface ActivityQueryRow {
   description: string;
   participants_max: number;
   category: string;
-  map_pin_x: number;
-  map_pin_y: number;
+  latitude: number;
+  longitude: number;
   host: {
     display_name: string;
     initials: string;
@@ -93,7 +93,7 @@ export const getActivities = cache(async (): Promise<Activity[]> => {
     .select(
       `
       id, title, host_user_id, location, starts_at, description,
-      participants_max, category, map_pin_x, map_pin_y,
+      participants_max, category, latitude, longitude,
       host:profiles!host_user_id ( display_name, initials, avatar_color, avatar_url, bio, favorite_categories ),
       activity_participants (
         user_id,
@@ -128,7 +128,10 @@ export const getActivities = cache(async (): Promise<Activity[]> => {
       participantsCurrent: participants.length,
       participantsMax: row.participants_max,
       category: row.category as ActivityCategory,
-      mapPin: { x: Number(row.map_pin_x), y: Number(row.map_pin_y) },
+      coordinates: {
+        lat: Number(row.latitude),
+        lng: Number(row.longitude),
+      },
       startsAt: row.starts_at,
       isJoined: user
         ? participants.some((p) => p.user_id === user.id)

@@ -1,5 +1,11 @@
 "use server";
 
+import { geocodeAddress, reverseGeocodeCoordinates } from "../geocoding";
+import {
+  formatCoordinateFallbackLabel,
+  isValidLatitude,
+  isValidLongitude,
+} from "../map";
 import { revalidateAppContentPaths } from "../revalidate-paths";
 import { createClient } from "../supabase/server";
 import type { ActivityCategory } from "../supabase/types";
@@ -11,8 +17,8 @@ export interface CreateActivityInput {
   description: string;
   participantsMax: number;
   category: ActivityCategory;
-  mapPinX: number;
-  mapPinY: number;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export async function createActivity(input: CreateActivityInput) {
@@ -22,16 +28,72 @@ export async function createActivity(input: CreateActivityInput) {
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Ikke innlogget");
 
+  const title = input.title.trim();
+  let location = input.location.trim();
+  const description = input.description.trim();
+  const participantsMax = Number(input.participantsMax);
+  let latitude =
+    typeof input.latitude === "number" ? Number(input.latitude) : null;
+  let longitude =
+    typeof input.longitude === "number" ? Number(input.longitude) : null;
+
+  if (!title) {
+    throw new Error("Tittel mangler.");
+  }
+
+  if (!description) {
+    throw new Error("Beskrivelse mangler.");
+  }
+
+  if (!Number.isInteger(participantsMax) || participantsMax < 1) {
+    throw new Error("Maks deltakere må være minst 1.");
+  }
+
+  if ((latitude == null || longitude == null) && !location) {
+    throw new Error("Legg inn en adresse eller sett et pin på kartet.");
+  }
+
+  if (latitude != null && longitude != null) {
+    if (!isValidLatitude(latitude) || !isValidLongitude(longitude)) {
+      throw new Error("Koordinatene er ugyldige.");
+    }
+  } else if (location) {
+    const geocodedLocation = await geocodeAddress(location);
+
+    if (!geocodedLocation) {
+      throw new Error("Fant ikke adressen på kartet.");
+    }
+
+    latitude = geocodedLocation.lat;
+    longitude = geocodedLocation.lng;
+    location = geocodedLocation.label;
+  }
+
+  if ((latitude == null || longitude == null) && !location) {
+    throw new Error("Kunne ikke fastsette en plassering for arrangementet.");
+  }
+
+  if (!location && latitude != null && longitude != null) {
+    const reverseLocation = await reverseGeocodeCoordinates({
+      lat: latitude,
+      lng: longitude,
+    });
+
+    location =
+      reverseLocation?.label ??
+      formatCoordinateFallbackLabel({ lat: latitude, lng: longitude });
+  }
+
   const { error } = await supabase.from("activities").insert({
-    title: input.title,
+    title,
     host_user_id: user.id,
-    location: input.location,
+    location,
     starts_at: input.startsAt,
-    description: input.description,
-    participants_max: input.participantsMax,
+    description,
+    participants_max: participantsMax,
     category: input.category,
-    map_pin_x: input.mapPinX,
-    map_pin_y: input.mapPinY,
+    latitude,
+    longitude,
   } as never);
 
   if (error) throw new Error(`Kunne ikke opprette arrangement: ${error.message}`);

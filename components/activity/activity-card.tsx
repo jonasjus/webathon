@@ -15,6 +15,7 @@ import {
 import { HostProfileTrigger } from "./host-profile-trigger";
 import { JoinButton } from "./join-button";
 import { ParticipantStack } from "./participant-stack";
+import { getShortLocationLabel } from "@/lib/location-label";
 
 type ActivityCardVariant = "compact" | "detailed";
 
@@ -66,7 +67,7 @@ export function ActivityCard({
     ? `${activity.date} · ${activity.time}`
     : "Tidspunkt vises ved innlogging";
   const locationLabel = isLoggedIn
-    ? activity.location
+    ? getShortLocationLabel(activity.location)
     : "Sted vises ved innlogging";
   const primaryAction = isOwnActivity ? (
     <span className="inline-flex h-11 items-center rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] px-5 text-sm font-medium text-[var(--ink-muted)]">
