@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Avatar } from "@/components/account/avatar";
+import { getShortLocationLabel } from "@/lib/location-label";
 import type { Activity } from "@/lib/supabase/types";
 import {
   ActivityCategoryIcon,
@@ -66,7 +67,7 @@ export function ActivityCard({
     ? `${activity.date} · ${activity.time}`
     : "Tidspunkt vises ved innlogging";
   const locationLabel = isLoggedIn
-    ? activity.location
+    ? getShortLocationLabel(activity.location)
     : "Sted vises ved innlogging";
   const primaryAction = isOwnActivity ? (
     <span className="inline-flex h-11 items-center rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] px-5 text-sm font-medium text-[var(--ink-muted)]">

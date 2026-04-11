@@ -30,13 +30,13 @@ create policy "profiles: authenticated read"
 create policy "profiles: own insert"
   on public.profiles for insert
   to authenticated
-  with check (id = auth.uid());
+  with check (id = (select auth.uid()));
 
 -- A user may only update their own profile
 create policy "profiles: own update"
   on public.profiles for update
   to authenticated
-  using (id = auth.uid());
+  using (id = (select auth.uid()));
 
 -- ------------------------------------------------------------
 -- 2. activities
@@ -50,8 +50,8 @@ create table if not exists public.activities (
   description      text        not null,
   participants_max int         not null check (participants_max > 0),
   category         text        not null check (category in ('Sport & Trening','Sosialt & Underholdning','Annet')),
-  map_pin_x        numeric     not null,
-  map_pin_y        numeric     not null,
+  latitude         double precision not null check (latitude between -90 and 90),
+  longitude        double precision not null check (longitude between -180 and 180),
   created_at       timestamptz not null default now()
 );
 
@@ -67,19 +67,19 @@ create policy "activities: public read"
 create policy "activities: authenticated insert"
   on public.activities for insert
   to authenticated
-  with check (host_user_id = auth.uid());
+  with check (host_user_id = (select auth.uid()));
 
 -- Host can update their own activity
 create policy "activities: host update"
   on public.activities for update
   to authenticated
-  using (host_user_id = auth.uid());
+  using (host_user_id = (select auth.uid()));
 
 -- Host can delete their own activity
 create policy "activities: host delete"
   on public.activities for delete
   to authenticated
-  using (host_user_id = auth.uid());
+  using (host_user_id = (select auth.uid()));
 
 -- ------------------------------------------------------------
 -- 3. activity_participants (RSVP join table)
@@ -103,13 +103,13 @@ create policy "participants: authenticated read"
 create policy "participants: own insert"
   on public.activity_participants for insert
   to authenticated
-  with check (user_id = auth.uid());
+  with check (user_id = (select auth.uid()));
 
 -- A user may only remove their own RSVP
 create policy "participants: own delete"
   on public.activity_participants for delete
   to authenticated
-  using (user_id = auth.uid());
+  using (user_id = (select auth.uid()));
 
 -- ------------------------------------------------------------
 -- 4. activity_chat_messages
@@ -127,6 +127,12 @@ create index if not exists activity_chat_messages_activity_created_idx
 
 create index if not exists activity_chat_messages_sender_idx
   on public.activity_chat_messages (sender_user_id);
+
+create index if not exists activities_host_user_id_idx
+  on public.activities (host_user_id);
+
+create index if not exists activity_participants_user_id_idx
+  on public.activity_participants (user_id);
 
 alter table public.activity_chat_messages enable row level security;
 
@@ -287,14 +293,14 @@ begin
   -- Only insert seed data if the activities table is empty
   if (select count(*) from public.activities) = 0 then
     insert into public.activities
-      (title, host_user_id, location, starts_at, description, participants_max, category, map_pin_x, map_pin_y)
+      (title, host_user_id, location, starts_at, description, participants_max, category, latitude, longitude)
     values
-      ('Søndagsfotball på Frogner',    demo_host, 'Frognerparken',      '2026-04-13 14:00:00+02', 'Uformell 7er-fotball for alle nivåer. Ta med studenter og venner! Vi deler oss i lag på stedet.',           14, 'Sport & Trening', 36, 42),
-      ('Morgenjoggen langs Akerselva', demo_host, 'Grünerløkka',        '2026-04-12 07:30:00+02', 'Lett joggetur på ca. 5 km langs elva. Passer perfekt for nybegynnere og de som ønsker en rolig start på dagen.', 12, 'Sport & Trening', 61, 34),
-      ('Yoga i parken',                demo_host, 'Sofienbergparken',   '2026-04-12 10:00:00+02', 'Utendørs yoga for alle nivåer. Ta med matte og vann. Vi fokuserer på pust, balanse og tilstedeværelse.',      15, 'Sport & Trening', 68, 48),
-      ('Klatring på Kolsås',           demo_host, 'Kolsåstoppen',       '2026-04-13 09:00:00+02', 'Klatring i fantastisk natur vest for Oslo. Erfaring kreves. Eget klatreutstyr medbringes.',                    8, 'Sport & Trening', 19, 54),
-      ('Padel-turnering Aker Brygge',  demo_host, 'Aker Brygge Padel',  '2026-04-10 18:00:00+02', 'Enkelt padel-turnering med pokalseremoni etterpå. Alle velkomne, blandede nivåer og aldre.',                  16, 'Sport & Trening', 44, 69),
-      ('Langsykling Oslofjorden',      demo_host, 'Vippetangen',        '2026-04-13 08:00:00+02', '60 km rundtur rundt Oslofjorden. Treningstur for erfarne syklister. Tempoet tilpasses gruppen.',              10, 'Sport & Trening', 51, 77);
+      ('Søndagsfotball på Frogner',    demo_host, 'Frognerparken',      '2026-04-13 14:00:00+02', 'Uformell 7er-fotball for alle nivåer. Ta med studenter og venner! Vi deler oss i lag på stedet.',           14, 'Sport & Trening', 59.9266, 10.6990),
+      ('Morgenjoggen langs Akerselva', demo_host, 'Grünerløkka',        '2026-04-12 07:30:00+02', 'Lett joggetur på ca. 5 km langs elva. Passer perfekt for nybegynnere og de som ønsker en rolig start på dagen.', 12, 'Sport & Trening', 59.9233, 10.7594),
+      ('Yoga i parken',                demo_host, 'Sofienbergparken',   '2026-04-12 10:00:00+02', 'Utendørs yoga for alle nivåer. Ta med matte og vann. Vi fokuserer på pust, balanse og tilstedeværelse.',      15, 'Sport & Trening', 59.9219, 10.7710),
+      ('Klatring på Kolsås',           demo_host, 'Kolsåstoppen',       '2026-04-13 09:00:00+02', 'Klatring i fantastisk natur vest for Oslo. Erfaring kreves. Eget klatreutstyr medbringes.',                    8, 'Sport & Trening', 59.9394, 10.5132),
+      ('Padel-turnering Aker Brygge',  demo_host, 'Aker Brygge Padel',  '2026-04-10 18:00:00+02', 'Enkelt padel-turnering med pokalseremoni etterpå. Alle velkomne, blandede nivåer og aldre.',                  16, 'Sport & Trening', 59.9095, 10.7286),
+      ('Langsykling Oslofjorden',      demo_host, 'Vippetangen',        '2026-04-13 08:00:00+02', '60 km rundtur rundt Oslofjorden. Treningstur for erfarne syklister. Tempoet tilpasses gruppen.',              10, 'Sport & Trening', 59.9035, 10.7461);
 
     raise notice 'Seeded 6 activities with host user %', demo_host;
   else

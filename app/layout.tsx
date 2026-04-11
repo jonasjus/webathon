@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Geist_Mono, Manrope, Newsreader } from "next/font/google";
+import "leaflet/dist/leaflet.css";
 import "./globals.css";
 
 const manrope = Manrope({

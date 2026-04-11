@@ -48,6 +48,17 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 
 The schema also installs a Postgres trigger that automatically creates a `profiles` row whenever a new user signs up — you don't need to insert it manually.
 
+### Existing project migration
+
+If your database already has `activities.map_pin_x` / `activities.map_pin_y`, do not just re-run the full schema on top of production data.
+
+If you already deleted the old activities, run:
+
+1. `supabase/migrations/20260411_activity_coordinates.sql`
+2. `supabase/migrations/20260411_optimize_activity_related_rls_and_indexes.sql`
+
+This upgrades the table to real `latitude` / `longitude` values used by the interactive map and keeps the common activity-related indexes/policies aligned with the app.
+
 ---
 
 ## 5. Enable email authentication
@@ -88,13 +99,9 @@ The `schema.sql` file includes a seed block for the 6 original Oslo activities. 
 3. Sign up with your name, email, and a password (minimum 6 characters). You will be redirected to `/` — the feed will be empty for now.
 4. In the Supabase dashboard, go to **Table Editor → profiles**.
 5. Copy the `id` (UUID) of the user you just created.
-6. Open `supabase/schema.sql` and find this line near the bottom:
-   ```sql
-   demo_host uuid := '00000000-0000-0000-0000-000000000001'; -- REPLACE THIS
-   ```
-7. Replace `'00000000-0000-0000-0000-000000000001'` with your actual UUID (keep the single quotes).
-8. Copy just the `do $$ ... end; $$;` block from `schema.sql` and run it in the SQL Editor.
-9. Reload [http://localhost:3000](http://localhost:3000) — you should see the 6 activities.
+6. Copy just the seed `do $$ ... end; $$;` block from the bottom of `supabase/schema.sql` and run it in the SQL Editor.
+7. The block automatically picks the first registered user as host for the demo activities.
+8. Reload [http://localhost:3000](http://localhost:3000) — you should see the 6 activities.
 
 ---
 

@@ -1,3 +1,5 @@
+import type { MapCoordinates } from "../map";
+
 // ---------------------------------------------------------------------------
 // Raw DB row types (mirrors what Supabase returns from the query)
 // ---------------------------------------------------------------------------
@@ -23,8 +25,8 @@ export interface ActivityRow {
   description: string;
   participants_max: number;
   category: ActivityCategory;
-  map_pin_x: number;
-  map_pin_y: number;
+  latitude: number;
+  longitude: number;
   created_at: string;
 }
 
@@ -81,7 +83,7 @@ export interface Activity {
   participantsCurrent: number;
   participantsMax: number;
   category: ActivityCategory;
-  mapPin: { x: number; y: number };
+  coordinates: MapCoordinates;
   startsAt: string;
   isJoined: boolean;
   hostUserId: string;

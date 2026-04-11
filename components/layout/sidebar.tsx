@@ -20,7 +20,7 @@ const baseNavigation: ReadonlyArray<{
   { label: "Profil", icon: User },
   { label: "Mine arrangementer", href: "/mine-aktiviteter", icon: Calendar },
   { label: "Meldinger", href: "/meldinger", icon: MessageCircle },
-  { label: "Kart", icon: Map },
+  { label: "Kart", href: "/kart", icon: Map },
   { label: "Innstillinger", href: "/instillinger", icon: Settings },
 ];
 
