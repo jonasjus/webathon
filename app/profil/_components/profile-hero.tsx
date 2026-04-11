@@ -125,7 +125,7 @@ export function ProfileHero({
 
   return (
     <>
-      <section className="overflow-hidden border-b border-[var(--border)]">
+      <section className="overflow-hidden rounded-[32px]">
         <div className="relative flex min-h-[19rem] items-center overflow-hidden px-6 py-8 sm:min-h-[20.5rem] sm:px-8 sm:py-10">
           <div
             className="absolute inset-0"

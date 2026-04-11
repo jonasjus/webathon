@@ -81,13 +81,13 @@ export default async function ProfileByIdPage({
   };
 
   return (
-    <main className="min-h-screen bg-[var(--canvas)] px-4 py-6 sm:px-6 xl:px-8">
-      <div className="mx-auto grid max-w-[1440px] gap-6 xl:grid-cols-[248px_minmax(0,1fr)]">
-        <div className="xl:sticky xl:top-6 xl:h-[calc(100vh-3rem)]">
+    <main className="min-h-screen bg-[var(--canvas)] px-4 py-6 sm:px-6 xl:p-0">
+      <div className="mx-auto grid max-w-[1440px] gap-6 xl:max-w-none xl:gap-0 xl:grid-cols-[248px_minmax(0,1fr)]">
+        <div className="xl:sticky xl:top-0 xl:h-screen">
           <Sidebar activeItem="Profil" user={currentUser} />
         </div>
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 xl:px-8 xl:py-6">
           {error && (
             <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
               {decodeURIComponent(error)}

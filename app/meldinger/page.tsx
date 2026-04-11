@@ -29,20 +29,22 @@ export default async function MessagesPage(props: MessagesPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-(--canvas) px-4 py-6 sm:px-6 xl:h-screen xl:overflow-hidden xl:px-8">
-      <div className="mx-auto grid max-w-360 gap-6 xl:h-full xl:min-h-0 xl:grid-cols-[248px_minmax(0,1fr)]">
-        <div className="xl:h-full xl:min-h-0">
+    <main className="min-h-screen bg-(--canvas) px-4 py-6 sm:px-6 xl:h-screen xl:overflow-hidden xl:p-0">
+      <div className="mx-auto grid max-w-360 gap-6 xl:h-full xl:min-h-0 xl:max-w-none xl:gap-0 xl:grid-cols-[248px_minmax(0,1fr)]">
+        <div className="xl:sticky xl:top-0 xl:h-screen xl:min-h-0">
           <Sidebar activeItem="Meldinger" user={data.sidebarUser} />
         </div>
 
-        <MessagesWorkspace
-          currentUser={data.sidebarUser}
-          currentUserId={data.currentUserId}
-          initialSummaries={data.summaries}
-          initialMessagesByActivityId={data.messagesByActivityId}
-          initialSelectedActivityId={data.selectedActivityId}
-          initialSelectionNotice={data.selectionNotice}
-        />
+        <div className="xl:flex xl:h-full xl:min-h-0 xl:flex-col xl:px-8 xl:py-6">
+          <MessagesWorkspace
+            currentUser={data.sidebarUser}
+            currentUserId={data.currentUserId}
+            initialSummaries={data.summaries}
+            initialMessagesByActivityId={data.messagesByActivityId}
+            initialSelectedActivityId={data.selectedActivityId}
+            initialSelectionNotice={data.selectionNotice}
+          />
+        </div>
       </div>
     </main>
   );
