@@ -374,8 +374,8 @@ export function MessagesWorkspace({
   }
 
   return (
-    <div className="flex flex-col gap-6 xl:h-full xl:min-h-0">
-      <section className="border-b border-[var(--border)] pb-8 sm:pb-10">
+    <div className="flex flex-col gap-2 xl:h-full xl:min-h-0">
+      <section className="border-[var(--border)] pb-8 sm:pb-2">
         <div className="max-w-5xl">
           <div>
             <h1 className="max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">

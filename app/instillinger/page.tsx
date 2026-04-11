@@ -47,8 +47,8 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
           />
         </div>
 
-        <div className="flex flex-col gap-6 xl:px-8 xl:py-6">
-          <section className="border-b border-[var(--border)] pb-8 sm:pb-10">
+        <div className="flex flex-col gap-4 xl:px-8 xl:py-6">
+          <section className="border-b border-[var(--border)] pb-8 sm:pb-4">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <h1 className="text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
