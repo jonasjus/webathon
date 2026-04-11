@@ -171,17 +171,17 @@ export function LocationPicker({
 
       <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface-muted)] p-3">
         <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-[var(--ink-muted)]">
-          <span className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1">
+          <span className="inline-flex items-center gap-1 rounded-full bg-[var(--surface)] px-3 py-1">
             <MapPin className="h-3.5 w-3.5" />
             Klikk i kartet eller dra pinnen for å velge sted
           </span>
           {coordinates ? (
-            <span className="rounded-full bg-white px-3 py-1">
+            <span className="rounded-full bg-[var(--surface)] px-3 py-1">
               {coordinates.lat.toFixed(5)}, {coordinates.lng.toFixed(5)}
             </span>
           ) : null}
           {isResolvingPin ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1">
+            <span className="inline-flex items-center gap-1 rounded-full bg-[var(--surface)] px-3 py-1">
               <LoaderCircle className="h-3.5 w-3.5 animate-spin" />
               Oppdaterer adresse…
             </span>

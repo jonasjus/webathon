@@ -25,12 +25,12 @@ export function ParticipantStack({
             initials={participant.initials}
             color={participant.avatarColor}
             size={32}
-            className="border-2 border-white shadow-sm"
+            className="border-2 border-[var(--surface)] shadow-sm"
           />
         ))}
 
         {overflowCount > 0 ? (
-          <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-[var(--surface-muted)] text-[10px] font-semibold text-[var(--ink)] shadow-sm">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[var(--surface)] bg-[var(--surface-muted)] text-[10px] font-semibold text-[var(--ink)] shadow-sm">
             +{overflowCount}
           </span>
         ) : null}

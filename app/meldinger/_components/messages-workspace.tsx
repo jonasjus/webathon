@@ -9,7 +9,6 @@ import {
   useRef,
   useState,
   useTransition,
-  type UIEvent,
 } from "react";
 import { Avatar } from "@/components/account/avatar";
 import { formatChatTimestamp, isActivityChatActive } from "@/lib/date-time";
@@ -190,18 +189,6 @@ export function MessagesWorkspace({
   }
 
   function applyIncomingMessage(message: ActivityChatMessage) {
-    const existingMessages = messagesByActivityIdRef.current[message.activityId] ?? [];
-    if (existingMessages.some((entry) => entry.id === message.id)) return;
-
-    const isSelectedChat = message.activityId === selectedActivityIdRef.current;
-    const shouldScrollToLatest =
-      isSelectedChat &&
-      (message.sender.id === currentUserId || shouldAutoFollowThreadRef.current);
-
-    if (shouldScrollToLatest) {
-      pendingScrollBehaviorRef.current = "auto";
-    }
-
     setMessagesByActivityId((current) => {
       const existing = current[message.activityId] ?? [];
       if (existing.some((entry) => entry.id === message.id)) return current;
@@ -373,10 +360,6 @@ export function MessagesWorkspace({
     };
   }, [currentUser, summaries, supabase]);
 
-  function handleMessagesScroll(event: UIEvent<HTMLDivElement>) {
-    shouldAutoFollowThreadRef.current = isThreadNearBottom(event.currentTarget);
-  }
-
   async function sendMessage() {
     const body = draft.trim();
     if (!selectedActivityId) return;
@@ -429,19 +412,19 @@ export function MessagesWorkspace({
   }
 
   return (
-    <div className="flex flex-col gap-6 xl:h-full xl:min-h-0 xl:overflow-hidden">
-      <section className="shrink-0 overflow-hidden rounded-[36px] border border-[var(--border)] bg-[var(--surface-muted)] p-6 shadow-[var(--section-hero-shadow)] sm:p-8">
+    <div className="flex flex-col gap-6">
+      <section className="overflow-hidden rounded-[36px] border border-[var(--border)] bg-[var(--surface-muted)] p-6 shadow-[var(--section-hero-shadow)] sm:p-8">
         <div className="max-w-5xl">
           <div>
-            <p className="inline-flex rounded-full border border-[var(--hero-pill-border)] bg-[var(--hero-pill-bg)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm backdrop-blur-sm">
-              Meldinger
-            </p>
-            <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
-              Dine gruppechatter
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">
-              Gruppechatter for arrangementene du er med på eller arrangerer.
-            </p>
+        <p className="inline-flex rounded-full border border-[var(--hero-pill-border)] bg-[var(--hero-pill-bg)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm backdrop-blur-sm">
+          Meldinger
+        </p>
+        <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
+          Dine gruppechatter
+        </h1>
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">
+          Gruppechatter for arrangementene du er med på eller arrangerer.
+        </p>
           </div>
         </div>
       </section>

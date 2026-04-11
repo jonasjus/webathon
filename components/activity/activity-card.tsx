@@ -52,10 +52,10 @@ function isNestedInteractiveTarget(
 
 function getUrgencyStyles(days: number | undefined): string {
   if (days === undefined) return "border-[var(--border)] bg-[var(--surface)]";
-  if (days === 0) return "border-[var(--sage-500)] bg-[linear-gradient(135deg,rgba(122,160,96,0.3),rgba(237,244,225,0.9))]";
-  if (days === 1) return "border-[rgba(122,160,96,0.65)] bg-[rgba(237,244,225,0.7)]";
-  if (days <= 3) return "border-[rgba(122,160,96,0.4)] bg-[rgba(237,244,225,0.4)]";
-  if (days <= 6) return "border-[rgba(122,160,96,0.22)] bg-[rgba(237,244,225,0.18)]";
+  if (days === 0) return "border-[var(--sage-500)] bg-[linear-gradient(135deg,rgba(122,160,96,0.22),var(--surface))]";
+  if (days === 1) return "border-[rgba(122,160,96,0.65)] bg-[rgba(122,160,96,0.14)]";
+  if (days <= 3) return "border-[rgba(122,160,96,0.4)] bg-[rgba(122,160,96,0.08)]";
+  if (days <= 6) return "border-[rgba(122,160,96,0.22)] bg-[rgba(122,160,96,0.05)]";
   return "border-[var(--border)] bg-[var(--surface)]";
 }
 
