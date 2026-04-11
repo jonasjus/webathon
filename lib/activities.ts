@@ -4,6 +4,7 @@ import { createClient } from "./supabase/server";
 import type {
   Activity,
   ActivityCategory,
+  ActivityInterestCategory,
   ActivityParticipantPreview,
 } from "./supabase/types";
 import { formatNorwegianDate, formatNorwegianTime } from "./date-time";
@@ -28,6 +29,8 @@ interface ActivityQueryRow {
     initials: string;
     avatar_color: string;
     avatar_url: string | null;
+    bio: string | null;
+    favorite_categories: ActivityInterestCategory[];
   } | null;
   activity_participants: {
     user_id: string;
@@ -91,7 +94,7 @@ export const getActivities = cache(async (): Promise<Activity[]> => {
       `
       id, title, host_user_id, location, starts_at, description,
       participants_max, category, map_pin_x, map_pin_y,
-      host:profiles!host_user_id ( display_name, initials, avatar_color, avatar_url ),
+      host:profiles!host_user_id ( display_name, initials, avatar_color, avatar_url, bio, favorite_categories ),
       activity_participants (
         user_id,
         joined_at,
@@ -116,6 +119,8 @@ export const getActivities = cache(async (): Promise<Activity[]> => {
       host: profile?.display_name ?? "Ukjent",
       hostInitials: profile?.initials ?? "??",
       hostColor: profile?.avatar_color ?? "#5FA8D3",
+      hostBio: profile?.bio ?? null,
+      hostFavoriteCategories: profile?.favorite_categories ?? [],
       location: row.location,
       date: formatNorwegianDate(row.starts_at),
       time: formatNorwegianTime(row.starts_at),

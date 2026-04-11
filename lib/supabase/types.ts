@@ -74,6 +74,8 @@ export interface Activity {
   host: string;
   hostInitials: string;
   hostColor: string;
+  hostBio: string | null;
+  hostFavoriteCategories: ActivityInterestCategory[];
   location: string;
   date: string;
   time: string;
