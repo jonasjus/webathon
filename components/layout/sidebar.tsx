@@ -80,7 +80,7 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
           const content = (
             <>
               <span
-                className={`flex h-[clamp(1.9rem,4.5vh,2.5rem)] w-[clamp(1.9rem,4.5vh,2.5rem)] items-center justify-center rounded-2xl transition ${
+                className={`flex h-[clamp(2.67rem,4.5vh,2.5rem)] w-[clamp(2.67rem,4.5vh,2.5rem)] items-center justify-center rounded-2xl transition ${
                   isActive
                     ? "bg-[var(--sage-500)] text-white shadow-sm"
                     : "bg-[var(--surface-muted)] text-[var(--ink-muted)] group-hover:bg-white group-hover:text-[var(--ink)]"
@@ -88,7 +88,7 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
               >
                 <Icon className="h-[clamp(0.8rem,1.85vh,1rem)] w-[clamp(0.8rem,1.85vh,1rem)]" />
               </span>
-              <span className="flex-1">{item.label}</span>
+              <span className="flex-1 text-[clamp(0.72rem,2vh,0.875rem)]">{item.label}</span>
             </>
           );
 
