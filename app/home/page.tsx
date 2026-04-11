@@ -98,10 +98,7 @@ export default async function HomePage() {
           <section className="border-b border-[var(--border)] pb-8 sm:pb-10">
             <div className="max-w-5xl">
               <div>
-                <p className="inline-flex rounded-full border border-[var(--hero-pill-border)] bg-[var(--hero-pill-bg)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm backdrop-blur-sm">
-                  Hjem
-                </p>
-                <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
+                <h1 className="max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
                   {currentUser
                     ? `Hei, ${firstName}. Klar for neste arrangement?`
                     : "Bygg din egen arrangementsuke i venue."}

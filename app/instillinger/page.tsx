@@ -51,10 +51,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
           <section className="border-b border-[var(--border)] pb-8 sm:pb-10">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <p className="inline-flex rounded-full border border-[var(--hero-pill-border)] bg-[var(--hero-pill-bg)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm">
-                  Konto, sikkerhet og utseende
-                </p>
-                <h1 className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
+                <h1 className="text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
                   Innstillinger
                 </h1>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">

@@ -378,10 +378,7 @@ export function MessagesWorkspace({
       <section className="border-b border-[var(--border)] pb-8 sm:pb-10">
         <div className="max-w-5xl">
           <div>
-            <p className="inline-flex rounded-full border border-[var(--hero-pill-border)] bg-[var(--hero-pill-bg)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm backdrop-blur-sm">
-              Meldinger
-            </p>
-            <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
+            <h1 className="max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
               Dine gruppechatter
             </h1>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">

@@ -48,7 +48,7 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
     <aside className="flex h-full min-h-0 flex-col border-b border-[var(--border)] bg-[var(--sidebar-surface)] px-4 py-4 xl:border-b-0 xl:border-r xl:px-5 xl:py-6 xl:pr-6">
       <div className="flex items-center gap-3 border-b border-[var(--border)] pb-5">
         <Image
-          src="/venue-mark.svg"
+          src="/venue_logo.png"
           alt="Venue logo"
           width={44}
           height={44}
