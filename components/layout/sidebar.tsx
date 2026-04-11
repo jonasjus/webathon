@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   Calendar,
@@ -47,8 +48,14 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
     <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]">
       <div className="rounded-[24px] bg-[linear-gradient(160deg,rgba(122,160,96,0.18),rgba(95,168,211,0.14),rgba(255,255,255,0.95))] p-4">
         <div className="flex flex-col items-center gap-4 py-2 text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-[22px] border border-dashed border-[var(--sage-400)] bg-white/70 text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--ink-subtle)] shadow-sm">
-            Logo
+          <div className="flex h-20 w-20 items-center justify-center rounded-[24px] border border-white/80 bg-white/80 p-2 shadow-sm">
+            <Image
+              src="/venue_logo.png"
+              alt="Venue logo"
+              width={64}
+              height={64}
+              className="h-full w-full object-contain"
+            />
           </div>
 
           <h1 className="text-4xl font-semibold tracking-[-0.06em] text-[var(--ink)]">
