@@ -127,24 +127,24 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
                 color={user.avatarColor}
               />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-[var(--ink)]">
+                <p className="truncate text-[clamp(0.72rem,1.22vh,0.875rem)] font-semibold text-[var(--ink)]">
                   {user.displayName}
                 </p>
-                <p className="text-xs text-[var(--ink-subtle)]">Din profil er aktiv</p>
+                <p className="text-[clamp(0.65rem,1.05vh,0.75rem)] text-[var(--ink-subtle)]">Din profil er aktiv</p>
               </div>
             </div>
 
             <div className="mt-[clamp(0.75rem,1.5vh,1rem)] flex items-center justify-between gap-[clamp(0.625rem,1vw,0.75rem)]">
               <Link
                 href={profileHref}
-                className="text-sm font-medium text-[var(--sage-700)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+                className="text-[clamp(0.72rem,1.22vh,0.875rem)] font-medium text-[var(--sage-700)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
               >
                 Åpne profil
               </Link>
               <form action={signOut}>
                 <button
                   type="submit"
-                  className="text-sm font-medium text-[var(--sage-700)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+                  className="text-[clamp(0.72rem,1.22vh,0.875rem)] font-medium text-[var(--sage-700)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
                 >
                   Logg ut
                 </button>
