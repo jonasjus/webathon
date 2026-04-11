@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Geist_Mono, Manrope, Newsreader } from "next/font/google";
+import Script from "next/script";
+import { getThemeInitScript } from "@/lib/theme";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
 
@@ -32,10 +34,17 @@ export default function RootLayout({
   return (
     <html
       lang="nb"
+      suppressHydrationWarning
+      data-theme="light"
       data-scroll-behavior="smooth"
       className={`${manrope.variable} ${newsreader.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Script id="theme-init" strategy="beforeInteractive">
+          {getThemeInitScript()}
+        </Script>
+        {children}
+      </body>
     </html>
   );
 }

@@ -85,11 +85,14 @@ export function ActivityDetailDialog({
         type="button"
         aria-label="Lukk arrangementsdetaljer"
         onClick={onClose}
-        className="absolute inset-0 bg-[rgba(15,27,18,0.52)] backdrop-blur-[3px]"
+        className="absolute inset-0 bg-[var(--overlay-scrim)] backdrop-blur-[3px]"
       />
 
-      <div className="relative z-10 flex max-h-[100dvh] w-full max-w-5xl flex-col overflow-hidden rounded-t-[2rem] border border-[var(--border)] bg-[var(--surface)] shadow-[0_32px_96px_-32px_rgba(15,27,18,0.55)] sm:max-h-[calc(100vh-3rem)] sm:rounded-[2rem]">
-        <div className="border-b border-[var(--border)] bg-[linear-gradient(135deg,rgba(122,160,96,0.18),rgba(237,244,225,0.9)_50%,rgba(255,255,255,0.98))] px-5 py-5 sm:px-6 sm:py-6">
+      <div className="relative z-10 flex max-h-[100dvh] w-full max-w-5xl flex-col overflow-hidden rounded-t-[2rem] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--modal-shadow)] sm:max-h-[calc(100vh-3rem)] sm:rounded-[2rem]">
+        <div
+          className="border-b border-[var(--border)] px-5 py-5 sm:px-6 sm:py-6"
+          style={{ background: "var(--dialog-header-bg)" }}
+        >
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
@@ -122,7 +125,11 @@ export function ActivityDetailDialog({
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/80 bg-white/90 text-[var(--ink-muted)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border text-[var(--ink-muted)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+              style={{
+                backgroundColor: "var(--dialog-close-bg)",
+                borderColor: "var(--dialog-close-border)",
+              }}
               aria-label="Lukk"
             >
               <X className="h-4 w-4" />

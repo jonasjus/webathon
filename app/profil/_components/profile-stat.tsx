@@ -5,7 +5,14 @@ interface ProfileStatProps {
 
 export function ProfileStat({ label, value }: ProfileStatProps) {
   return (
-    <div className="rounded-[24px] border border-white/55 bg-white/72 px-4 py-3 text-center shadow-[0_10px_28px_-22px_rgba(15,27,18,0.55)] backdrop-blur-sm">
+    <div
+      className="rounded-[24px] border px-4 py-3 text-center backdrop-blur-sm"
+      style={{
+        background: "var(--profile-stat-bg)",
+        borderColor: "var(--profile-stat-border)",
+        boxShadow: "var(--profile-stat-shadow)",
+      }}
+    >
       <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)] sm:text-xs">
         {label}
       </p>

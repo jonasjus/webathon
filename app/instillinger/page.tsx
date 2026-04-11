@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SettingsIdentityChip } from "./_components/settings-identity-chip";
 import { SettingsProfileCard } from "./_components/settings-profile-card";
 import { SettingsSecurityCard } from "./_components/settings-security-card";
+import { SettingsThemeCard } from "./_components/settings-theme-card";
 
 interface SettingsPageProps {
   searchParams: Promise<{ error?: string; success?: string }>;
@@ -51,7 +52,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-xs font-medium uppercase tracking-wider text-[var(--ink-muted)]">
-                  Konto og sikkerhet
+                  Konto, sikkerhet og utseende
                 </p>
                 <h1 className="mt-1 text-2xl font-semibold tracking-tight text-[var(--ink)]">
                   Innstillinger
@@ -81,12 +82,13 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
             <div className="grid gap-4 lg:grid-cols-2">
               <SettingsProfileCard displayName={displayName} />
               <SettingsSecurityCard />
+              <SettingsThemeCard />
             </div>
 
-            <div className="rounded-2xl border border-red-200 bg-[color:rgba(239,68,68,0.03)] p-5 shadow-sm">
+            <div className="rounded-2xl border border-[color:rgba(239,68,68,0.18)] bg-[color:rgba(239,68,68,0.08)] p-5 shadow-sm">
               <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-8">
                 <div className="flex min-w-0 flex-1 items-start gap-3">
-                  <span className="mt-0.5 inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-[color:rgba(239,68,68,0.1)] text-red-600">
+                  <span className="mt-0.5 inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-[color:rgba(239,68,68,0.16)] text-red-400">
                     <svg
                       viewBox="0 0 24 24"
                       className="h-3.5 w-3.5 fill-none stroke-current"
@@ -98,8 +100,8 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
                     </svg>
                   </span>
                   <div>
-                    <h2 className="card-title text-[1.45rem] text-red-950">Slett konto</h2>
-                    <p className="mt-3 text-sm leading-6 text-gray-600">
+                    <h2 className="card-title text-[1.45rem] text-red-200">Slett konto</h2>
+                    <p className="mt-3 text-sm leading-6 text-[var(--ink-muted)]">
                       Dette sletter brukeren din <strong>permanent</strong>,
                       inkludert arrangementer og deltakelser.
                     </p>

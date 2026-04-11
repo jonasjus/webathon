@@ -46,9 +46,18 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
 
   return (
     <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-[clamp(0.8rem,1.8vh,1.25rem)] shadow-[var(--shadow-card)]">
-        <div className="rounded-[24px] bg-[linear-gradient(160deg,rgba(122,160,96,0.18),rgba(95,168,211,0.14),rgba(255,255,255,0.95))] p-4">
+      <div
+        className="rounded-[24px] p-4"
+        style={{ background: "var(--sidebar-brand-bg)" }}
+      >
         <div className="flex flex-col items-center gap-4 py-2 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-[24px] border border-white/80 bg-white/80 p-2 shadow-sm">
+          <div
+            className="flex h-20 w-20 items-center justify-center rounded-[24px] border p-2 shadow-sm"
+            style={{
+              backgroundColor: "var(--sidebar-logo-bg)",
+              borderColor: "var(--sidebar-logo-border)",
+            }}
+          >
             <Image
               src="/venue_logo.png"
               alt="Venue logo"
@@ -83,7 +92,7 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
                 className={`flex h-[clamp(2.67rem,4.5vh,2.5rem)] w-[clamp(2.67rem,4.5vh,2.5rem)] items-center justify-center rounded-2xl transition ${
                   isActive
                     ? "bg-[var(--sage-500)] text-white shadow-sm"
-                    : "bg-[var(--surface-muted)] text-[var(--ink-muted)] group-hover:bg-white group-hover:text-[var(--ink)]"
+                    : "bg-[var(--surface-muted)] text-[var(--ink-muted)] group-hover:bg-[var(--surface-elevated)] group-hover:text-[var(--ink)]"
                 }`}
               >
                 <Icon className="h-[clamp(0.8rem,1.85vh,1rem)] w-[clamp(0.8rem,1.85vh,1rem)]" />

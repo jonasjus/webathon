@@ -95,14 +95,14 @@ export function HostProfileTrigger({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className={`inline-flex items-center gap-2 rounded-full bg-[var(--sage-50)] font-medium text-[var(--sage-700)] transition hover:bg-[#e5efda] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${compact ? "px-2 py-1 text-xs" : "px-2.5 py-1.5 text-sm"}`}
+        className={`inline-flex items-center gap-2 rounded-full bg-[var(--sage-50)] font-medium text-[var(--sage-700)] transition hover:bg-[var(--surface-elevated)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${compact ? "px-2 py-1 text-xs" : "px-2.5 py-1.5 text-sm"}`}
       >
         <Avatar
           src={avatarUrl}
           initials={initials}
           color={color}
           size={compact ? 18 : 20}
-          className="ring-2 ring-white/80"
+          className="ring-2 ring-[var(--surface)]"
         />
         <span>
           Arrangør <span className="font-semibold">{host}</span>
@@ -126,9 +126,9 @@ export function HostProfileTrigger({
 
               <div
                 ref={dialogRef}
-                className="relative z-10 max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto overscroll-contain rounded-[32px] border border-[var(--border)] bg-[var(--surface)] shadow-[0_24px_64px_rgba(0,0,0,0.18)]"
+                className="relative z-10 max-h-[calc(100vh-2rem)] w-full max-w-md overflow-y-auto overscroll-contain rounded-[32px] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--modal-shadow)]"
               >
-                <div className="bg-[linear-gradient(135deg,rgba(122,160,96,0.24),rgba(237,244,225,0.92)_52%,rgba(255,255,255,0.98))] px-6 py-6">
+                <div className="px-6 py-6" style={{ background: "var(--dialog-header-bg)" }}>
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-4">
                       <Avatar
@@ -136,7 +136,7 @@ export function HostProfileTrigger({
                         initials={initials}
                         color={color}
                         size={72}
-                        className="rounded-[24px] ring-4 ring-white/80"
+                        className="rounded-[24px] ring-4 ring-[var(--surface)]"
                       />
                       <div className="min-w-0">
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">
@@ -151,7 +151,11 @@ export function HostProfileTrigger({
                     <button
                       type="button"
                       onClick={() => setIsOpen(false)}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/80 bg-white/80 text-[var(--ink-muted)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border text-[var(--ink-muted)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+                      style={{
+                        backgroundColor: "var(--dialog-close-bg)",
+                        borderColor: "var(--dialog-close-border)",
+                      }}
                       aria-label="Lukk"
                     >
                       <X className="h-4 w-4" />
