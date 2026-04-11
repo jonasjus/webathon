@@ -45,59 +45,45 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
   );
 
   return (
-    <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-[clamp(0.8rem,1.8vh,1.25rem)] shadow-[var(--shadow-card)]">
-      <div
-        className="rounded-[24px] p-4"
-        style={{ background: "var(--sidebar-brand-bg)" }}
-      >
-        <div className="flex flex-col items-center gap-4 py-2 text-center">
-          <div
-            className="flex h-20 w-20 items-center justify-center rounded-[24px] border p-2 shadow-sm"
-            style={{
-              backgroundColor: "var(--sidebar-logo-bg)",
-              borderColor: "var(--sidebar-logo-border)",
-            }}
-          >
-            <Image
-              src="/venue_logo.png"
-              alt="Venue logo"
-              width={64}
-              height={64}
-              className="h-full w-full object-contain"
-            />
-          </div>
-
-          <h1 className="text-[clamp(2rem,4.8vh,2.25rem)] font-semibold tracking-[-0.06em] text-[var(--ink)]">
-            VENUE
-          </h1>
-        </div>
+    <aside className="flex h-full min-h-0 flex-col border-b border-[var(--border)] bg-[var(--sidebar-surface)] px-4 py-4 xl:border-b-0 xl:border-r xl:px-5 xl:py-6 xl:pr-6">
+      <div className="flex items-center gap-3 border-b border-[var(--border)] pb-5">
+        <Image
+          src="/venue-mark.svg"
+          alt="Venue logo"
+          width={44}
+          height={44}
+          className="h-11 w-11 object-contain"
+        />
+        <h1 className="text-[clamp(1.35rem,2.8vh,1.65rem)] font-semibold tracking-[-0.05em] text-[var(--ink)]">
+          VENUE
+        </h1>
       </div>
 
       <nav
-        className="mt-[clamp(0.75rem,2.2vh,2rem)] flex-1 space-y-[clamp(0.2rem,0.55vh,0.5rem)] overflow-hidden"
+        className="mt-5 flex-1 space-y-1.5 overflow-y-auto pr-2"
         aria-label="Hovednavigasjon"
       >
         {navigation.map((item) => {
           const isActive = item.label === activeItem;
           const Icon = item.icon;
-          const className = `group flex w-full items-center gap-[clamp(0.45rem,1.1vh,0.75rem)] rounded-2xl px-[clamp(0.45rem,1.2vh,0.75rem)] py-[clamp(0.35rem,1.05vh,0.75rem)] text-left text-[clamp(0.72rem,1.22vh,0.875rem)] font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${
+          const className = `group flex w-full items-center gap-3 rounded-2xl border px-3 py-2.5 text-left text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${
             isActive
-              ? "bg-[var(--sage-50)] text-[var(--sage-700)]"
-              : "text-[var(--ink-muted)] hover:bg-[var(--surface-muted)] hover:text-[var(--ink)]"
+              ? "border-[var(--sidebar-active-border)] bg-[var(--sidebar-active-bg)] text-[var(--ink)] shadow-[var(--shadow-card)]"
+              : "border-transparent text-[var(--ink-muted)] hover:border-[var(--border)] hover:bg-[var(--sidebar-hover-bg)] hover:text-[var(--ink)]"
           }`;
 
           const content = (
             <>
               <span
-                className={`flex h-[clamp(2.67rem,4.5vh,2.5rem)] w-[clamp(2.67rem,4.5vh,2.5rem)] items-center justify-center rounded-2xl transition ${
+                className={`flex h-10 w-10 items-center justify-center rounded-xl border transition ${
                   isActive
-                    ? "bg-[var(--sage-500)] text-white shadow-sm"
-                    : "bg-[var(--surface-muted)] text-[var(--ink-muted)] group-hover:bg-[var(--surface-elevated)] group-hover:text-[var(--ink)]"
+                    ? "border-[var(--sidebar-active-border)] bg-[var(--surface-muted)] text-[var(--sage-700)]"
+                    : "border-transparent bg-transparent text-[var(--ink-subtle)] group-hover:border-[var(--border)] group-hover:bg-[var(--surface)] group-hover:text-[var(--ink)]"
                 }`}
               >
-                <Icon className="h-[clamp(0.8rem,1.85vh,1rem)] w-[clamp(0.8rem,1.85vh,1rem)]" />
+                <Icon className="h-4 w-4" />
               </span>
-              <span className="flex-1 text-[clamp(0.72rem,2vh,0.875rem)]">{item.label}</span>
+              <span className="flex-1">{item.label}</span>
             </>
           );
 
@@ -122,34 +108,36 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
         })}
       </nav>
 
-      <div className="mt-[clamp(0.7rem,1.8vh,1.5rem)] flex-shrink-0">
+      <div className="mt-6 flex-shrink-0 border-t border-[var(--border)] pt-5">
         {user ? (
-          <div className="w-full rounded-[24px] border border-[var(--border)] bg-[var(--surface-muted)] p-[clamp(0.55rem,1.6vh,1rem)]">
-            <div className="flex items-center gap-[clamp(0.45rem,1.15vh,0.75rem)]">
+          <div className="w-full">
+            <div className="flex items-center gap-3">
               <Avatar
                 src={user.avatarUrl}
                 initials={user.initials}
                 color={user.avatarColor}
               />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[clamp(0.72rem,1.22vh,0.875rem)] font-semibold text-[var(--ink)]">
+                <p className="truncate text-sm font-semibold text-[var(--ink)]">
                   {user.displayName}
                 </p>
-                <p className="text-[clamp(0.65rem,1.05vh,0.75rem)] text-[var(--ink-subtle)]">Din profil er aktiv</p>
+                <p className="text-xs text-[var(--ink-subtle)]">
+                  Din profil er aktiv
+                </p>
               </div>
             </div>
 
-            <div className="mt-[clamp(0.45rem,1.3vh,1rem)] flex items-center justify-between gap-[clamp(0.45rem,1.15vh,0.75rem)]">
+            <div className="mt-4 flex items-center justify-between gap-3">
               <Link
                 href={profileHref}
-                className="text-[clamp(0.72rem,1.22vh,0.875rem)] font-medium text-[var(--sage-700)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+                className="text-sm font-medium text-[var(--sage-700)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
               >
                 Åpne profil
               </Link>
               <form action={signOut}>
                 <button
                   type="submit"
-                  className="text-[clamp(0.72rem,1.22vh,0.875rem)] font-medium text-[var(--sage-700)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+                  className="text-sm font-medium text-[var(--sage-700)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
                 >
                   Logg ut
                 </button>
@@ -159,7 +147,7 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
         ) : (
           <Link
             href="/login"
-            className="flex h-11 w-full items-center justify-center rounded-2xl border border-[var(--sage-500)] text-sm font-semibold text-[var(--sage-700)] transition hover:bg-[var(--sage-50)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+            className="flex h-11 w-full items-center justify-center rounded-xl border border-[var(--sage-500)] text-sm font-semibold text-[var(--sage-700)] transition hover:bg-[var(--sage-50)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
           >
             Logg inn
           </Link>

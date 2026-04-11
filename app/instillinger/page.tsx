@@ -48,7 +48,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
         </div>
 
         <div className="flex flex-col gap-6">
-          <section className="overflow-hidden rounded-[36px] border border-[var(--border)] bg-[var(--surface-muted)] p-6 shadow-[var(--section-hero-shadow)] sm:p-8">
+          <section className="border-b border-[var(--border)] pb-8 sm:pb-10">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <p className="inline-flex rounded-full border border-[var(--hero-pill-border)] bg-[var(--hero-pill-bg)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm">
@@ -84,7 +84,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
             </p>
           )}
 
-          <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
+          <section>
             <div className="grid gap-4 xl:grid-cols-3">
               <SettingsProfileCard displayName={displayName} />
               <SettingsSecurityCard />
@@ -92,7 +92,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
             </div>
           </section>
 
-          <section className="rounded-[32px] border border-[color:rgba(239,68,68,0.18)] bg-[color:rgba(239,68,68,0.08)] p-6 shadow-[var(--shadow-card)]">
+          <section className="border-t border-[color:rgba(239,68,68,0.24)] pt-6">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-8">
               <div className="flex min-w-0 flex-1 items-start gap-3">
                 <span className="mt-0.5 inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-[color:rgba(239,68,68,0.16)] text-red-400">

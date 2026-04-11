@@ -31,7 +31,7 @@ export function InteractiveMap({
   const [selectedActivityId, setSelectedActivityId] = useState<string>();
 
   return (
-    <section className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]">
+    <section>
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">

@@ -35,7 +35,7 @@ export default async function MyActivitiesPage() {
         </div>
 
         <div className="flex flex-col gap-6">
-          <section className="overflow-hidden rounded-[36px] border border-[var(--border)] bg-[var(--surface-muted)] p-6 shadow-[var(--section-hero-shadow)] sm:p-8">
+          <section className="border-b border-[var(--border)] pb-8 sm:pb-10">
             <div className="max-w-5xl">
               <div>
                 <p className="inline-flex rounded-full border border-[var(--hero-pill-border)] bg-[var(--hero-pill-bg)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm backdrop-blur-sm">
@@ -51,7 +51,7 @@ export default async function MyActivitiesPage() {
             </div>
           </section>
 
-          <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
+          <section>
             <ActivityBrowser
               activities={myActivities}
               isLoggedIn

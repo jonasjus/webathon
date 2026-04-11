@@ -114,7 +114,7 @@ export default async function ProfileByIdPage({
           />
 
           {/* Activities */}
-          <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
+          <section>
             <div className="flex flex-col gap-3 border-b border-[var(--border)] pb-6 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-sm font-medium text-[var(--ink-muted)]">

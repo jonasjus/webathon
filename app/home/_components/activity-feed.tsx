@@ -16,7 +16,7 @@ export function ActivityFeed({
   createCta,
 }: ActivityFeedProps) {
   return (
-    <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)]">
+    <section>
       <div className="border-b border-[var(--border)] pb-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="card-intro">

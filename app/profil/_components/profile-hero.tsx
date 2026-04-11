@@ -71,6 +71,13 @@ export function ProfileHero({
   const bioText = bio?.trim() ?? "";
   const hasBio = bioText.length > 0;
   const hasFavoriteCategories = favoriteCategories.length > 0;
+  const currentBannerPreset = BANNER_PRESETS.find((preset) => preset.id === bannerTheme);
+  const currentBannerLabel = currentBannerPreset?.label ?? (
+    bannerTheme && /^#/.test(bannerTheme) ? "Egendefinert" : BANNER_PRESETS[0].label
+  );
+  const currentBannerSwatch = currentBannerPreset?.swatch ?? (
+    bannerTheme && /^#/.test(bannerTheme) ? bannerTheme : BANNER_PRESETS[0].swatch
+  );
   const bannerThemeValue = useCustomColor
     ? customColor
     : (selectedPreset ?? BANNER_PRESETS[0].id);
@@ -118,7 +125,7 @@ export function ProfileHero({
 
   return (
     <>
-      <section className="overflow-hidden rounded-[32px] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card-strong)]">
+      <section className="overflow-hidden border-b border-[var(--border)]">
         <div className="relative flex min-h-[19rem] items-center overflow-hidden px-6 py-8 sm:min-h-[20.5rem] sm:px-8 sm:py-10">
           <div
             className="absolute inset-0"
@@ -172,7 +179,7 @@ export function ProfileHero({
         </div>
       </section>
 
-      <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-card)] sm:p-8">
+      <section className="py-6 sm:py-8">
         <form action={updateProfileDetails}>
           {editorOpen ? (
             <>
@@ -220,8 +227,8 @@ export function ProfileHero({
             )}
           </div>
 
-          <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-            <div>
+          <div className="mt-6 grid gap-4 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+            <section className="rounded-[28px] border border-[var(--border)] bg-[var(--surface-muted)] p-5 sm:p-6">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">
                 Bio
               </p>
@@ -244,57 +251,6 @@ export function ProfileHero({
                     </span>
                   </div>
 
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">
-                      Banner
-                    </p>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {BANNER_PRESETS.map((preset) => (
-                        <button
-                          key={preset.id}
-                          type="button"
-                          onClick={() => {
-                            setSelectedPreset(preset.id);
-                            setUseCustomColor(false);
-                          }}
-                          className={`h-10 w-16 rounded-2xl border-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${
-                            !useCustomColor && selectedPreset === preset.id
-                              ? "border-[var(--sage-500)] shadow-sm"
-                              : "border-transparent hover:border-[var(--border)]"
-                          }`}
-                          style={{ backgroundColor: preset.swatch }}
-                          title={preset.label}
-                          aria-label={preset.label}
-                          aria-pressed={!useCustomColor && selectedPreset === preset.id}
-                        />
-                      ))}
-
-                      <label
-                        className={`relative flex h-10 w-16 cursor-pointer items-center justify-center rounded-2xl border-2 transition focus-within:ring-2 focus-within:ring-[var(--sage-600)] focus-within:ring-offset-2 ${
-                          useCustomColor
-                            ? "border-[var(--sage-500)] shadow-sm"
-                            : "border-transparent hover:border-[var(--border)]"
-                        }`}
-                        style={{ background: customColor }}
-                        title="Egendefinert farge"
-                      >
-                        <span className="text-[10px] font-bold text-white/80 drop-shadow">
-                          Velg
-                        </span>
-                        <input
-                          type="color"
-                          value={customColor}
-                          onChange={(event) => {
-                            setCustomColor(event.target.value);
-                            setUseCustomColor(true);
-                            setSelectedPreset(null);
-                          }}
-                          className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-                          aria-label="Velg egendefinert farge"
-                        />
-                      </label>
-                    </div>
-                  </div>
                 </div>
               ) : (
                 <p className="card-copy mt-3 max-w-prose text-[15px]">
@@ -305,61 +261,141 @@ export function ProfileHero({
                       : "Ingen bio lagt til enda."}
                 </p>
               )}
-            </div>
+            </section>
 
-            <div className="border-t border-[var(--border)] pt-6 lg:border-t-0 lg:border-l lg:pl-8 lg:pt-0">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">
-                Interesser
-              </p>
-              {editorOpen ? (
-                <div className="mt-3 space-y-4">
-                  {groupedCategories.map(({ group, options }) => (
-                    <div key={group}>
-                      <p className="text-xs font-medium text-[var(--ink-muted)]">
-                        {group}
-                      </p>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {options.map((option) => {
-                          const isSelected = selectedCategories.includes(option.value);
-                          const isDisabled =
-                            !isSelected && selectedCategories.length >= 3;
+            <div className="space-y-4">
+              <section className="rounded-[28px] border border-[var(--border)] bg-[var(--surface-muted)] p-5 sm:p-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">
+                      Profilstil
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
+                      {editorOpen
+                        ? "Velg hvordan toppfeltet på profilen skal se ut."
+                        : "Bakgrunnsstilen som vises i toppen av profilen."}
+                    </p>
+                  </div>
+                  <span
+                    className="mt-1 h-11 w-11 flex-shrink-0 rounded-2xl border border-[var(--border)]"
+                    style={{ backgroundColor: currentBannerSwatch }}
+                    aria-hidden="true"
+                  />
+                </div>
 
-                          return (
-                            <button
-                              key={option.value}
-                              type="button"
-                              onClick={() => toggleCategory(option.value)}
-                              disabled={isDisabled}
-                              aria-pressed={isSelected}
-                              className={`inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${
-                                isSelected
-                                  ? "border-[var(--sage-500)] bg-[var(--sage-50)] text-[var(--sage-700)]"
-                                  : isDisabled
-                                    ? "cursor-not-allowed border-[var(--border)] bg-[var(--surface-muted)] text-[var(--ink-subtle)] opacity-40"
-                                    : "border-[var(--border)] bg-[var(--surface-muted)] text-[var(--ink)] hover:border-[var(--sage-400)] hover:bg-[var(--sage-50)]"
-                              }`}
-                            >
-                              {option.label}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : hasFavoriteCategories ? (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {favoriteCategories.map((category) => (
-                    <InterestCategoryTag key={category} category={category} />
-                  ))}
-                </div>
-              ) : (
-                <p className="card-copy mt-3 text-[15px]">
-                  {isSelf
-                    ? "Velg opptil tre favorittkategorier for profilen din."
-                    : "Ingen interesser eller preferanser er valgt enda."}
+                {editorOpen ? (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {BANNER_PRESETS.map((preset) => (
+                      <button
+                        key={preset.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedPreset(preset.id);
+                          setUseCustomColor(false);
+                        }}
+                        className={`h-10 w-16 rounded-2xl border-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${
+                          !useCustomColor && selectedPreset === preset.id
+                            ? "border-[var(--sage-500)] shadow-sm"
+                            : "border-transparent hover:border-[var(--border)]"
+                        }`}
+                        style={{ backgroundColor: preset.swatch }}
+                        title={preset.label}
+                        aria-label={preset.label}
+                        aria-pressed={!useCustomColor && selectedPreset === preset.id}
+                      />
+                    ))}
+
+                    <label
+                      className={`relative flex h-10 w-16 cursor-pointer items-center justify-center rounded-2xl border-2 transition focus-within:ring-2 focus-within:ring-[var(--sage-600)] focus-within:ring-offset-2 ${
+                        useCustomColor
+                          ? "border-[var(--sage-500)] shadow-sm"
+                          : "border-transparent hover:border-[var(--border)]"
+                      }`}
+                      style={{ background: customColor }}
+                      title="Egendefinert farge"
+                    >
+                      <span className="text-[10px] font-bold text-white/80 drop-shadow">
+                        Velg
+                      </span>
+                      <input
+                        type="color"
+                        value={customColor}
+                        onChange={(event) => {
+                          setCustomColor(event.target.value);
+                          setUseCustomColor(true);
+                          setSelectedPreset(null);
+                        }}
+                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                        aria-label="Velg egendefinert farge"
+                      />
+                    </label>
+                  </div>
+                ) : (
+                  <div className="mt-4 inline-flex items-center gap-3 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-medium text-[var(--ink)]">
+                    <span
+                      className="h-3 w-3 rounded-full"
+                      style={{ backgroundColor: currentBannerSwatch }}
+                      aria-hidden="true"
+                    />
+                    {currentBannerLabel}
+                  </div>
+                )}
+              </section>
+
+              <section className="rounded-[28px] border border-[var(--border)] bg-[var(--surface-muted)] p-5 sm:p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">
+                  Interesser
                 </p>
-              )}
+                {editorOpen ? (
+                  <div className="mt-3 space-y-4">
+                    {groupedCategories.map(({ group, options }) => (
+                      <div key={group}>
+                        <p className="text-xs font-medium text-[var(--ink-muted)]">
+                          {group}
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {options.map((option) => {
+                            const isSelected = selectedCategories.includes(option.value);
+                            const isDisabled =
+                              !isSelected && selectedCategories.length >= 3;
+
+                            return (
+                              <button
+                                key={option.value}
+                                type="button"
+                                onClick={() => toggleCategory(option.value)}
+                                disabled={isDisabled}
+                                aria-pressed={isSelected}
+                                className={`inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${
+                                  isSelected
+                                    ? "border-[var(--sage-500)] bg-[var(--sage-50)] text-[var(--sage-700)]"
+                                    : isDisabled
+                                      ? "cursor-not-allowed border-[var(--border)] bg-[var(--surface-muted)] text-[var(--ink-subtle)] opacity-40"
+                                      : "border-[var(--border)] bg-[var(--surface)] text-[var(--ink)] hover:border-[var(--sage-400)] hover:bg-[var(--sage-50)]"
+                                }`}
+                              >
+                                {option.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : hasFavoriteCategories ? (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {favoriteCategories.map((category) => (
+                      <InterestCategoryTag key={category} category={category} />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="card-copy mt-3 text-[15px]">
+                    {isSelf
+                      ? "Velg opptil tre favorittkategorier for profilen din."
+                      : "Ingen interesser eller preferanser er valgt enda."}
+                  </p>
+                )}
+              </section>
             </div>
           </div>
 

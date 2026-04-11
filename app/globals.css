@@ -33,6 +33,10 @@
   --sidebar-brand-bg: #eef2e8;
   --sidebar-logo-bg: rgba(255, 255, 255, 0.8);
   --sidebar-logo-border: rgba(255, 255, 255, 0.8);
+  --sidebar-surface: #e3e8dd;
+  --sidebar-active-bg: #f8fbf5;
+  --sidebar-active-border: #cad4c1;
+  --sidebar-hover-bg: #eef3e8;
   --surface-hover: #ffffff;
   --dialog-header-bg: #edf4e1;
   --hero-overlay: rgba(15, 27, 18, 0.16);
@@ -83,6 +87,10 @@ html[data-theme="dark"] {
   --sidebar-brand-bg: #111c19;
   --sidebar-logo-bg: rgba(8, 13, 12, 0.82);
   --sidebar-logo-border: rgba(240, 245, 242, 0.08);
+  --sidebar-surface: #0f1615;
+  --sidebar-active-bg: #17211f;
+  --sidebar-active-border: #30423d;
+  --sidebar-hover-bg: #141d1c;
   --surface-hover: #1f2e2b;
   --dialog-header-bg: #13201d;
   --hero-overlay: rgba(4, 9, 8, 0.42);
