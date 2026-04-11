@@ -14,7 +14,7 @@ interface PlannerStatsToggleProps {
 }
 
 export function PlannerStatsToggle({ stats }: PlannerStatsToggleProps) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const label = isOpen ? "Skjul planoversikt" : "Vis planoversikt";
 
   return (

@@ -133,6 +133,7 @@ html[data-theme="dark"] {
   --font-display: var(--font-newsreader);
   --font-sans: var(--font-manrope);
   --font-mono: var(--font-geist-mono);
+  --font-brand: var(--font-bricolage-grotesque);
 }
 
 * {

@@ -46,15 +46,15 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
 
   return (
     <aside className="flex h-full min-h-0 flex-col border-b border-[var(--border)] bg-[var(--sidebar-surface)] px-4 py-4 xl:border-b-0 xl:border-r xl:px-5 xl:py-6 xl:pr-6">
-      <div className="flex items-center gap-3 border-b border-[var(--border)] pb-5">
+      <div className="flex items-center gap-0 border-b border-[var(--border)] pb-5">
         <Image
           src="/venue_logo.png"
           alt="Venue logo"
-          width={100}
-          height={100}
-          className="h-[3.25rem] w-[3.25rem] object-contain"
+          width={120}
+          height={120}
+          className="h-24 w-24 object-contain"
         />
-        <h1 className="text-[clamp(1.35rem,2.8vh,1.65rem)] font-semibold tracking-[-0.05em] text-[var(--ink)]">
+        <h1 className="font-brand text-[clamp(1.65rem,3.4vh,2rem)] font-semibold tracking-[-0.05em] text-[var(--ink)]">
           VENUE
         </h1>
       </div>

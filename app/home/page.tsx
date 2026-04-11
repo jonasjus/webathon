@@ -98,7 +98,7 @@ export default async function HomePage() {
           <section className="border-b border-[var(--border)] pb-8 sm:pb-10">
             <div className="max-w-5xl">
               <div>
-                <h1 className="max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
+                <h1 className="text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
                   {currentUser
                     ? `Hei, ${firstName}. Klar for neste arrangement?`
                     : "Bygg din egen arrangementsuke i venue."}
