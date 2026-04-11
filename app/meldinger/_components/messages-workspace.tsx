@@ -5,6 +5,13 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { Avatar } from "@/components/account/avatar";
 import { formatChatTimestamp, isActivityChatActive } from "@/lib/date-time";
+import {
+  getUnreadActivityIds,
+  markActivityRead,
+  markActivityUnread,
+  retainUnreadActivityIds,
+  subscribeToUnreadActivityIds,
+} from "@/lib/messages-unread-store";
 import { createClient } from "@/lib/supabase/client";
 import type {
   ActivityChatMessage,
@@ -89,6 +96,7 @@ export function MessagesWorkspace({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const selectedActivityIdRef = useRef<string | null>(initialSelectedActivityId);
   const [supabase] = useState(() => createClient());
   const [summaries, setSummaries] = useState(initialSummaries);
   const [messagesByActivityId, setMessagesByActivityId] = useState(
@@ -99,7 +107,7 @@ export function MessagesWorkspace({
   );
   const [selectionNotice, setSelectionNotice] = useState(initialSelectionNotice);
   const [unreadActivityIds, setUnreadActivityIds] = useState<Set<string>>(
-    () => new Set()
+    () => getUnreadActivityIds()
   );
   const [draft, setDraft] = useState("");
   const [composerError, setComposerError] = useState<string | null>(null);
@@ -128,16 +136,12 @@ export function MessagesWorkspace({
   }, [currentSearch, pathname, router]);
 
   function setActiveChat(nextActivityId: string | null) {
+    selectedActivityIdRef.current = nextActivityId;
     setSelectedActivityId(nextActivityId);
     setSelectionNotice(null);
     syncSelection(nextActivityId);
     if (nextActivityId) {
-      setUnreadActivityIds((prev) => {
-        if (!prev.has(nextActivityId)) return prev;
-        const next = new Set(prev);
-        next.delete(nextActivityId);
-        return next;
-      });
+      markActivityRead(nextActivityId);
     }
   }
 
@@ -164,17 +168,29 @@ export function MessagesWorkspace({
         .sort(sortSummaries)
     );
 
-    // Mark as unread if the message is from someone else and the chat isn't open
-    setSelectedActivityId((currentSelected) => {
-      if (
-        message.sender.id !== currentUserId &&
-        message.activityId !== currentSelected
-      ) {
-        setUnreadActivityIds((prev) => new Set([...prev, message.activityId]));
+    if (message.sender.id !== currentUserId) {
+      if (message.activityId === selectedActivityIdRef.current) {
+        markActivityRead(message.activityId);
+      } else {
+        markActivityUnread(message.activityId);
       }
-      return currentSelected;
-    });
+    }
   }, [currentUserId]);
+
+  useEffect(() => subscribeToUnreadActivityIds(setUnreadActivityIds), []);
+
+  useEffect(() => {
+    selectedActivityIdRef.current = selectedActivityId;
+  }, [selectedActivityId]);
+
+  useEffect(() => {
+    retainUnreadActivityIds(summaries.map((summary) => summary.activityId));
+  }, [summaries]);
+
+  useEffect(() => {
+    if (!selectedActivityId) return;
+    markActivityRead(selectedActivityId);
+  }, [selectedActivityId]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -378,21 +394,12 @@ export function MessagesWorkspace({
                   key={summary.activityId}
                   type="button"
                   onClick={() => setActiveChat(summary.activityId)}
-                  className={`group relative flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition ${
+                  className={`group flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition ${
                     isActive
                       ? "border-[var(--sage-500)] bg-[var(--sage-50)]"
                       : "border-transparent hover:border-[var(--border)] hover:bg-[var(--surface-muted)]"
                   }`}
                 >
-                  {/* Unread indicator */}
-                  {hasUnread && !isActive && (
-                    <span className="absolute left-2 top-1/2 -translate-y-1/2">
-                      <span className="block h-2 w-2 rounded-full bg-[var(--sage-500)]">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--sage-500)] opacity-60" />
-                      </span>
-                    </span>
-                  )}
-
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
                       <h2
@@ -402,11 +409,18 @@ export function MessagesWorkspace({
                       >
                         {summary.title}
                       </h2>
-                      {summary.lastMessageAt && (
-                        <span className="shrink-0 text-xs text-[var(--ink-subtle)]">
-                          {formatChatTimestamp(summary.lastMessageAt)}
-                        </span>
-                      )}
+                      <div className="flex shrink-0 items-center gap-2">
+                        {summary.lastMessageAt ? (
+                          <span className="text-xs text-[var(--ink-subtle)]">
+                            {formatChatTimestamp(summary.lastMessageAt)}
+                          </span>
+                        ) : null}
+                        {hasUnread && !isActive ? (
+                          <span className="relative flex h-2 w-2 rounded-full bg-[var(--sage-500)]">
+                            <span className="absolute inset-0 animate-ping rounded-full bg-[var(--sage-500)] opacity-60" />
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
 
                     <p className="mt-0.5 truncate text-xs text-[var(--ink-subtle)]">

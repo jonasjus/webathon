@@ -6,6 +6,7 @@ import type { Activity } from "@/lib/supabase/types";
 import { ActivityFeed } from "./_components/activity-feed";
 import { CreateActivityCta } from "./_components/create-activity-cta";
 import { DashboardStat } from "./_components/dashboard-stat";
+import { PlannerStatsToggle } from "./_components/planner-stats-toggle";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -57,6 +58,34 @@ export default async function HomePage() {
   const joinedCount = myActivities.filter(
     (activity) => activity.hostUserId !== currentUser?.id && activity.isJoined
   ).length;
+  const plannerStats = [
+    { label: "Planer", value: myActivities.length },
+    { label: "Arrangerer", value: hostedCount },
+    { label: "Deltar", value: joinedCount },
+    { label: "Brukere i appen", value: usersInApp },
+  ];
+  const publicStats = [
+    { label: "Arrangementer", value: activities.length },
+    {
+      label: "Kategorier",
+      value: new Set(activities.map((activity) => activity.category)).size,
+    },
+    {
+      label: "Ledige plasser",
+      value: activities.reduce(
+        (total, activity) =>
+          total + (activity.participantsMax - activity.participantsCurrent),
+        0
+      ),
+    },
+    {
+      label: "Største gruppe",
+      value: activities.reduce(
+        (max, activity) => Math.max(max, activity.participantsCurrent),
+        0
+      ),
+    },
+  ];
 
   return (
     <main className="min-h-screen bg-[var(--canvas)] px-4 py-6 sm:px-6 xl:px-8">
@@ -77,53 +106,32 @@ export default async function HomePage() {
                     ? `Hei, ${firstName}. Klar for neste arrangement?`
                     : "Bygg din egen arrangementsuke i venue."}
                 </h1>
-                <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">
-                  {currentUser
-                    ? "Bruk hjem til å få oversikt over arrangementene dine og finne nye du vil bli med på."
-                    : "Utforsk kommende arrangementer, se hvilke kategorier som er aktive nå, og logg inn når du vil bygge din egen profil."}
-                </p>
-
-                <div className="mt-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                  <DashboardStat
-                    label={currentUser ? "Planer" : "Arrangementer"}
-                    value={currentUser ? myActivities.length : activities.length}
-                  />
-                  <DashboardStat
-                    label={currentUser ? "Arrangerer" : "Kategorier"}
-                    value={
-                      currentUser
-                        ? hostedCount
-                        : new Set(activities.map((activity) => activity.category)).size
-                    }
-                  />
-                  <DashboardStat
-                    label={currentUser ? "Deltar" : "Ledige plasser"}
-                    value={
-                      currentUser
-                        ? joinedCount
-                        : activities.reduce(
-                            (total, activity) =>
-                              total +
-                              (activity.participantsMax - activity.participantsCurrent),
-                            0
-                          )
-                    }
-                  />
-                  <DashboardStat
-                    label={currentUser ? "Brukere i appen" : "Største gruppe"}
-                    value={
-                      currentUser
-                        ? usersInApp
-                        : activities.reduce(
-                            (max, activity) =>
-                              Math.max(max, activity.participantsCurrent),
-                            0
-                          )
-                    }
-                  />
-                </div>
               </div>
             </div>
+
+            {currentUser ? (
+              <div className="mt-4 grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-6">
+                <p className="max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">
+                  Bruk hjem til å få oversikt over arrangementene dine og finne nye du vil bli med på.
+                </p>
+                <PlannerStatsToggle stats={plannerStats} />
+              </div>
+            ) : (
+              <div className="max-w-5xl">
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">
+                  Utforsk kommende arrangementer, se hvilke kategorier som er aktive nå, og logg inn når du vil bygge din egen profil.
+                </p>
+                <div className="mt-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                  {publicStats.map((stat) => (
+                    <DashboardStat
+                      key={stat.label}
+                      label={stat.label}
+                      value={stat.value}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </section>
 
           <ActivityFeed
