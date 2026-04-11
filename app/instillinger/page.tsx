@@ -89,7 +89,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
             </div>
           </section>
 
-          <section className="border-t border-[color:rgba(239,68,68,0.24)] pt-6">
+          <section className="rounded-[28px] border border-[color:rgba(239,68,68,0.22)] bg-[color:rgba(239,68,68,0.07)] p-6">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-8">
               <div className="flex min-w-0 flex-1 items-start gap-3">
                 <span className="mt-0.5 inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-[color:rgba(239,68,68,0.16)] text-red-400">
