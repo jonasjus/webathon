@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   useEffectEvent,
+  useLayoutEffect,
   useRef,
   useState,
   useTransition,
@@ -101,7 +102,9 @@ export function MessagesWorkspace({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const messagesScrollRef = useRef<HTMLDivElement | null>(null);
+  const previousSelectedActivityIdRef = useRef<string | null>(null);
+  const previousSelectedMessageCountRef = useRef(0);
   const selectedActivityIdRef = useRef<string | null>(initialSelectedActivityId);
   const [supabase] = useState(() => createClient());
   const [summaries, setSummaries] = useState(initialSummaries);
@@ -200,8 +203,29 @@ export function MessagesWorkspace({
     markActivityRead(selectedActivityId);
   }, [selectedActivityId]);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  useLayoutEffect(() => {
+    const container = messagesScrollRef.current;
+
+    if (!selectedActivityId || !container) {
+      previousSelectedActivityIdRef.current = selectedActivityId;
+      previousSelectedMessageCountRef.current = selectedMessages.length;
+      return;
+    }
+
+    const selectedChatChanged =
+      previousSelectedActivityIdRef.current !== selectedActivityId;
+    const selectedMessageCountChanged =
+      previousSelectedMessageCountRef.current !== selectedMessages.length;
+
+    previousSelectedActivityIdRef.current = selectedActivityId;
+    previousSelectedMessageCountRef.current = selectedMessages.length;
+
+    if (!selectedChatChanged && !selectedMessageCountChanged) return;
+
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: selectedChatChanged ? "auto" : "smooth",
+    });
   }, [selectedActivityId, selectedMessages.length]);
 
   useEffect(() => {
@@ -350,258 +374,260 @@ export function MessagesWorkspace({
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 xl:h-full xl:min-h-0">
       <section className="overflow-hidden rounded-[36px] border border-[var(--border)] bg-[var(--surface-muted)] p-6 shadow-[var(--section-hero-shadow)] sm:p-8">
         <div className="max-w-5xl">
           <div>
-        <p className="inline-flex rounded-full border border-[var(--hero-pill-border)] bg-[var(--hero-pill-bg)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm backdrop-blur-sm">
-          Meldinger
-        </p>
-        <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
-          Dine gruppechatter
-        </h1>
-        <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">
-          Gruppechatter for arrangementene du er med på eller arrangerer.
-        </p>
+            <p className="inline-flex rounded-full border border-[var(--hero-pill-border)] bg-[var(--hero-pill-bg)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm backdrop-blur-sm">
+              Meldinger
+            </p>
+            <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
+              Dine gruppechatter
+            </h1>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">
+              Gruppechatter for arrangementene du er med på eller arrangerer.
+            </p>
           </div>
         </div>
       </section>
 
-    <section className="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
-      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)]">
-        <div className="border-b border-[var(--border)] px-5 py-3">
-          <p className="text-xs text-[var(--ink-subtle)]">Aktive chatter</p>
+      <section className="grid gap-6 xl:min-h-0 xl:flex-1 xl:grid-cols-[320px_minmax(0,1fr)]">
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)] xl:flex xl:h-full xl:min-h-0 xl:flex-col xl:overflow-hidden">
+          <div className="border-b border-[var(--border)] px-5 py-3 xl:flex-none">
+            <p className="text-xs text-[var(--ink-subtle)]">Aktive chatter</p>
+          </div>
+
+          {summaries.length === 0 ? (
+            <div className="px-5 py-8 xl:flex-1">
+              <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface-muted)] px-5 py-8 text-center">
+                <h2 className="text-lg font-semibold text-[var(--ink)]">
+                  Ingen aktive chatter
+                </h2>
+                <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
+                  Når du blir med på et arrangement, får du en egen gruppechat her
+                  fram til arrangementsdatoen er over.
+                </p>
+                <Link
+                  href="/"
+                  className="mt-4 inline-flex h-11 items-center justify-center rounded-xl border border-[var(--sage-500)] px-4 text-sm font-semibold text-[var(--sage-700)] transition hover:bg-[var(--sage-50)]"
+                >
+                  Finn arrangementer
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="max-h-[72vh] overflow-y-auto p-2 xl:min-h-0 xl:flex-1 xl:max-h-none xl:overscroll-contain">
+              {summaries.map((summary) => {
+                const isActive = summary.activityId === selectedActivityId;
+                const hasUnread = unreadActivityIds.has(summary.activityId);
+
+                return (
+                  <button
+                    key={summary.activityId}
+                    type="button"
+                    onClick={() => setActiveChat(summary.activityId)}
+                    className={`group flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition ${
+                      isActive
+                        ? "border-[var(--sage-500)] bg-[var(--sage-50)]"
+                        : "border-transparent hover:border-[var(--border)] hover:bg-[var(--surface-muted)]"
+                    }`}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <h2
+                          className={`truncate text-sm text-[var(--ink)] ${
+                            hasUnread && !isActive ? "font-bold" : "font-semibold"
+                          }`}
+                        >
+                          {summary.title}
+                        </h2>
+                        <div className="flex shrink-0 items-center gap-2">
+                          {summary.lastMessageAt ? (
+                            <span className="text-xs text-[var(--ink-subtle)]">
+                              {formatChatTimestamp(summary.lastMessageAt)}
+                            </span>
+                          ) : null}
+                          {hasUnread && !isActive ? (
+                            <span className="relative flex h-2 w-2 rounded-full bg-[var(--sage-500)]">
+                              <span className="absolute inset-0 animate-ping rounded-full bg-[var(--sage-500)] opacity-60" />
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
+
+                      <p className="mt-0.5 truncate text-xs text-[var(--ink-subtle)]">
+                        {summary.location}
+                      </p>
+
+                      <p className="mt-1 text-xs text-[var(--ink-subtle)]">
+                        {summary.dateLabel} · kl. {summary.timeLabel}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
-        {summaries.length === 0 ? (
-          <div className="px-5 py-8">
-            <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface-muted)] px-5 py-8 text-center">
-              <h2 className="text-lg font-semibold text-[var(--ink)]">
-                Ingen aktive chatter
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
-                Når du blir med på et arrangement, får du en egen gruppechat her
-                fram til arrangementsdatoen er over.
-              </p>
-              <Link
-                href="/"
-                className="mt-4 inline-flex h-11 items-center justify-center rounded-xl border border-[var(--sage-500)] px-4 text-sm font-semibold text-[var(--sage-700)] transition hover:bg-[var(--sage-50)]"
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)] xl:flex xl:h-full xl:min-h-0 xl:flex-col xl:overflow-hidden">
+          {selectionNotice ? (
+            <div className="border-b border-[var(--border)] bg-[var(--surface-muted)] px-5 py-3 text-sm text-[var(--ink-muted)] xl:flex-none">
+              {selectionNotice}
+            </div>
+          ) : null}
+
+          {!selectedSummary ? (
+            <div className="flex min-h-[640px] items-center justify-center px-6 py-10 xl:min-h-0 xl:flex-1">
+              <div className="max-w-md text-center">
+                <h2 className="text-xl font-semibold text-[var(--ink)]">
+                  Ingen chat valgt
+                </h2>
+                <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
+                  Velg et arrangement fra listen for å åpne gruppechatten.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex min-h-[640px] flex-col xl:min-h-0 xl:flex-1">
+              <div className="border-b border-[var(--border)] px-5 py-5 xl:flex-none">
+                <p className="text-sm font-medium text-[var(--ink-muted)]">
+                  {selectedSummary.location}
+                </p>
+                <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[var(--ink)]">
+                  {selectedSummary.title}
+                </h2>
+                <p className="mt-2 text-sm text-[var(--ink-muted)]">
+                  {selectedSummary.dateLabel} kl. {selectedSummary.timeLabel}
+                </p>
+              </div>
+
+              <div
+                ref={messagesScrollRef}
+                className="flex-1 space-y-4 overflow-y-auto px-5 py-5 xl:min-h-0 xl:overscroll-contain"
               >
-                Finn arrangementer
-              </Link>
-            </div>
-          </div>
-        ) : (
-          <div className="max-h-[72vh] overflow-y-auto p-2">
-            {summaries.map((summary) => {
-              const isActive = summary.activityId === selectedActivityId;
-              const hasUnread = unreadActivityIds.has(summary.activityId);
-
-              return (
-                <button
-                  key={summary.activityId}
-                  type="button"
-                  onClick={() => setActiveChat(summary.activityId)}
-                  className={`group flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition ${
-                    isActive
-                      ? "border-[var(--sage-500)] bg-[var(--sage-50)]"
-                      : "border-transparent hover:border-[var(--border)] hover:bg-[var(--surface-muted)]"
-                  }`}
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <h2
-                        className={`truncate text-sm text-[var(--ink)] ${
-                          hasUnread && !isActive ? "font-bold" : "font-semibold"
-                        }`}
-                      >
-                        {summary.title}
-                      </h2>
-                      <div className="flex shrink-0 items-center gap-2">
-                        {summary.lastMessageAt ? (
-                          <span className="text-xs text-[var(--ink-subtle)]">
-                            {formatChatTimestamp(summary.lastMessageAt)}
-                          </span>
-                        ) : null}
-                        {hasUnread && !isActive ? (
-                          <span className="relative flex h-2 w-2 rounded-full bg-[var(--sage-500)]">
-                            <span className="absolute inset-0 animate-ping rounded-full bg-[var(--sage-500)] opacity-60" />
-                          </span>
-                        ) : null}
-                      </div>
+                {selectedMessages.length === 0 ? (
+                  <div className="flex h-full min-h-[360px] items-center justify-center">
+                    <div className="max-w-md rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface-muted)] px-6 py-8 text-center">
+                      <h3 className="text-lg font-semibold text-[var(--ink)]">
+                        Start samtalen
+                      </h3>
+                      <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
+                        Dette er gruppechatten for arrangementet. Første melding setter
+                        i gang praten.
+                      </p>
                     </div>
-
-                    <p className="mt-0.5 truncate text-xs text-[var(--ink-subtle)]">
-                      {summary.location}
-                    </p>
-
-                    <p className="mt-1 text-xs text-[var(--ink-subtle)]">
-                      {summary.dateLabel} · kl. {summary.timeLabel}
-                    </p>
                   </div>
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
+                ) : (
+                  selectedMessages.map((message) => {
+                    const isOwnMessage = message.sender.id === currentUserId;
 
-      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)]">
-        {selectionNotice ? (
-          <div className="border-b border-[var(--border)] bg-[var(--surface-muted)] px-5 py-3 text-sm text-[var(--ink-muted)]">
-            {selectionNotice}
-          </div>
-        ) : null}
-
-        {!selectedSummary ? (
-          <div className="flex min-h-[640px] items-center justify-center px-6 py-10">
-            <div className="max-w-md text-center">
-              <h2 className="text-xl font-semibold text-[var(--ink)]">
-                Ingen chat valgt
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
-                Velg et arrangement fra listen for å åpne gruppechatten.
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className="flex min-h-[640px] flex-col">
-            <div className="border-b border-[var(--border)] px-5 py-5">
-              <p className="text-sm font-medium text-[var(--ink-muted)]">
-                {selectedSummary.location}
-              </p>
-              <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[var(--ink)]">
-                {selectedSummary.title}
-              </h2>
-              <p className="mt-2 text-sm text-[var(--ink-muted)]">
-                {selectedSummary.dateLabel} kl. {selectedSummary.timeLabel}
-              </p>
-            </div>
-
-            <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
-              {selectedMessages.length === 0 ? (
-                <div className="flex h-full min-h-[360px] items-center justify-center">
-                  <div className="max-w-md rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface-muted)] px-6 py-8 text-center">
-                    <h3 className="text-lg font-semibold text-[var(--ink)]">
-                      Start samtalen
-                    </h3>
-                    <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
-                      Dette er gruppechatten for arrangementet. Første melding setter
-                      i gang praten.
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                selectedMessages.map((message) => {
-                  const isOwnMessage = message.sender.id === currentUserId;
-
-                  return (
-                    <article
-                      key={message.id}
-                      className={`flex gap-3 ${
-                        isOwnMessage ? "justify-end" : "justify-start"
-                      }`}
-                    >
-                      {!isOwnMessage ? (
-                        <Avatar
-                          src={message.sender.avatarUrl}
-                          initials={message.sender.initials}
-                          color={message.sender.avatarColor}
-                          size={36}
-                        />
-                      ) : null}
-
-                      <div
-                        className={`max-w-[85%] rounded-2xl px-4 py-3 ${
-                          isOwnMessage
-                            ? "bg-[var(--sage-500)] text-white"
-                            : "bg-[var(--surface-muted)] text-[var(--ink)]"
+                    return (
+                      <article
+                        key={message.id}
+                        className={`flex gap-3 ${
+                          isOwnMessage ? "justify-end" : "justify-start"
                         }`}
                       >
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="text-sm font-semibold">
-                            {isOwnMessage ? "Deg" : message.sender.displayName}
+                        {!isOwnMessage ? (
+                          <Avatar
+                            src={message.sender.avatarUrl}
+                            initials={message.sender.initials}
+                            color={message.sender.avatarColor}
+                            size={36}
+                          />
+                        ) : null}
+
+                        <div
+                          className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                            isOwnMessage
+                              ? "bg-[var(--sage-500)] text-white"
+                              : "bg-[var(--surface-muted)] text-[var(--ink)]"
+                          }`}
+                        >
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="text-sm font-semibold">
+                              {isOwnMessage ? "Deg" : message.sender.displayName}
+                            </p>
+                            <span
+                              className={`text-xs ${
+                                isOwnMessage
+                                  ? "text-white/75"
+                                  : "text-[var(--ink-subtle)]"
+                              }`}
+                            >
+                              {formatChatTimestamp(message.createdAt)}
+                            </span>
+                          </div>
+                          <p className="mt-2 whitespace-pre-wrap text-sm leading-6">
+                            {message.body}
                           </p>
-                          <span
-                            className={`text-xs ${
-                              isOwnMessage
-                                ? "text-white/75"
-                                : "text-[var(--ink-subtle)]"
-                            }`}
-                          >
-                            {formatChatTimestamp(message.createdAt)}
-                          </span>
                         </div>
-                        <p className="mt-2 whitespace-pre-wrap text-sm leading-6">
-                          {message.body}
-                        </p>
-                      </div>
 
-                      {isOwnMessage ? (
-                        <Avatar
-                          src={currentUser.avatarUrl}
-                          initials={currentUser.initials}
-                          color={currentUser.avatarColor}
-                          size={36}
-                        />
-                      ) : null}
-                    </article>
-                  );
-                })
-              )}
-              <div ref={messagesEndRef} />
+                        {isOwnMessage ? (
+                          <Avatar
+                            src={currentUser.avatarUrl}
+                            initials={currentUser.initials}
+                            color={currentUser.avatarColor}
+                            size={36}
+                          />
+                        ) : null}
+                      </article>
+                    );
+                  })
+                )}
+              </div>
+
+              <form
+                className="border-t border-[var(--border)] px-5 py-4 xl:flex-none"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  startTransition(async () => {
+                    await sendMessage();
+                  });
+                }}
+              >
+                <label htmlFor="message-body" className="sr-only">
+                  Skriv melding
+                </label>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                  <textarea
+                    id="message-body"
+                    value={draft}
+                    onChange={(event) => setDraft(event.target.value)}
+                    placeholder="Skriv til gruppen…"
+                    rows={3}
+                    maxLength={2000}
+                    className="min-h-[88px] flex-1 resize-none rounded-2xl border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--sage-500)] focus:ring-2 focus:ring-[color:rgba(122,160,96,0.18)]"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSending || !selectedSummary}
+                    className="inline-flex h-11 items-center justify-center rounded-xl border border-[var(--sage-500)] bg-[var(--sage-500)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--sage-600)] disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {isSending ? "Sender…" : "Send"}
+                  </button>
+                </div>
+
+                <div className="mt-2 flex items-center justify-between gap-3">
+                  <p className="text-xs text-[var(--ink-subtle)]">
+                    Chatten slettes automatisk etter arrangementsdatoen.
+                  </p>
+                  <p className="text-xs text-[var(--ink-subtle)]">
+                    {draft.trim().length}/2000
+                  </p>
+                </div>
+
+                {composerError ? (
+                  <p className="mt-2 text-sm text-[var(--accent-coral)]">
+                    {composerError}
+                  </p>
+                ) : null}
+              </form>
             </div>
-
-            <form
-              className="border-t border-[var(--border)] px-5 py-4"
-              onSubmit={(event) => {
-                event.preventDefault();
-                startTransition(async () => {
-                  await sendMessage();
-                });
-              }}
-            >
-              <label htmlFor="message-body" className="sr-only">
-                Skriv melding
-              </label>
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-                <textarea
-                  id="message-body"
-                  value={draft}
-                  onChange={(event) => setDraft(event.target.value)}
-                  placeholder="Skriv til gruppen…"
-                  rows={3}
-                  maxLength={2000}
-                  className="min-h-[88px] flex-1 resize-none rounded-2xl border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--sage-500)] focus:ring-2 focus:ring-[color:rgba(122,160,96,0.18)]"
-                />
-                <button
-                  type="submit"
-                  disabled={isSending || !selectedSummary}
-                  className="inline-flex h-11 items-center justify-center rounded-xl border border-[var(--sage-500)] bg-[var(--sage-500)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--sage-600)] disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {isSending ? "Sender…" : "Send"}
-                </button>
-              </div>
-
-              <div className="mt-2 flex items-center justify-between gap-3">
-                <p className="text-xs text-[var(--ink-subtle)]">
-                  Chatten slettes automatisk etter arrangementsdatoen.
-                </p>
-                <p className="text-xs text-[var(--ink-subtle)]">
-                  {draft.trim().length}/2000
-                </p>
-              </div>
-
-              {composerError ? (
-                <p className="mt-2 text-sm text-[var(--accent-coral)]">
-                  {composerError}
-                </p>
-              ) : null}
-            </form>
-          </div>
-        )}
-      </div>
-    </section>
+          )}
+        </div>
+      </section>
     </div>
   );
 }
