@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { CalendarDays, MapPin } from "lucide-react";
-import Link from "next/link";
 import { Avatar } from "@/components/account/avatar";
 import {
   ActivityCategoryIcon,
@@ -11,14 +10,15 @@ import type { Activity } from "@/lib/supabase/types";
 
 interface ProfileActivityCardProps {
   activity: Activity;
-  currentUserId: string;
+  isSelf: boolean;
+  profileOwnerName: string;
 }
 
 export function ProfileActivityCard({
   activity,
-  currentUserId,
+  isSelf,
+  profileOwnerName,
 }: ProfileActivityCardProps) {
-  const isHost = activity.hostUserId === currentUserId;
   const appearance = getActivityCategoryAppearance(activity.category);
   const accentSurface = withAlpha(appearance.color, 0.12);
   const accentBorder = withAlpha(appearance.color, 0.24);
@@ -43,7 +43,7 @@ export function ProfileActivityCard({
             className="text-xs font-semibold uppercase tracking-[0.18em]"
             style={{ color: accentInk }}
           >
-            {isHost ? "Arrangerer" : "Deltar"} · {appearance.label}
+            Arrangerer · {appearance.label}
           </p>
           <h3 className="card-title mt-3 text-[1.7rem] text-[var(--ink)]">
             {activity.title}
@@ -59,31 +59,24 @@ export function ProfileActivityCard({
             <MetaItem icon={<MapPin className="h-4 w-4" />}>
               {activity.location}
             </MetaItem>
-            {isHost ? (
-              <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--ink-muted)]">
-                <Avatar
-                  src={activity.hostAvatarUrl}
-                  initials={activity.hostInitials}
-                  color={activity.hostColor}
-                  size={22}
-                />
-                Du arrangerer
-              </span>
-            ) : (
-              <Link
-                href={`/profil/${activity.hostUserId}`}
-                className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--ink-muted)] transition hover:border-[var(--sage-400)] hover:bg-[var(--sage-50)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
-              >
-                <Avatar
-                  src={activity.hostAvatarUrl}
-                  initials={activity.hostInitials}
-                  color={activity.hostColor}
-                  size={22}
-                />
-                Arrangør{" "}
-                <span className="font-medium text-[var(--ink)]">{activity.host}</span>
-              </Link>
-            )}
+            <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--ink-muted)]">
+              <Avatar
+                src={activity.hostAvatarUrl}
+                initials={activity.hostInitials}
+                color={activity.hostColor}
+                size={22}
+              />
+              {isSelf ? (
+                "Du arrangerer"
+              ) : (
+                <>
+                  Arrangør{" "}
+                  <span className="font-medium text-[var(--ink)]">
+                    {profileOwnerName}
+                  </span>
+                </>
+              )}
+            </span>
           </div>
         </div>
       </div>
