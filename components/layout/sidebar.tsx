@@ -50,9 +50,9 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
         <Image
           src="/venue_logo.png"
           alt="Venue logo"
-          width={44}
-          height={44}
-          className="h-11 w-11 object-contain"
+          width={100}
+          height={100}
+          className="h-[3.25rem] w-[3.25rem] object-contain"
         />
         <h1 className="text-[clamp(1.35rem,2.8vh,1.65rem)] font-semibold tracking-[-0.05em] text-[var(--ink)]">
           VENUE

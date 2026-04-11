@@ -71,13 +71,10 @@ export function ProfileHero({
   const bioText = bio?.trim() ?? "";
   const hasBio = bioText.length > 0;
   const hasFavoriteCategories = favoriteCategories.length > 0;
-  const currentBannerPreset = BANNER_PRESETS.find((preset) => preset.id === bannerTheme);
-  const currentBannerLabel = currentBannerPreset?.label ?? (
-    bannerTheme && /^#/.test(bannerTheme) ? "Egendefinert" : BANNER_PRESETS[0].label
-  );
-  const currentBannerSwatch = currentBannerPreset?.swatch ?? (
-    bannerTheme && /^#/.test(bannerTheme) ? bannerTheme : BANNER_PRESETS[0].swatch
-  );
+  const selectedBannerSwatch = useCustomColor
+    ? customColor
+    : (BANNER_PRESETS.find((preset) => preset.id === selectedPreset)?.swatch ??
+        BANNER_PRESETS[0].swatch);
   const bannerThemeValue = useCustomColor
     ? customColor
     : (selectedPreset ?? BANNER_PRESETS[0].id);
@@ -239,110 +236,99 @@ export function ProfileHero({
                       id="profile-bio-inline"
                       name="bio"
                       maxLength={280}
-                      rows={5}
                       value={bioDraft}
                       onChange={(event) => setBioDraft(event.target.value)}
                       placeholder="Fortell andre litt om deg selv..."
                       autoFocus
-                      className="card-copy w-full resize-none rounded-[24px] border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-4 text-[15px] text-[var(--ink)] outline-none transition focus:border-[var(--sage-500)] focus:ring-2 focus:ring-[color:rgba(122,160,96,0.18)]"
+                      className="card-copy h-56 w-full resize-none rounded-[24px] border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-4 text-[15px] text-[var(--ink)] outline-none transition focus:border-[var(--sage-500)] focus:ring-2 focus:ring-[color:rgba(122,160,96,0.18)]"
                     />
                     <span className="absolute bottom-3 right-4 text-xs text-[var(--ink-subtle)]">
                       {bioDraft.length}/280
                     </span>
                   </div>
 
-                </div>
-              ) : (
-                <p className="card-copy mt-3 max-w-prose text-[15px]">
-                  {hasBio
-                    ? bioText
-                    : isSelf
-                      ? "Skriv noen linjer om deg selv i profilredigeringen."
-                      : "Ingen bio lagt til enda."}
-                </p>
-              )}
-            </section>
+                  <div className="border-t border-[var(--border)] pt-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">
+                          Profilstil
+                        </p>
+                        <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
+                          Velg hvordan toppfeltet pa profilen skal se ut.
+                        </p>
+                      </div>
+                      <span
+                        className="mt-1 h-11 w-11 flex-shrink-0 rounded-2xl border border-[var(--border)]"
+                        style={{ backgroundColor: selectedBannerSwatch }}
+                        aria-hidden="true"
+                      />
+                    </div>
 
-            <div className="space-y-4">
-              <section className="rounded-[28px] border border-[var(--border)] bg-[var(--surface-muted)] p-5 sm:p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">
-                      Profilstil
-                    </p>
-                    <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
-                      {editorOpen
-                        ? "Velg hvordan toppfeltet på profilen skal se ut."
-                        : "Bakgrunnsstilen som vises i toppen av profilen."}
-                    </p>
-                  </div>
-                  <span
-                    className="mt-1 h-11 w-11 flex-shrink-0 rounded-2xl border border-[var(--border)]"
-                    style={{ backgroundColor: currentBannerSwatch }}
-                    aria-hidden="true"
-                  />
-                </div>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {BANNER_PRESETS.map((preset) => (
+                        <button
+                          key={preset.id}
+                          type="button"
+                          onClick={() => {
+                            setSelectedPreset(preset.id);
+                            setUseCustomColor(false);
+                          }}
+                          className={`h-10 w-16 rounded-2xl border-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${
+                            !useCustomColor && selectedPreset === preset.id
+                              ? "border-[var(--sage-500)] shadow-sm"
+                              : "border-transparent hover:border-[var(--border)]"
+                          }`}
+                          style={{ backgroundColor: preset.swatch }}
+                          title={preset.label}
+                          aria-label={preset.label}
+                          aria-pressed={!useCustomColor && selectedPreset === preset.id}
+                        />
+                      ))}
 
-                {editorOpen ? (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {BANNER_PRESETS.map((preset) => (
-                      <button
-                        key={preset.id}
-                        type="button"
-                        onClick={() => {
-                          setSelectedPreset(preset.id);
-                          setUseCustomColor(false);
-                        }}
-                        className={`h-10 w-16 rounded-2xl border-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${
-                          !useCustomColor && selectedPreset === preset.id
+                      <label
+                        className={`relative flex h-10 w-16 cursor-pointer items-center justify-center rounded-2xl border-2 transition focus-within:ring-2 focus-within:ring-[var(--sage-600)] focus-within:ring-offset-2 ${
+                          useCustomColor
                             ? "border-[var(--sage-500)] shadow-sm"
                             : "border-transparent hover:border-[var(--border)]"
                         }`}
-                        style={{ backgroundColor: preset.swatch }}
-                        title={preset.label}
-                        aria-label={preset.label}
-                        aria-pressed={!useCustomColor && selectedPreset === preset.id}
-                      />
-                    ))}
-
-                    <label
-                      className={`relative flex h-10 w-16 cursor-pointer items-center justify-center rounded-2xl border-2 transition focus-within:ring-2 focus-within:ring-[var(--sage-600)] focus-within:ring-offset-2 ${
-                        useCustomColor
-                          ? "border-[var(--sage-500)] shadow-sm"
-                          : "border-transparent hover:border-[var(--border)]"
-                      }`}
-                      style={{ background: customColor }}
-                      title="Egendefinert farge"
-                    >
-                      <span className="text-[10px] font-bold text-white/80 drop-shadow">
-                        Velg
-                      </span>
-                      <input
-                        type="color"
-                        value={customColor}
-                        onChange={(event) => {
-                          setCustomColor(event.target.value);
-                          setUseCustomColor(true);
-                          setSelectedPreset(null);
-                        }}
-                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-                        aria-label="Velg egendefinert farge"
-                      />
-                    </label>
+                        style={{ background: customColor }}
+                        title="Egendefinert farge"
+                      >
+                        <span className="text-[10px] font-bold text-white/80 drop-shadow">
+                          Velg
+                        </span>
+                        <input
+                          type="color"
+                          value={customColor}
+                          onChange={(event) => {
+                            setCustomColor(event.target.value);
+                            setUseCustomColor(true);
+                            setSelectedPreset(null);
+                          }}
+                          className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                          aria-label="Velg egendefinert farge"
+                        />
+                      </label>
+                    </div>
                   </div>
-                ) : (
-                  <div className="mt-4 inline-flex items-center gap-3 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-medium text-[var(--ink)]">
-                    <span
-                      className="h-3 w-3 rounded-full"
-                      style={{ backgroundColor: currentBannerSwatch }}
-                      aria-hidden="true"
-                    />
-                    {currentBannerLabel}
-                  </div>
-                )}
-              </section>
+                </div>
+              ) : (
+                <div className="card-copy mt-3 flex h-34 items-start rounded-[24px] border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-4 text-[15px]">
+                  <p className="max-w-prose">
+                    {hasBio
+                      ? bioText
+                      : isSelf
+                        ? "Skriv noen linjer om deg selv i profilredigeringen."
+                        : "Ingen bio lagt til enda."}
+                  </p>
+                </div>
+              )}
+            </section>
 
-              <section className="rounded-[28px] border border-[var(--border)] bg-[var(--surface-muted)] p-5 sm:p-6">
+            <div className="h-full">
+              <section
+                className="flex h-full flex-col rounded-[28px] border border-[var(--border)] bg-[var(--surface-muted)] p-5 sm:p-6"
+              >
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">
                   Interesser
                 </p>
@@ -383,7 +369,7 @@ export function ProfileHero({
                     ))}
                   </div>
                 ) : hasFavoriteCategories ? (
-                  <div className="mt-3 flex flex-wrap gap-2">
+                  <div className="mt-3 flex flex-wrap content-start gap-2">
                     {favoriteCategories.map((category) => (
                       <InterestCategoryTag key={category} category={category} />
                     ))}
