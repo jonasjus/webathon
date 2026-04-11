@@ -24,6 +24,7 @@ export interface ActivityRow {
   starts_at: string;
   description: string;
   participants_max: number;
+  price: number | null;
   category: ActivityCategory;
   latitude: number;
   longitude: number;
@@ -84,6 +85,7 @@ export interface Activity {
   description: string;
   participantsCurrent: number;
   participantsMax: number;
+  price: number | null;
   category: ActivityCategory;
   coordinates: MapCoordinates;
   startsAt: string;

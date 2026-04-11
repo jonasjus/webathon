@@ -81,6 +81,14 @@ function stopActionPropagation(
   event.stopPropagation();
 }
 
+function formatPriceLabel(price: number | null): string {
+  if (price == null) {
+    return "FREE";
+  }
+
+  return `${new Intl.NumberFormat("nb-NO").format(price)} kr`;
+}
+
 export function ActivityCard({
   activity,
   isLoggedIn,
@@ -103,6 +111,7 @@ export function ActivityCard({
   const locationLabel = isLoggedIn
     ? getShortLocationLabel(activity.location)
     : "Sted vises ved innlogging";
+  const priceLabel = formatPriceLabel(activity.price);
 
   function handleCardClick(event: MouseEvent<HTMLElement>) {
     if (!canOpenDetails) {
@@ -234,6 +243,9 @@ export function ActivityCard({
                 <MetaItem compact icon={<MapPin className="h-3.5 w-3.5" />}>
                   {locationLabel}
                 </MetaItem>
+                <MetaItem compact icon={<PriceIcon compact />}>
+                  {priceLabel}
+                </MetaItem>
                 <MetaItem compact icon={<Users2 className="h-3.5 w-3.5" />}>
                   {activity.participantsCurrent}/{activity.participantsMax}
                 </MetaItem>
@@ -312,6 +324,7 @@ export function ActivityCard({
               {dateTimeLabel}
             </MetaItem>
             <MetaItem icon={<MapPin className="h-4 w-4" />}>{locationLabel}</MetaItem>
+            <MetaItem icon={<PriceIcon />}>{priceLabel}</MetaItem>
             {daysUntil !== undefined ? <CountdownBadge daysUntil={daysUntil} /> : null}
           </div>
 
@@ -389,6 +402,26 @@ function CountdownBadge({ daysUntil, compact = false }: CountdownBadgeProps) {
       <Clock3 className={compact ? "h-3 w-3" : "h-3.5 w-3.5"} />
       {getCountdownLabel(daysUntil)}
     </span>
+  );
+}
+
+interface PriceIconProps {
+  compact?: boolean;
+}
+
+function PriceIcon({ compact = false }: PriceIconProps) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className={compact ? "h-3.5 w-3.5 fill-none stroke-current" : "h-4 w-4 fill-none stroke-current"}
+      strokeWidth="1.8"
+    >
+      <path d="M4 8h16" />
+      <path d="M6 8v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8" />
+      <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+      <path d="M12 11v4" />
+    </svg>
   );
 }
 
