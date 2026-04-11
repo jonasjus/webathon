@@ -12,12 +12,29 @@ interface CreateActivityFormProps {
   onClose: () => void;
 }
 
+function toLocalDateTimeInputValue(date: Date): string {
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate()
+  )}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 export function CreateActivityForm({ onClose }: CreateActivityFormProps) {
   const [isPending, startTransition] = useTransition();
   const [category, setCategory] = useState<ActivityCategory | "">("");
   const [location, setLocation] = useState("");
   const [coordinates, setCoordinates] = useState<MapCoordinates | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [minDateTime, setMinDateTime] = useState(() =>
+    toLocalDateTimeInputValue(new Date())
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMinDateTime(toLocalDateTimeInputValue(new Date()));
+    }, 60_000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     function handleKey(event: KeyboardEvent) {
@@ -115,6 +132,7 @@ export function CreateActivityForm({ onClose }: CreateActivityFormProps) {
               name="starts_at"
               type="datetime-local"
               required
+              min={minDateTime}
               className={inputClass}
             />
           </div>

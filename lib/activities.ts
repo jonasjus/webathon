@@ -103,6 +103,7 @@ export const getActivities = cache(async (): Promise<Activity[]> => {
       )
     `
     )
+    .gte("starts_at", new Date().toISOString())
     .order("starts_at", { ascending: true });
 
   if (error) throw new Error(`Failed to fetch activities: ${error.message}`);
