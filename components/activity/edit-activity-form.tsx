@@ -1,7 +1,7 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { activityCategoryOptions } from "@/components/activity/category-tag";
 import { LocationPicker } from "@/components/activity/location-picker";
 import type { MapCoordinates } from "@/lib/map";
@@ -13,6 +13,13 @@ interface EditActivityFormProps {
   onClose: () => void;
 }
 
+function toLocalDateTimeInputValue(date: Date): string {
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate()
+  )}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 export function EditActivityForm({ activity, onClose }: EditActivityFormProps) {
   const [isPending, startTransition] = useTransition();
   const [isDeleting, startDeleteTransition] = useTransition();
@@ -22,6 +29,16 @@ export function EditActivityForm({ activity, onClose }: EditActivityFormProps) {
     activity.coordinates
   );
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [minDateTime, setMinDateTime] = useState(() =>
+    toLocalDateTimeInputValue(new Date())
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMinDateTime(toLocalDateTimeInputValue(new Date()));
+    }, 60_000);
+    return () => clearInterval(interval);
+  }, []);
 
   function handleDelete() {
     if (!confirm("Er du sikker på at du vil slette dette arrangementet?")) return;
@@ -124,6 +141,7 @@ export function EditActivityForm({ activity, onClose }: EditActivityFormProps) {
               name="starts_at"
               type="datetime-local"
               required
+              min={minDateTime}
               defaultValue={activity.startsAt.slice(0, 16)}
               className={inputClass}
             />

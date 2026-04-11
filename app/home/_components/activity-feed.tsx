@@ -17,14 +17,14 @@ export function ActivityFeed({
 }: ActivityFeedProps) {
   return (
     <section>
-      <div className="border-b border-[var(--border)] pb-6">
+      <div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="card-intro">
             <p className="text-sm font-medium text-[var(--ink-muted)]">
               Arrangementer akkurat nå
             </p>
             <h2 className="card-title text-[2.35rem] text-[var(--ink)]">
-              Kommende arrangementer i venue
+              Kommende arrangementer
             </h2>
           </div>
           {createCta}

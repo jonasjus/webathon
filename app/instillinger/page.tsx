@@ -38,23 +38,20 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
     (user.user_metadata?.avatar_url as string | undefined) ?? null;
 
   return (
-    <main className="min-h-screen bg-[var(--canvas)] px-4 py-6 sm:px-6 xl:px-8">
-      <div className="mx-auto grid max-w-[1440px] gap-6 xl:grid-cols-[248px_minmax(0,1fr)]">
-        <div className="xl:sticky xl:top-6 xl:h-[calc(100vh-3rem)]">
+    <main className="min-h-screen bg-[var(--canvas)] px-4 py-6 sm:px-6 xl:p-0">
+      <div className="mx-auto grid max-w-[1440px] gap-6 xl:max-w-none xl:gap-0 xl:grid-cols-[248px_minmax(0,1fr)]">
+        <div className="xl:sticky xl:top-0 xl:h-screen">
           <Sidebar
             activeItem="Innstillinger"
             user={{ id: user.id, displayName, initials, avatarColor, avatarUrl }}
           />
         </div>
 
-        <div className="flex flex-col gap-6">
-          <section className="border-b border-[var(--border)] pb-8 sm:pb-10">
+        <div className="flex flex-col gap-4 xl:px-8 xl:py-6">
+          <section className="border-b border-[var(--border)] pb-8 sm:pb-4">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <p className="inline-flex rounded-full border border-[var(--hero-pill-border)] bg-[var(--hero-pill-bg)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm">
-                  Konto, sikkerhet og utseende
-                </p>
-                <h1 className="mt-5 text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
+                <h1 className="text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
                   Innstillinger
                 </h1>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">
@@ -92,7 +89,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
             </div>
           </section>
 
-          <section className="border-t border-[color:rgba(239,68,68,0.24)] pt-6">
+          <section className="rounded-[28px] border border-[color:rgba(239,68,68,0.22)] bg-[color:rgba(239,68,68,0.07)] p-6">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-8">
               <div className="flex min-w-0 flex-1 items-start gap-3">
                 <span className="mt-0.5 inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-[color:rgba(239,68,68,0.16)] text-red-400">
