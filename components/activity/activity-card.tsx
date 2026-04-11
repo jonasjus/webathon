@@ -15,6 +15,7 @@ import {
 import { HostProfileTrigger } from "./host-profile-trigger";
 import { JoinButton } from "./join-button";
 import { ParticipantStack } from "./participant-stack";
+import { getShortLocationLabel } from "@/lib/location-label";
 
 type ActivityCardVariant = "compact" | "detailed";
 
