@@ -29,9 +29,9 @@ export default async function MessagesPage(props: MessagesPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--canvas)] px-4 py-6 sm:px-6 xl:px-8">
-      <div className="mx-auto grid max-w-[1440px] gap-6 xl:grid-cols-[248px_minmax(0,1fr)]">
-        <div className="xl:sticky xl:top-6 xl:h-[calc(100vh-3rem)]">
+    <main className="min-h-screen bg-(--canvas) px-4 py-6 sm:px-6 xl:h-screen xl:overflow-hidden xl:px-8">
+      <div className="mx-auto grid max-w-360 gap-6 xl:h-full xl:min-h-0 xl:grid-cols-[248px_minmax(0,1fr)]">
+        <div className="xl:h-full xl:min-h-0">
           <Sidebar activeItem="Meldinger" user={data.sidebarUser} />
         </div>
 
