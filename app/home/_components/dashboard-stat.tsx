@@ -5,7 +5,14 @@ interface DashboardStatProps {
 
 export function DashboardStat({ label, value }: DashboardStatProps) {
   return (
-    <div className="rounded-[28px] border border-white/75 bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(244,248,241,0.82))] px-4 py-4 shadow-[0_16px_36px_rgba(58,74,50,0.08)] backdrop-blur-sm">
+    <div
+      className="rounded-[28px] border px-4 py-4 backdrop-blur-sm"
+      style={{
+        background: "var(--stat-card-bg)",
+        borderColor: "var(--stat-card-border)",
+        boxShadow: "var(--stat-card-shadow)",
+      }}
+    >
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">
         {label}
       </p>

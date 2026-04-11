@@ -64,7 +64,7 @@ export function MapPopupCard({
             initials={activity.hostInitials}
             color={activity.hostColor}
             size={20}
-            className="ring-2 ring-white/80"
+            className="ring-2 ring-[var(--surface)]"
           />
           <span className="max-w-[5.5rem] truncate text-[11px] font-medium text-[var(--ink-muted)]">
             {activity.host}
