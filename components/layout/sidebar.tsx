@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Avatar } from "@/components/account/avatar";
 import { signOut } from "@/lib/actions/auth";
+import { SidebarMessagesIndicator } from "@/components/layout/sidebar-messages-indicator";
 
 const baseNavigation: ReadonlyArray<{
   label: string;
@@ -44,27 +45,27 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
   );
 
   return (
-    <aside className="flex h-full min-h-0 flex-col overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-card)]">
-      <div className="rounded-[24px] bg-[linear-gradient(160deg,rgba(122,160,96,0.18),rgba(95,168,211,0.14),rgba(255,255,255,0.95))] p-4">
-        <div className="flex flex-col items-center gap-4 py-2 text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-[22px] border border-dashed border-[var(--sage-400)] bg-white/70 text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--ink-subtle)] shadow-sm">
+    <aside className="flex min-h-0 flex-col overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-[clamp(1rem,1.3vw,1.25rem)] shadow-[var(--shadow-card)] xl:h-[calc(100dvh-3rem)]">
+      <div className="shrink-0 rounded-[24px] bg-[linear-gradient(160deg,rgba(122,160,96,0.18),rgba(95,168,211,0.14),rgba(255,255,255,0.95))] p-[clamp(0.875rem,1.1vw,1rem)]">
+        <div className="flex flex-col items-center gap-[clamp(0.75rem,1.5vh,1rem)] py-[clamp(0.125rem,0.8vh,0.5rem)] text-center">
+          <div className="flex h-[clamp(3rem,7vh,4rem)] w-[clamp(3rem,7vh,4rem)] items-center justify-center rounded-[22px] border border-dashed border-[var(--sage-400)] bg-white/70 text-[clamp(0.55rem,1.1vh,0.625rem)] font-semibold uppercase tracking-[0.22em] text-[var(--ink-subtle)] shadow-sm">
             Logo
           </div>
 
-          <h1 className="text-4xl font-semibold tracking-[-0.06em] text-[var(--ink)]">
+          <h1 className="text-[clamp(2rem,4.8vh,2.25rem)] font-semibold tracking-[-0.06em] text-[var(--ink)]">
             VENUE
           </h1>
         </div>
       </div>
 
       <nav
-        className="mt-8 flex-1 space-y-2 overflow-y-auto pr-1"
+        className="mt-[clamp(1rem,2.4vh,2rem)] flex-1 space-y-[clamp(0.375rem,0.9vh,0.5rem)] overflow-y-auto pr-1"
         aria-label="Hovednavigasjon"
       >
         {navigation.map((item) => {
           const isActive = item.label === activeItem;
           const Icon = item.icon;
-          const className = `group flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${
+          const className = `group flex w-full items-center gap-[clamp(0.625rem,1.2vw,0.75rem)] rounded-2xl px-[clamp(0.75rem,1vw,0.875rem)] py-[clamp(0.625rem,1.5vh,0.75rem)] text-left text-[clamp(0.8125rem,1.6vh,0.875rem)] font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${
             isActive
               ? "bg-[var(--sage-50)] text-[var(--sage-700)]"
               : "text-[var(--ink-muted)] hover:bg-[var(--surface-muted)] hover:text-[var(--ink)]"
@@ -73,17 +74,17 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
           const content = (
             <>
               <span
-                className={`flex h-10 w-10 items-center justify-center rounded-2xl transition ${
+                className={`flex h-[clamp(2.25rem,4.5vh,2.5rem)] w-[clamp(2.25rem,4.5vh,2.5rem)] items-center justify-center rounded-2xl transition ${
                   isActive
                     ? "bg-[var(--sage-500)] text-white shadow-sm"
                     : "bg-[var(--surface-muted)] text-[var(--ink-muted)] group-hover:bg-white group-hover:text-[var(--ink)]"
                 }`}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-[clamp(0.875rem,1.8vh,1rem)] w-[clamp(0.875rem,1.8vh,1rem)]" />
               </span>
               <span className="flex-1">{item.label}</span>
-              {isActive ? (
-                <span className="h-2.5 w-2.5 rounded-full bg-[var(--sage-500)]" />
+              {item.label === "Meldinger" ? (
+                <SidebarMessagesIndicator currentUserId={user?.id ?? null} />
               ) : null}
             </>
           );
@@ -109,10 +110,10 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
         })}
       </nav>
 
-      <div className="mt-6 flex-shrink-0">
+      <div className="mt-[clamp(1rem,2vh,1.5rem)] flex-shrink-0">
         {user ? (
-          <div className="w-full rounded-[24px] border border-[var(--border)] bg-[var(--surface-muted)] p-4">
-            <div className="flex items-center gap-3">
+          <div className="w-full rounded-[24px] border border-[var(--border)] bg-[var(--surface-muted)] p-[clamp(0.875rem,1vw,1rem)]">
+            <div className="flex items-center gap-[clamp(0.625rem,1vw,0.75rem)]">
               <Avatar
                 src={user.avatarUrl}
                 initials={user.initials}
@@ -126,7 +127,7 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
               </div>
             </div>
 
-            <div className="mt-4 flex items-center justify-between gap-3">
+            <div className="mt-[clamp(0.75rem,1.5vh,1rem)] flex items-center justify-between gap-[clamp(0.625rem,1vw,0.75rem)]">
               <Link
                 href={profileHref}
                 className="text-sm font-medium text-[var(--sage-700)] transition hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
@@ -146,7 +147,7 @@ export function Sidebar({ activeItem, user }: SidebarProps) {
         ) : (
           <Link
             href="/login"
-            className="flex h-11 w-full items-center justify-center rounded-2xl border border-[var(--sage-500)] text-sm font-semibold text-[var(--sage-700)] transition hover:bg-[var(--sage-50)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
+            className="flex h-[clamp(2.75rem,5vh,2.875rem)] w-full items-center justify-center rounded-2xl border border-[var(--sage-500)] text-sm font-semibold text-[var(--sage-700)] transition hover:bg-[var(--sage-50)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
           >
             Logg inn
           </Link>
