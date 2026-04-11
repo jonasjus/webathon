@@ -58,6 +58,7 @@ export default async function ProfileByIdPage({
   const joinedActivities = profileActivities.filter(
     (a) => a.hostUserId !== profileId
   );
+  const activityPreview = hostedActivities.slice(0, 5);
 
   const isSelf = user.id === profileId;
   const currentUser = buildAppUser(user);
@@ -117,12 +118,12 @@ export default async function ProfileByIdPage({
             <div className="flex flex-col gap-3 border-b border-[var(--border)] pb-6 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-sm font-medium text-[var(--ink-muted)]">
-                  {isSelf ? "Kommende arrangementer" : "Arrangementer"}
+                  {isSelf
+                    ? "Du arrangerer"
+                    : `Arrangeres av ${profile.display_name}`}
                 </p>
                 <h2 className="card-title text-[2rem] text-[var(--ink)]">
-                  {isSelf
-                    ? "Din neste plan"
-                    : `${profile.display_name}s arrangementer`}
+                  {isSelf ? "Dine arrangementer" : `${profile.display_name}s arrangementer`}
                 </h2>
               </div>
               {isSelf && (
@@ -135,26 +136,27 @@ export default async function ProfileByIdPage({
               )}
             </div>
 
-            {profileActivities.length === 0 ? (
+            {hostedActivities.length === 0 ? (
               <div className="mt-6 rounded-[28px] border border-dashed border-[var(--border)] bg-[var(--surface-muted)] px-6 py-12 text-center">
                 <h3 className="card-title text-[1.7rem] text-[var(--ink)]">
                   {isSelf
-                    ? "Profilen din venter på første arrangement"
-                    : "Ingen arrangementer enda"}
+                    ? "Du har ikke arrangert noe enda"
+                    : "Ingen arrangerte arrangementer enda"}
                 </h3>
                 <p className="card-copy mt-4 text-[15px]">
                   {isSelf
-                    ? "Bli med på et arrangement fra hjem-siden, eller opprett et nytt for å fylle ut profilen din."
-                    : "Denne brukeren har ikke registrert noen arrangementer enda."}
+                    ? "Opprett et nytt arrangement for å fylle ut denne delen av profilen din."
+                    : "Denne brukeren har ikke opprettet noen arrangementer enda."}
                 </p>
               </div>
             ) : (
               <div className="mt-6 space-y-4">
-                {profileActivities.slice(0, 5).map((activity) => (
+                {activityPreview.map((activity) => (
                   <ProfileActivityCard
                     key={activity.id}
                     activity={activity}
-                    currentUserId={isSelf ? user.id : profileId}
+                    isSelf={isSelf}
+                    profileOwnerName={profile.display_name}
                   />
                 ))}
               </div>
