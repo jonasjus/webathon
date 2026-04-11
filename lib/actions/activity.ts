@@ -117,6 +117,7 @@ export interface UpdateActivityInput {
   startsAt: string;
   description: string;
   participantsMax: number;
+  price?: number | null;
   category: ActivityCategory;
   latitude?: number | null;
   longitude?: number | null;
@@ -143,6 +144,10 @@ export async function updateActivity(input: UpdateActivityInput) {
   let location = input.location.trim();
   const description = input.description.trim();
   const participantsMax = Number(input.participantsMax);
+  const price =
+    typeof input.price === "number" && Number.isFinite(input.price)
+      ? Number(input.price)
+      : null;
   let latitude =
     typeof input.latitude === "number" ? Number(input.latitude) : null;
   let longitude =
@@ -152,6 +157,8 @@ export async function updateActivity(input: UpdateActivityInput) {
   if (!description) throw new Error("Beskrivelse mangler.");
   if (!Number.isInteger(participantsMax) || participantsMax < 1)
     throw new Error("Maks deltakere må være minst 1.");
+  if (price != null && price < 0)
+    throw new Error("Pris kan ikke være negativ.");
   if ((latitude == null || longitude == null) && !location)
     throw new Error("Legg inn en adresse eller sett et pin på kartet.");
 
@@ -182,6 +189,7 @@ export async function updateActivity(input: UpdateActivityInput) {
       starts_at: input.startsAt,
       description,
       participants_max: participantsMax,
+      price,
       category: input.category,
       latitude,
       longitude,

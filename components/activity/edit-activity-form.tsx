@@ -51,6 +51,10 @@ export function EditActivityForm({ activity, onClose }: EditActivityFormProps) {
           startsAt: formData.get("starts_at") as string,
           description: formData.get("description") as string,
           participantsMax: Number(formData.get("participants_max")),
+          price:
+            formData.get("price") === "" || formData.get("price") == null
+              ? null
+              : Number(formData.get("price")),
           category,
           latitude: coordinates?.lat ?? null,
           longitude: coordinates?.lng ?? null,
@@ -152,6 +156,21 @@ export function EditActivityForm({ activity, onClose }: EditActivityFormProps) {
               min={1}
               max={200}
               defaultValue={activity.participantsMax}
+              className={inputClass}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-[var(--ink)]">
+              Pris (kr)
+            </label>
+            <input
+              name="price"
+              type="number"
+              min={0}
+              step="1"
+              defaultValue={activity.price ?? ""}
+              placeholder="Tom = gratis"
               className={inputClass}
             />
           </div>
