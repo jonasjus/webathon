@@ -15,6 +15,7 @@ import { createPortal } from "react-dom";
 import type { Activity } from "@/lib/supabase/types";
 import { getActivityCategoryAppearance } from "./category-tag";
 import { ActivityDetailMap } from "./activity-detail-map";
+import { EditActivityButton } from "./edit-activity-button";
 import { HostProfileTrigger } from "./host-profile-trigger";
 import { JoinButton } from "./join-button";
 import { ParticipantStack } from "./participant-stack";
@@ -34,7 +35,7 @@ function MetaRow({
   label: string;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-[1.15rem] border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-3 text-sm text-[var(--ink-muted)]">
+    <div className="flex items-start gap-3 rounded-[1.15rem] border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm text-[var(--ink-muted)]">
       <span className="mt-0.5 text-[var(--sage-700)]">{icon}</span>
       <span className="leading-6">{label}</span>
     </div>
@@ -101,9 +102,16 @@ export function ActivityDetailDialog({
                 >
                   {appearance.label}
                 </span>
-                <span className="inline-flex items-center rounded-full bg-white/80 px-3 py-1 text-[11px] font-medium text-[var(--ink-muted)] shadow-sm">
-                  {activity.participantsCurrent}/{activity.participantsMax} deltakere
-                </span>
+                <HostProfileTrigger
+                  avatarUrl={activity.hostAvatarUrl}
+                  host={activity.host}
+                  initials={activity.hostInitials}
+                  color={activity.hostColor}
+                  hostBio={activity.hostBio}
+                  hostUserId={activity.hostUserId}
+                  interests={activity.hostFavoriteCategories}
+                  compact
+                />
               </div>
 
               <h3 className="card-title mt-4 text-[2rem] text-[var(--ink)] sm:text-[2.45rem]">
@@ -124,50 +132,33 @@ export function ActivityDetailDialog({
 
         <div className="overflow-y-auto overscroll-contain px-5 py-5 sm:px-6 sm:py-6">
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-            <div className="min-w-0">
-              <div className="rounded-[1.6rem] border border-[var(--border)] bg-[var(--surface-muted)] p-5">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">
-                  Arrangør
-                </p>
-                <div className="mt-3">
-                  <HostProfileTrigger
-                    avatarUrl={activity.hostAvatarUrl}
-                    host={activity.host}
-                    initials={activity.hostInitials}
-                    color={activity.hostColor}
-                    hostBio={activity.hostBio}
-                    hostUserId={activity.hostUserId}
-                    interests={activity.hostFavoriteCategories}
-                  />
-                </div>
-              </div>
-
-              <div className="mt-6">
+            <div className="min-w-0 lg:flex">
+              <div className="flex h-full w-full flex-col rounded-[1.6rem] border border-[var(--border)] bg-[var(--surface-muted)] p-5">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ink-subtle)]">
                   Om arrangementet
                 </p>
                 <p className="card-copy mt-3 text-[15px] text-[var(--ink-soft)]">
                   {activity.description}
                 </p>
-              </div>
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                <MetaRow
-                  icon={<CalendarDays className="h-4 w-4" />}
-                  label={activity.date}
-                />
-                <MetaRow
-                  icon={<Clock3 className="h-4 w-4" />}
-                  label={`Kl. ${activity.time}`}
-                />
-                <MetaRow
-                  icon={<MapPin className="h-4 w-4" />}
-                  label={activity.location}
-                />
-                <MetaRow
-                  icon={<Users2 className="h-4 w-4" />}
-                  label={`${activity.participantsCurrent} påmeldte av ${activity.participantsMax} plasser`}
-                />
+                <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:mt-auto">
+                  <MetaRow
+                    icon={<CalendarDays className="h-4 w-4" />}
+                    label={activity.date}
+                  />
+                  <MetaRow
+                    icon={<Clock3 className="h-4 w-4" />}
+                    label={`Kl. ${activity.time}`}
+                  />
+                  <MetaRow
+                    icon={<MapPin className="h-4 w-4" />}
+                    label={activity.location}
+                  />
+                  <MetaRow
+                    icon={<Users2 className="h-4 w-4" />}
+                    label={`${activity.participantsCurrent} påmeldte av ${activity.participantsMax} plasser`}
+                  />
+                </div>
               </div>
             </div>
 
@@ -211,6 +202,10 @@ export function ActivityDetailDialog({
                       <MessageCircle className="h-4 w-4" />
                       Se chat
                     </Link>
+                  ) : null}
+
+                  {isOwnActivity ? (
+                    <EditActivityButton activity={activity} variant="full" />
                   ) : null}
                 </div>
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import type { KeyboardEvent, MouseEvent, ReactNode } from "react";
+import type { KeyboardEvent, MouseEvent, PointerEvent, ReactNode } from "react";
 import {
   CalendarDays,
   Clock3,
@@ -70,6 +70,15 @@ function getCountdownBadgeStyles(days: number): string {
   if (days === 1) return "bg-[rgba(122,160,96,0.2)] text-[var(--sage-700)]";
   if (days <= 3) return "bg-[rgba(122,160,96,0.12)] text-[var(--sage-700)]";
   return "bg-[var(--surface-muted)] text-[var(--ink-muted)]";
+}
+
+function stopActionPropagation(
+  event:
+    | KeyboardEvent<HTMLDivElement>
+    | MouseEvent<HTMLDivElement>
+    | PointerEvent<HTMLDivElement>
+) {
+  event.stopPropagation();
 }
 
 export function ActivityCard({
@@ -232,7 +241,15 @@ export function ActivityCard({
             </div>
           </div>
 
-          <div className="sm:flex-shrink-0">{action}</div>
+          <div
+            className="sm:flex-shrink-0"
+            onClick={stopActionPropagation}
+            onKeyDown={stopActionPropagation}
+            onMouseDown={stopActionPropagation}
+            onPointerDown={stopActionPropagation}
+          >
+            {action}
+          </div>
         </div>
       </article>
     );
@@ -307,7 +324,15 @@ export function ActivityCard({
           </div>
         </div>
 
-        <div className="lg:flex-shrink-0 lg:pl-6 lg:pt-1">{action}</div>
+        <div
+          className="lg:flex-shrink-0 lg:pl-6 lg:pt-1"
+          onClick={stopActionPropagation}
+          onKeyDown={stopActionPropagation}
+          onMouseDown={stopActionPropagation}
+          onPointerDown={stopActionPropagation}
+        >
+          {action}
+        </div>
       </div>
     </article>
   );

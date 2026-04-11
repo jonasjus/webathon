@@ -5,7 +5,7 @@ import { useState, useTransition } from "react";
 import { activityCategoryOptions } from "@/components/activity/category-tag";
 import { LocationPicker } from "@/components/activity/location-picker";
 import type { MapCoordinates } from "@/lib/map";
-import { updateActivity } from "@/lib/actions/activity";
+import { updateActivity, deleteActivity } from "@/lib/actions/activity";
 import type { Activity, ActivityCategory } from "@/lib/supabase/types";
 
 interface EditActivityFormProps {
@@ -15,12 +15,27 @@ interface EditActivityFormProps {
 
 export function EditActivityForm({ activity, onClose }: EditActivityFormProps) {
   const [isPending, startTransition] = useTransition();
+  const [isDeleting, startDeleteTransition] = useTransition();
   const [category, setCategory] = useState<ActivityCategory>(activity.category);
   const [location, setLocation] = useState(activity.location);
   const [coordinates, setCoordinates] = useState<MapCoordinates | null>(
     activity.coordinates
   );
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  function handleDelete() {
+    if (!confirm("Er du sikker på at du vil slette dette arrangementet?")) return;
+    startDeleteTransition(async () => {
+      try {
+        await deleteActivity(activity.id);
+        onClose();
+      } catch (error) {
+        setSubmitError(
+          error instanceof Error ? error.message : "Kunne ikke slette arrangementet."
+        );
+      }
+    });
+  }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -179,10 +194,11 @@ export function EditActivityForm({ activity, onClose }: EditActivityFormProps) {
             </button>
             <button
               type="button"
-              onClick={onClose}
-              className="inline-flex h-11 items-center justify-center rounded-xl border border-[var(--border)] px-5 text-sm font-medium text-[var(--ink-muted)] transition hover:bg-[var(--surface-muted)]"
+              onClick={handleDelete}
+              disabled={isDeleting || isPending}
+              className="inline-flex h-11 items-center justify-center rounded-xl border border-[#e5b4b4] bg-[#fdf2f2] px-5 text-sm font-medium text-[#a64532] transition hover:bg-[#fae5e5] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#a64532] focus-visible:ring-offset-2"
             >
-              Avbryt
+              {isDeleting ? "Sletter…" : "Slett aktivitet"}
             </button>
           </div>
         </form>

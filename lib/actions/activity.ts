@@ -182,6 +182,32 @@ export async function updateActivity(input: UpdateActivityInput) {
   revalidateAppContentPaths();
 }
 
+export async function deleteActivity(activityId: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Ikke innlogget");
+
+  const { data: existing } = await supabase
+    .from("activities")
+    .select("host_user_id")
+    .eq("id", activityId)
+    .single();
+
+  if (!existing || (existing as { host_user_id: string }).host_user_id !== user.id) {
+    throw new Error("Du kan ikke slette dette arrangementet.");
+  }
+
+  const { error } = await supabase
+    .from("activities")
+    .delete()
+    .eq("id", activityId);
+
+  if (error) throw new Error(`Kunne ikke slette arrangement: ${error.message}`);
+  revalidateAppContentPaths();
+}
+
 export async function joinActivity(activityId: string) {
   const supabase = await createClient();
   const {
