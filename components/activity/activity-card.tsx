@@ -6,14 +6,13 @@ import {
   Users2,
 } from "lucide-react";
 import Link from "next/link";
-import { Avatar } from "@/components/account/avatar";
-import { getShortLocationLabel } from "@/lib/location-label";
 import type { Activity } from "@/lib/supabase/types";
 import {
   ActivityCategoryIcon,
   getActivityCategoryAppearance,
   withAlpha,
 } from "./category-tag";
+import { HostProfileTrigger } from "./host-profile-trigger";
 import { JoinButton } from "./join-button";
 import { ParticipantStack } from "./participant-stack";
 
@@ -128,6 +127,8 @@ export function ActivityCard({
                       host={activity.host}
                       initials={activity.hostInitials}
                       color={activity.hostColor}
+                      hostBio={activity.hostBio}
+                      interests={activity.hostFavoriteCategories}
                       hostUserId={activity.hostUserId}
                       compact
                     />
@@ -195,6 +196,8 @@ export function ActivityCard({
                       host={activity.host}
                       initials={activity.hostInitials}
                       color={activity.hostColor}
+                      hostBio={activity.hostBio}
+                      interests={activity.hostFavoriteCategories}
                       hostUserId={activity.hostUserId}
                     />
                   </div>
@@ -292,7 +295,9 @@ interface HostInlineProps {
   host: string;
   initials: string;
   color: string;
+  hostBio: string | null;
   hostUserId: string;
+  interests: Activity["hostFavoriteCategories"];
   compact?: boolean;
 }
 
@@ -301,25 +306,22 @@ function HostInline({
   host,
   initials,
   color,
+  hostBio,
   hostUserId,
+  interests,
   compact = false,
 }: HostInlineProps) {
   return (
-    <Link
-      href={`/profil/${hostUserId}`}
-      className={`inline-flex items-center gap-2 rounded-full bg-[var(--sage-50)] font-medium text-[var(--sage-700)] transition hover:bg-[var(--sage-100)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 ${compact ? "px-2 py-1 text-xs" : "px-2.5 py-1.5 text-sm"}`}
-    >
-      <Avatar
-        src={avatarUrl}
-        initials={initials}
-        color={color}
-        size={compact ? 18 : 20}
-        className="ring-2 ring-white/80"
-      />
-      <span>
-        Arrangør <span className="font-semibold">{host}</span>
-      </span>
-    </Link>
+    <HostProfileTrigger
+      avatarUrl={avatarUrl}
+      host={host}
+      initials={initials}
+      color={color}
+      hostBio={hostBio}
+      hostUserId={hostUserId}
+      interests={interests}
+      compact={compact}
+    />
   );
 }
 

@@ -32,6 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="nb"
+      data-scroll-behavior="smooth"
       className={`${manrope.variable} ${newsreader.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
