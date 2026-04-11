@@ -234,11 +234,7 @@ export function MessagesWorkspace({
     }
   }
 
-  const applyIncomingMessageFromSubscription = useEffectEvent(
-    (message: ActivityChatMessage) => {
-      applyIncomingMessage(message);
-    }
-  );
+  const applyIncomingMessageFromEffect = useEffectEvent(applyIncomingMessage);
 
   useEffect(() => subscribeToUnreadActivityIds(setUnreadActivityIds), []);
 
@@ -365,7 +361,7 @@ export function MessagesWorkspace({
             .single();
 
           if (error || !data) return;
-          applyIncomingMessageFromSubscription(
+          applyIncomingMessageFromEffect(
             toChatMessage(data as unknown as MessageQueryRow, currentUser)
           );
         }
@@ -434,10 +430,10 @@ export function MessagesWorkspace({
 
   return (
     <div className="flex flex-col gap-6 xl:h-full xl:min-h-0 xl:overflow-hidden">
-      <section className="shrink-0 overflow-hidden rounded-[36px] border border-[var(--border)] bg-[var(--surface-muted)] p-6 shadow-[0_28px_72px_rgba(67,92,56,0.10)] sm:p-8">
+      <section className="shrink-0 overflow-hidden rounded-[36px] border border-[var(--border)] bg-[var(--surface-muted)] p-6 shadow-[var(--section-hero-shadow)] sm:p-8">
         <div className="max-w-5xl">
           <div>
-            <p className="inline-flex rounded-full border border-white/80 bg-white/72 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm backdrop-blur-sm">
+            <p className="inline-flex rounded-full border border-[var(--hero-pill-border)] bg-[var(--hero-pill-bg)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm backdrop-blur-sm">
               Meldinger
             </p>
             <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">

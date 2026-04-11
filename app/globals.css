@@ -17,6 +17,9 @@
   --accent-sky: #5fa8d3;
   --accent-amber: #f1b24a;
   --accent-plum: #8e6bb1;
+  --hero-pill-bg: rgba(255, 255, 255, 0.72);
+  --hero-pill-border: rgba(255, 255, 255, 0.8);
+  --section-hero-shadow: 0 28px 72px rgba(67, 92, 56, 0.1);
   --shadow-card:
     0 1px 2px rgba(15, 27, 18, 0.04),
     0 8px 24px -16px rgba(15, 27, 18, 0.12);
