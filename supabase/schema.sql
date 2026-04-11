@@ -12,6 +12,9 @@ create table if not exists public.profiles (
   initials     text        not null,
   avatar_color text        not null default '#5FA8D3',
   avatar_url   text,
+  bio          text        check (bio is null or char_length(bio) <= 280),
+  banner_theme text,
+  favorite_categories text[] not null default '{}' check (coalesce(array_length(favorite_categories, 1), 0) <= 3),
   created_at   timestamptz not null default now()
 );
 
@@ -46,7 +49,7 @@ create table if not exists public.activities (
   starts_at        timestamptz not null,
   description      text        not null,
   participants_max int         not null check (participants_max > 0),
-  category         text        not null check (category in ('fotball','løping','yoga','klatring','padel','sykling')),
+  category         text        not null check (category in ('Sport & Trening','Sosialt & Underholdning','Annet')),
   map_pin_x        numeric     not null,
   map_pin_y        numeric     not null,
   created_at       timestamptz not null default now()
@@ -286,12 +289,12 @@ begin
     insert into public.activities
       (title, host_user_id, location, starts_at, description, participants_max, category, map_pin_x, map_pin_y)
     values
-      ('Søndagsfotball på Frogner',    demo_host, 'Frognerparken',      '2026-04-13 14:00:00+02', 'Uformell 7er-fotball for alle nivåer. Ta med studenter og venner! Vi deler oss i lag på stedet.',           14, 'fotball', 36, 42),
-      ('Morgenjoggen langs Akerselva', demo_host, 'Grünerløkka',        '2026-04-12 07:30:00+02', 'Lett joggetur på ca. 5 km langs elva. Passer perfekt for nybegynnere og de som ønsker en rolig start på dagen.', 12, 'løping',  61, 34),
-      ('Yoga i parken',                demo_host, 'Sofienbergparken',   '2026-04-12 10:00:00+02', 'Utendørs yoga for alle nivåer. Ta med matte og vann. Vi fokuserer på pust, balanse og tilstedeværelse.',      15, 'yoga',    68, 48),
-      ('Klatring på Kolsås',           demo_host, 'Kolsåstoppen',       '2026-04-13 09:00:00+02', 'Klatring i fantastisk natur vest for Oslo. Erfaring kreves. Eget klatreutstyr medbringes.',                    8, 'klatring', 19, 54),
-      ('Padel-turnering Aker Brygge',  demo_host, 'Aker Brygge Padel',  '2026-04-10 18:00:00+02', 'Enkelt padel-turnering med pokalseremoni etterpå. Alle velkomne, blandede nivåer og aldre.',                  16, 'padel',   44, 69),
-      ('Langsykling Oslofjorden',      demo_host, 'Vippetangen',        '2026-04-13 08:00:00+02', '60 km rundtur rundt Oslofjorden. Treningstur for erfarne syklister. Tempoet tilpasses gruppen.',              10, 'sykling',  51, 77);
+      ('Søndagsfotball på Frogner',    demo_host, 'Frognerparken',      '2026-04-13 14:00:00+02', 'Uformell 7er-fotball for alle nivåer. Ta med studenter og venner! Vi deler oss i lag på stedet.',           14, 'Sport & Trening', 36, 42),
+      ('Morgenjoggen langs Akerselva', demo_host, 'Grünerløkka',        '2026-04-12 07:30:00+02', 'Lett joggetur på ca. 5 km langs elva. Passer perfekt for nybegynnere og de som ønsker en rolig start på dagen.', 12, 'Sport & Trening', 61, 34),
+      ('Yoga i parken',                demo_host, 'Sofienbergparken',   '2026-04-12 10:00:00+02', 'Utendørs yoga for alle nivåer. Ta med matte og vann. Vi fokuserer på pust, balanse og tilstedeværelse.',      15, 'Sport & Trening', 68, 48),
+      ('Klatring på Kolsås',           demo_host, 'Kolsåstoppen',       '2026-04-13 09:00:00+02', 'Klatring i fantastisk natur vest for Oslo. Erfaring kreves. Eget klatreutstyr medbringes.',                    8, 'Sport & Trening', 19, 54),
+      ('Padel-turnering Aker Brygge',  demo_host, 'Aker Brygge Padel',  '2026-04-10 18:00:00+02', 'Enkelt padel-turnering med pokalseremoni etterpå. Alle velkomne, blandede nivåer og aldre.',                  16, 'Sport & Trening', 44, 69),
+      ('Langsykling Oslofjorden',      demo_host, 'Vippetangen',        '2026-04-13 08:00:00+02', '60 km rundtur rundt Oslofjorden. Treningstur for erfarne syklister. Tempoet tilpasses gruppen.',              10, 'Sport & Trening', 51, 77);
 
     raise notice 'Seeded 6 activities with host user %', demo_host;
   else
@@ -301,11 +304,7 @@ end;
 $$;
 
 -- ============================================================
--- 8. Avatar column migration
+-- 8. Notes
 -- ============================================================
--- If you already ran this schema before avatar support was added,
--- run this one-liner in the SQL Editor to add the column:
---
---   alter table public.profiles add column if not exists avatar_url text;
---
--- Also run the storage bucket setup described in AVATAR_SETUP.md.
+-- The base schema above already includes avatar, bio, banner theme,
+-- and favorite interest support on public.profiles.

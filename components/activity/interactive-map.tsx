@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Activity } from "@/lib/supabase/types";
-import { getCategoryAppearance } from "./category-tag";
+import { getActivityCategoryAppearance } from "./category-tag";
 
 interface InteractiveMapProps {
   activities: Activity[];
@@ -26,7 +26,7 @@ export function InteractiveMap({ activities }: InteractiveMapProps) {
           </h3>
         </div>
         <span className="rounded-full bg-[var(--surface-muted)] px-3 py-1 text-xs font-medium text-[var(--ink-muted)]">
-          {activities.length} økter
+          {activities.length} arrangementer
         </span>
       </div>
 
@@ -36,7 +36,7 @@ export function InteractiveMap({ activities }: InteractiveMapProps) {
             viewBox="0 0 100 100"
             className="h-full w-full"
             role="img"
-            aria-label="Interaktivt kart over aktiviteter i Oslo"
+            aria-label="Interaktivt kart over arrangementer i Oslo"
           >
             <path
               d="M18 14C29 11 44 14 55 18C64 22 72 29 79 38C83 43 88 49 89 58C89 67 82 74 74 77C63 82 48 83 38 81C29 80 21 75 16 68C11 61 10 52 11 44C12 34 10 24 18 14Z"
@@ -66,7 +66,7 @@ export function InteractiveMap({ activities }: InteractiveMapProps) {
 
           {activities.map((activity) => {
             const isSelected = activity.id === selectedActivity?.id;
-            const appearance = getCategoryAppearance(activity.category);
+            const appearance = getActivityCategoryAppearance(activity.category);
 
             return (
               <button
@@ -75,7 +75,7 @@ export function InteractiveMap({ activities }: InteractiveMapProps) {
                 onMouseEnter={() => setSelectedActivityId(activity.id)}
                 onFocus={() => setSelectedActivityId(activity.id)}
                 onClick={() => setSelectedActivityId(activity.id)}
-                aria-label={`Vis aktivitet: ${activity.title}`}
+                aria-label={`Vis arrangement: ${activity.title}`}
                 className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--surface-muted)]"
                 style={{
                   left: `${activity.mapPin.x}%`,

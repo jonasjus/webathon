@@ -9,8 +9,8 @@ import Link from "next/link";
 import { Avatar } from "@/components/account/avatar";
 import type { Activity } from "@/lib/supabase/types";
 import {
-  CategoryIcon,
-  getCategoryAppearance,
+  ActivityCategoryIcon,
+  getActivityCategoryAppearance,
   withAlpha,
 } from "./category-tag";
 import { JoinButton } from "./join-button";
@@ -57,7 +57,7 @@ export function ActivityCard({
 }: ActivityCardProps) {
   const isOwnActivity = !!currentUserId && currentUserId === activity.hostUserId;
   const canOpenChat = isOwnActivity || activity.isJoined;
-  const appearance = getCategoryAppearance(activity.category);
+  const appearance = getActivityCategoryAppearance(activity.category);
   const urgencyStyles = getUrgencyStyles(daysUntil);
   const accentSurface = withAlpha(appearance.color, 0.12);
   const accentBorder = withAlpha(appearance.color, 0.24);
@@ -70,7 +70,7 @@ export function ActivityCard({
     : "Sted vises ved innlogging";
   const primaryAction = isOwnActivity ? (
     <span className="inline-flex h-11 items-center rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] px-5 text-sm font-medium text-[var(--ink-muted)]">
-      Din aktivitet
+      Ditt arrangement
     </span>
   ) : (
     <JoinButton
@@ -261,7 +261,7 @@ function ActivityIdentityTile({
         color: accentInk,
       }}
     >
-      <CategoryIcon
+      <ActivityCategoryIcon
         category={category}
         size={size === "compact" ? 18 : 24}
         strokeWidth={size === "compact" ? 2 : 1.9}

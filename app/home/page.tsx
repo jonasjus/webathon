@@ -74,18 +74,18 @@ export default async function HomePage() {
                 </p>
                 <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
                   {currentUser
-                    ? `Hei, ${firstName}. Klar for neste aktivitet?`
-                    : "Bygg din egen aktivitetsuke i venue."}
+                    ? `Hei, ${firstName}. Klar for neste arrangement?`
+                    : "Bygg din egen arrangementsuke i venue."}
                 </h1>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">
                   {currentUser
-                    ? "Bruk hjem til å få oversikt over aktivitetene dine og finne nye økter å bli med på."
-                    : "Utforsk kommende økter, se hvilke kategorier som er aktive nå, og logg inn når du vil bygge din egen profil."}
+                    ? "Bruk hjem til å få oversikt over arrangementene dine og finne nye du vil bli med på."
+                    : "Utforsk kommende arrangementer, se hvilke kategorier som er aktive nå, og logg inn når du vil bygge din egen profil."}
                 </p>
 
                 <div className="mt-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   <DashboardStat
-                    label={currentUser ? "Planer" : "Aktiviteter"}
+                    label={currentUser ? "Planer" : "Arrangementer"}
                     value={currentUser ? myActivities.length : activities.length}
                   />
                   <DashboardStat
@@ -133,7 +133,7 @@ export default async function HomePage() {
             createCta={
               <CreateActivityCta
                 isLoggedIn={!!currentUser}
-                label="Opprett aktivitet"
+                label="Opprett arrangement"
                 buttonClassName="inline-flex h-11 items-center justify-center rounded-2xl border border-[var(--sage-500)] px-4 text-sm font-semibold text-[var(--sage-700)] transition hover:bg-[var(--sage-50)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sage-600)] focus-visible:ring-offset-2"
               />
             }

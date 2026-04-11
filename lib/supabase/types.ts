@@ -10,7 +10,7 @@ export interface ProfileRow {
   avatar_url: string | null;
   bio: string | null;
   banner_theme: string | null;
-  favorite_categories: ActivityCategory[];
+  favorite_categories: ActivityInterestCategory[];
   created_at: string;
 }
 
@@ -47,6 +47,11 @@ export interface ActivityChatMessageRow {
 // ---------------------------------------------------------------------------
 
 export type ActivityCategory =
+  | "Sport & Trening"
+  | "Sosialt & Underholdning"
+  | "Annet";
+
+export type ActivityInterestCategory =
   // Sport & Trening
   | "fotball" | "løping" | "yoga" | "klatring" | "padel" | "sykling"
   | "basketball" | "tennis" | "volleyball" | "svømming" | "ski" | "snowboard"
@@ -60,8 +65,8 @@ export type ActivityCategory =
   // Annet
   | "annet";
 
-/** @deprecated Use ActivityCategory */
-export type SportCategory = ActivityCategory;
+/** @deprecated Use ActivityInterestCategory */
+export type SportCategory = ActivityInterestCategory;
 
 export interface Activity {
   id: string;
@@ -130,7 +135,7 @@ export interface Database {
         Insert: Omit<ProfileRow, "created_at"> & {
           bio?: string | null;
           banner_theme?: string | null;
-          favorite_categories?: ActivityCategory[];
+          favorite_categories?: ActivityInterestCategory[];
         };
         Update: Partial<Omit<ProfileRow, "id" | "created_at">>;
       };

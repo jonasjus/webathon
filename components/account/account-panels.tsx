@@ -12,7 +12,7 @@ export function DisplayNamePanel({
   displayName,
   redirectPath = "/instillinger",
   title = "Visningsnavn",
-  description = "Navnet brukes i profilen din, aktivitetskort og meldinger.",
+  description = "Navnet brukes i profilen din, arrangementskort og meldinger.",
   className = "",
 }: DisplayNamePanelProps) {
   return (

@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { Pencil, X } from "lucide-react";
 import {
-  categoryOptions,
-  CategoryTag,
+  activityCategoryOptions,
+  interestCategoryOptions,
+  InterestCategoryTag,
 } from "@/components/activity/category-tag";
 import { AvatarUpload } from "@/components/account/avatar-upload";
 import { Avatar } from "@/components/account/avatar";
@@ -13,7 +14,7 @@ import {
   resolveBannerBackground,
 } from "@/lib/banner-themes";
 import { updateProfileDetails } from "@/lib/actions/profile";
-import type { ActivityCategory } from "@/lib/supabase/types";
+import type { ActivityInterestCategory } from "@/lib/supabase/types";
 import { ProfileStat } from "./profile-stat";
 
 interface ProfileStats {
@@ -31,7 +32,7 @@ interface ProfileHeroProps {
   avatarUrl: string | null;
   bio: string | null;
   bannerTheme: string | null;
-  favoriteCategories: ActivityCategory[];
+  favoriteCategories: ActivityInterestCategory[];
   memberSince: string;
   isSelf: boolean;
   stats: ProfileStats;
@@ -64,7 +65,7 @@ export function ProfileHero({
     !!bannerTheme && /^#/.test(bannerTheme)
   );
   const [selectedCategories, setSelectedCategories] =
-    useState<ActivityCategory[]>(favoriteCategories);
+    useState<ActivityInterestCategory[]>(favoriteCategories);
 
   const bannerBackground = resolveBannerBackground(bannerTheme);
   const bioText = bio?.trim() ?? "";
@@ -74,10 +75,9 @@ export function ProfileHero({
     ? customColor
     : (selectedPreset ?? BANNER_PRESETS[0].id);
 
-  const groups = ["Sport & Trening", "Sosialt & Underholdning", "Annet"] as const;
-  const groupedCategories = groups.map((group) => ({
-    group,
-    options: categoryOptions.filter((category) => category.group === group),
+  const groupedCategories = activityCategoryOptions.map(({ value }) => ({
+    group: value,
+    options: interestCategoryOptions.filter((category) => category.group === value),
   }));
 
   function resetEditorState() {
@@ -102,7 +102,7 @@ export function ProfileHero({
     setEditorOpen(true);
   }
 
-  function toggleCategory(category: ActivityCategory) {
+  function toggleCategory(category: ActivityInterestCategory) {
     setSelectedCategories((current) => {
       if (current.includes(category)) {
         return current.filter((value) => value !== category);
@@ -347,7 +347,7 @@ export function ProfileHero({
               ) : hasFavoriteCategories ? (
                 <div className="mt-3 flex flex-wrap gap-2">
                   {favoriteCategories.map((category) => (
-                    <CategoryTag key={category} category={category} />
+                    <InterestCategoryTag key={category} category={category} />
                   ))}
                 </div>
               ) : (

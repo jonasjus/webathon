@@ -17,7 +17,7 @@ export default async function MyActivitiesPage() {
   if (!user) {
     redirect(
       `/login?error=${encodeURIComponent(
-        "Du må være logget inn for å se dine aktiviteter."
+        "Du må være logget inn for å se arrangementene dine."
       )}`
     );
   }
@@ -31,7 +31,7 @@ export default async function MyActivitiesPage() {
     <main className="min-h-screen bg-[var(--canvas)] px-4 py-6 sm:px-6 xl:px-8">
       <div className="mx-auto grid max-w-[1440px] gap-6 xl:grid-cols-[248px_minmax(0,1fr)]">
         <div className="xl:sticky xl:top-6 xl:h-[calc(100vh-3rem)]">
-          <Sidebar activeItem="Mine aktiviteter" user={sidebarUser} />
+          <Sidebar activeItem="Mine arrangementer" user={sidebarUser} />
         </div>
 
         <div className="flex flex-col gap-6">
@@ -39,13 +39,13 @@ export default async function MyActivitiesPage() {
             <div className="max-w-5xl">
               <div>
                 <p className="inline-flex rounded-full border border-white/80 bg-white/72 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--ink-subtle)] shadow-sm backdrop-blur-sm">
-                  Mine aktiviteter
+                  Mine arrangementer
                 </p>
                 <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-[var(--ink)] sm:text-5xl">
-                  Dine aktiviteter
+                  Dine arrangementer
                 </h1>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">
-                  Her ser du alle aktiviteter du deltar på eller arrangerer selv.
+                  Her ser du alle arrangementer du deltar på eller arrangerer selv.
                 </p>
               </div>
             </div>
@@ -59,12 +59,12 @@ export default async function MyActivitiesPage() {
               initialView="compact"
               showCountdown
               emptyStateCopy={{
-                baseTitle: "Ingen aktiviteter enda",
+                baseTitle: "Ingen arrangementer enda",
                 baseDescription:
-                  "Når du blir med på en aktivitet eller oppretter en selv, dukker den opp her.",
-                filteredTitle: "Ingen aktiviteter matcher",
+                  "Når du blir med på et arrangement eller oppretter et selv, dukker det opp her.",
+                filteredTitle: "Ingen arrangementer matcher",
                 filteredDescription:
-                  "Ingen av aktivitetene dine matcher søket eller filtrene akkurat nå.",
+                  "Ingen av arrangementene dine matcher søket eller filtrene akkurat nå.",
               }}
             />
           </section>

@@ -58,7 +58,7 @@ export function SettingsProfileCard({
             className={inputClass}
           />
           <p className="text-xs text-[var(--ink-subtle)]">
-            Vises i aktivitetsstrømmen og meldinger.
+            Vises i arrangementsstrømmen og meldinger.
           </p>
         </div>
         <div className="flex justify-end">

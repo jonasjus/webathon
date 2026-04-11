@@ -15,8 +15,8 @@ export function AuthCard({ error, success, isSignUp }: AuthCardProps) {
       </h1>
       <p className="card-copy mt-3 text-[15px]">
         {isSignUp
-          ? "Lag en konto for å opprette og delta i aktiviteter."
-          : "Logg inn for å delta i aktiviteter."}
+          ? "Lag en konto for å opprette og delta i arrangementer."
+          : "Logg inn for å delta i arrangementer."}
       </p>
 
       {error && (

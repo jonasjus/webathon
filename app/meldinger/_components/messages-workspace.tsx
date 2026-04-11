@@ -337,7 +337,7 @@ export function MessagesWorkspace({
           Dine gruppechatter
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--ink-muted)] sm:text-base">
-          Gruppechatter for aktivitetene du er med på eller arrangerer.
+          Gruppechatter for arrangementene du er med på eller arrangerer.
         </p>
           </div>
         </div>
@@ -356,14 +356,14 @@ export function MessagesWorkspace({
                 Ingen aktive chatter
               </h2>
               <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
-                Når du blir med på en aktivitet, får du en egen gruppechat her
-                fram til aktivitetsdatoen er over.
+                Når du blir med på et arrangement, får du en egen gruppechat her
+                fram til arrangementsdatoen er over.
               </p>
               <Link
                 href="/"
                 className="mt-4 inline-flex h-11 items-center justify-center rounded-xl border border-[var(--sage-500)] px-4 text-sm font-semibold text-[var(--sage-700)] transition hover:bg-[var(--sage-50)]"
               >
-                Finn aktiviteter
+                Finn arrangementer
               </Link>
             </div>
           </div>
@@ -438,7 +438,7 @@ export function MessagesWorkspace({
                 Ingen chat valgt
               </h2>
               <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
-                Velg en aktivitet fra listen for å åpne gruppechatten.
+                Velg et arrangement fra listen for å åpne gruppechatten.
               </p>
             </div>
           </div>
@@ -464,7 +464,7 @@ export function MessagesWorkspace({
                       Start samtalen
                     </h3>
                     <p className="mt-2 text-sm leading-6 text-[var(--ink-muted)]">
-                      Dette er gruppechatten for aktiviteten. Første melding setter
+                      Dette er gruppechatten for arrangementet. Første melding setter
                       i gang praten.
                     </p>
                   </div>
@@ -563,7 +563,7 @@ export function MessagesWorkspace({
 
               <div className="mt-2 flex items-center justify-between gap-3">
                 <p className="text-xs text-[var(--ink-subtle)]">
-                  Chatten slettes automatisk etter aktivitetsdatoen.
+                  Chatten slettes automatisk etter arrangementsdatoen.
                 </p>
                 <p className="text-xs text-[var(--ink-subtle)]">
                   {draft.trim().length}/2000

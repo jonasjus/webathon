@@ -38,24 +38,62 @@ import {
   Volleyball,
   Waves,
 } from "lucide-react";
-import type { ActivityCategory } from "@/lib/supabase/types";
+import type {
+  ActivityCategory,
+  ActivityInterestCategory,
+} from "@/lib/supabase/types";
 
-type CategoryGroup = "Sport & Trening" | "Sosialt & Underholdning" | "Annet";
+type CategoryGroup = ActivityCategory;
 
-type CategoryMeta = {
+type InterestCategoryMeta = {
   label: string;
   color: string;
   group: CategoryGroup;
   icon: LucideIcon;
 };
 
-export type CategoryOption = {
+type ActivityCategoryMeta = {
+  label: ActivityCategory;
+  color: string;
+  icon: LucideIcon;
+};
+
+export type ActivityCategoryOption = {
   value: ActivityCategory;
+  label: ActivityCategory;
+};
+
+export type InterestCategoryOption = {
+  value: ActivityInterestCategory;
   label: string;
   group: CategoryGroup;
 };
 
-const orderedCategories: readonly ActivityCategory[] = [
+const activityCategoryMeta = {
+  "Sport & Trening": {
+    label: "Sport & Trening",
+    color: "#5FA8D3",
+    icon: Trophy,
+  },
+  "Sosialt & Underholdning": {
+    label: "Sosialt & Underholdning",
+    color: "#D868A8",
+    icon: Sparkles,
+  },
+  Annet: {
+    label: "Annet",
+    color: "#A8A8A8",
+    icon: CircleEllipsis,
+  },
+} satisfies Record<ActivityCategory, ActivityCategoryMeta>;
+
+export const activityCategoryOptions = [
+  { value: "Sport & Trening", label: "Sport & Trening" },
+  { value: "Sosialt & Underholdning", label: "Sosialt & Underholdning" },
+  { value: "Annet", label: "Annet" },
+] as const satisfies readonly ActivityCategoryOption[];
+
+const orderedInterestCategories: readonly ActivityInterestCategory[] = [
   "fotball",
   "basketball",
   "volleyball",
@@ -103,7 +141,7 @@ const orderedCategories: readonly ActivityCategory[] = [
   "annet",
 ];
 
-const categoryMeta = {
+const interestCategoryMeta = {
   fotball: { label: "Fotball", color: "#5FA8D3", group: "Sport & Trening", icon: Goal },
   løping: { label: "Løping", color: "#F08A6E", group: "Sport & Trening", icon: Footprints },
   yoga: { label: "Yoga", color: "#F1B24A", group: "Sport & Trening", icon: Flower2 },
@@ -149,13 +187,13 @@ const categoryMeta = {
   vandring: { label: "Vandring", color: "#78A858", group: "Sosialt & Underholdning", icon: MapPinned },
   tur: { label: "Tur", color: "#68B888", group: "Sosialt & Underholdning", icon: TentTree },
   annet: { label: "Annet", color: "#A8A8A8", group: "Annet", icon: CircleEllipsis },
-} satisfies Record<ActivityCategory, CategoryMeta>;
+} satisfies Record<ActivityInterestCategory, InterestCategoryMeta>;
 
-export const categoryOptions: readonly CategoryOption[] = orderedCategories.map(
+export const interestCategoryOptions: readonly InterestCategoryOption[] = orderedInterestCategories.map(
   (category) => ({
     value: category,
-    label: categoryMeta[category].label,
-    group: categoryMeta[category].group,
+    label: interestCategoryMeta[category].label,
+    group: interestCategoryMeta[category].group,
   })
 );
 
@@ -173,24 +211,28 @@ export function withAlpha(hex: string, alpha: number): string {
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }
 
-export function getCategoryAppearance(category: ActivityCategory) {
-  return categoryMeta[category];
+export function getActivityCategoryAppearance(category: ActivityCategory) {
+  return activityCategoryMeta[category];
 }
 
-interface CategoryIconProps {
+export function getInterestCategoryAppearance(category: ActivityInterestCategory) {
+  return interestCategoryMeta[category];
+}
+
+interface ActivityCategoryIconProps {
   category: ActivityCategory;
   className?: string;
   size?: number;
   strokeWidth?: number;
 }
 
-export function CategoryIcon({
+export function ActivityCategoryIcon({
   category,
   className,
   size = 18,
   strokeWidth = 1.9,
-}: CategoryIconProps) {
-  const Icon = getCategoryAppearance(category).icon;
+}: ActivityCategoryIconProps) {
+  const Icon = getActivityCategoryAppearance(category).icon;
 
   return (
     <Icon
@@ -202,12 +244,37 @@ export function CategoryIcon({
   );
 }
 
-interface CategoryTagProps {
-  category: ActivityCategory;
+interface InterestCategoryIconProps {
+  category: ActivityInterestCategory;
+  className?: string;
+  size?: number;
+  strokeWidth?: number;
 }
 
-export function CategoryTag({ category }: CategoryTagProps) {
-  const meta = getCategoryAppearance(category);
+export function InterestCategoryIcon({
+  category,
+  className,
+  size = 18,
+  strokeWidth = 1.9,
+}: InterestCategoryIconProps) {
+  const Icon = getInterestCategoryAppearance(category).icon;
+
+  return (
+    <Icon
+      aria-hidden="true"
+      size={size}
+      strokeWidth={strokeWidth}
+      className={className}
+    />
+  );
+}
+
+interface InterestCategoryTagProps {
+  category: ActivityInterestCategory;
+}
+
+export function InterestCategoryTag({ category }: InterestCategoryTagProps) {
+  const meta = getInterestCategoryAppearance(category);
 
   return (
     <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3 py-1.5 text-xs font-semibold text-[var(--ink)]">
@@ -218,7 +285,7 @@ export function CategoryTag({ category }: CategoryTagProps) {
           color: meta.color,
         }}
       >
-        <CategoryIcon category={category} size={12} strokeWidth={2.2} />
+        <InterestCategoryIcon category={category} size={12} strokeWidth={2.2} />
       </span>
       {meta.label}
     </span>

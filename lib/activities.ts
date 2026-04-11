@@ -3,8 +3,8 @@ import { cache } from "react";
 import { createClient } from "./supabase/server";
 import type {
   Activity,
+  ActivityCategory,
   ActivityParticipantPreview,
-  SportCategory,
 } from "./supabase/types";
 import { formatNorwegianDate, formatNorwegianTime } from "./date-time";
 
@@ -122,7 +122,7 @@ export const getActivities = cache(async (): Promise<Activity[]> => {
       description: row.description,
       participantsCurrent: participants.length,
       participantsMax: row.participants_max,
-      category: row.category as SportCategory,
+      category: row.category as ActivityCategory,
       mapPin: { x: Number(row.map_pin_x), y: Number(row.map_pin_y) },
       startsAt: row.starts_at,
       isJoined: user

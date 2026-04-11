@@ -1,14 +1,14 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { categoryOptions } from "@/components/activity/category-tag";
+import { interestCategoryOptions } from "@/components/activity/category-tag";
 import { BANNER_PRESETS, isHexColor } from "@/lib/banner-themes";
 import { revalidateAppContentPaths } from "@/lib/revalidate-paths";
 import { createClient } from "@/lib/supabase/server";
-import type { ActivityCategory } from "@/lib/supabase/types";
+import type { ActivityInterestCategory } from "@/lib/supabase/types";
 
 const VALID_PRESET_IDS = new Set(BANNER_PRESETS.map((p) => p.id));
-const VALID_CATEGORIES = new Set<string>(categoryOptions.map((c) => c.value));
+const VALID_CATEGORIES = new Set<string>(interestCategoryOptions.map((c) => c.value));
 
 export async function updateProfileDetails(formData: FormData) {
   const supabase = await createClient();
@@ -48,7 +48,7 @@ export async function updateProfileDetails(formData: FormData) {
   const rawCategories = formData.getAll("favorite_categories").map(String);
   const favorite_categories = rawCategories.filter((c) =>
     VALID_CATEGORIES.has(c)
-  ) as ActivityCategory[];
+  ) as ActivityInterestCategory[];
 
   if (favorite_categories.length > 3) {
     redirect(

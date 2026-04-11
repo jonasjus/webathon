@@ -34,7 +34,7 @@ export async function createActivity(input: CreateActivityInput) {
     map_pin_y: input.mapPinY,
   } as never);
 
-  if (error) throw new Error(`Kunne ikke opprette aktivitet: ${error.message}`);
+  if (error) throw new Error(`Kunne ikke opprette arrangement: ${error.message}`);
   revalidateAppContentPaths();
 }
 

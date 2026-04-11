@@ -3,8 +3,8 @@ import { CalendarDays, MapPin } from "lucide-react";
 import Link from "next/link";
 import { Avatar } from "@/components/account/avatar";
 import {
-  CategoryIcon,
-  getCategoryAppearance,
+  ActivityCategoryIcon,
+  getActivityCategoryAppearance,
   withAlpha,
 } from "@/components/activity/category-tag";
 import type { Activity } from "@/lib/supabase/types";
@@ -19,7 +19,7 @@ export function ProfileActivityCard({
   currentUserId,
 }: ProfileActivityCardProps) {
   const isHost = activity.hostUserId === currentUserId;
-  const appearance = getCategoryAppearance(activity.category);
+  const appearance = getActivityCategoryAppearance(activity.category);
   const accentSurface = withAlpha(appearance.color, 0.12);
   const accentBorder = withAlpha(appearance.color, 0.24);
   const accentInk = withAlpha(appearance.color, 0.88);
@@ -35,7 +35,7 @@ export function ProfileActivityCard({
             color: accentInk,
           }}
         >
-          <CategoryIcon category={activity.category} size={20} />
+          <ActivityCategoryIcon category={activity.category} size={20} />
         </div>
 
         <div className="min-w-0 flex-1">

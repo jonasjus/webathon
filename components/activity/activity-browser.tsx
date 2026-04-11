@@ -9,7 +9,10 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import type { Activity, ActivityCategory } from "@/lib/supabase/types";
-import { categoryOptions, getCategoryAppearance } from "./category-tag";
+import {
+  activityCategoryOptions,
+  getActivityCategoryAppearance,
+} from "./category-tag";
 import { ActivityCard } from "./activity-card";
 
 type FilterId = "alle" | "helg" | "ledige";
@@ -38,9 +41,9 @@ const filters: { id: FilterId; label: string }[] = [
 ];
 
 const emptyStateDefaults: EmptyStateCopy = {
-  baseTitle: "Ingen aktiviteter",
-  baseDescription: "Det er ingen aktiviteter å vise akkurat nå.",
-  filteredTitle: "Ingen aktiviteter matcher",
+  baseTitle: "Ingen arrangementer",
+  baseDescription: "Det er ingen arrangementer å vise akkurat nå.",
+  filteredTitle: "Ingen arrangementer matcher",
   filteredDescription: "Prøv et annet søk eller juster filtrene dine.",
 };
 
@@ -104,7 +107,7 @@ export function ActivityBrowser({
   const deferredQuery = useDeferredValue(query);
   const normalizedQuery = normalizeSearchValue(deferredQuery);
 
-  const availableCategories = categoryOptions.filter((option) =>
+  const availableCategories = activityCategoryOptions.filter((option) =>
     activities.some((activity) => activity.category === option.value)
   );
 
@@ -133,7 +136,7 @@ export function ActivityBrowser({
       return true;
     }
 
-    const categoryLabel = getCategoryAppearance(activity.category).label;
+    const categoryLabel = getActivityCategoryAppearance(activity.category).label;
     const haystack = normalizeSearchValue(
       [
         activity.title,
@@ -165,7 +168,7 @@ export function ActivityBrowser({
               <div className="inline-flex items-center gap-2 text-sm text-[var(--ink-muted)]">
                 <SlidersHorizontal className="h-4 w-4" />
                 <span>
-                  {visibleActivities.length} av {activities.length} aktiviteter
+                  {visibleActivities.length} av {activities.length} arrangementer
                 </span>
               </div>
 

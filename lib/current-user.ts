@@ -1,4 +1,8 @@
-import type { ActivityCategory, ChatParticipant, ProfileRow } from "./supabase/types";
+import type {
+  ActivityInterestCategory,
+  ChatParticipant,
+  ProfileRow,
+} from "./supabase/types";
 
 interface AuthUserLike {
   id: string;
@@ -10,7 +14,7 @@ export interface AppUser extends ChatParticipant {
   email: string | null;
   bio: string | null;
   bannerTheme: string | null;
-  favoriteCategories: ActivityCategory[];
+  favoriteCategories: ActivityInterestCategory[];
 }
 
 function getMetadataString(

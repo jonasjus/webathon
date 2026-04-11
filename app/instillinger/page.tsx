@@ -101,7 +101,7 @@ export default async function SettingsPage({ searchParams }: SettingsPageProps) 
                     <h2 className="card-title text-[1.45rem] text-red-950">Slett konto</h2>
                     <p className="mt-3 text-sm leading-6 text-gray-600">
                       Dette sletter brukeren din <strong>permanent</strong>,
-                      inkludert aktiviteter og deltakelser.
+                      inkludert arrangementer og deltakelser.
                     </p>
                   </div>
                 </div>

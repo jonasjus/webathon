@@ -21,10 +21,10 @@ export function ActivityFeed({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="card-intro">
             <p className="text-sm font-medium text-[var(--ink-muted)]">
-              Aktiviteter akkurat nå
+              Arrangementer akkurat nå
             </p>
             <h2 className="card-title text-[2.35rem] text-[var(--ink)]">
-              Neste økter i venue
+              Kommende arrangementer i venue
             </h2>
           </div>
           {createCta}
@@ -38,11 +38,11 @@ export function ActivityFeed({
           currentUserId={currentUserId}
           initialView="detailed"
           emptyStateCopy={{
-            baseTitle: "Ingen aktiviteter",
-            baseDescription: "Det er ingen aktiviteter å vise akkurat nå.",
-            filteredTitle: "Ingen aktiviteter matcher",
+            baseTitle: "Ingen arrangementer",
+            baseDescription: "Det er ingen arrangementer å vise akkurat nå.",
+            filteredTitle: "Ingen arrangementer matcher",
             filteredDescription:
-              "Ingen aktiviteter matcher søket eller filtrene dine akkurat nå.",
+              "Ingen arrangementer matcher søket eller filtrene dine akkurat nå.",
           }}
         />
       </div>

@@ -13,7 +13,7 @@ interface CreateActivityCtaProps {
 export function CreateActivityCta({
   isLoggedIn,
   buttonClassName,
-  label = "Opprett aktivitet",
+  label = "Opprett arrangement",
 }: CreateActivityCtaProps) {
   const [isOpen, setIsOpen] = useState(false);
 

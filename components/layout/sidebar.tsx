@@ -18,7 +18,7 @@ const baseNavigation: ReadonlyArray<{
 }> = [
   { label: "Hjem", href: "/", icon: Home },
   { label: "Profil", icon: User },
-  { label: "Mine aktiviteter", href: "/mine-aktiviteter", icon: Calendar },
+  { label: "Mine arrangementer", href: "/mine-aktiviteter", icon: Calendar },
   { label: "Meldinger", href: "/meldinger", icon: MessageCircle },
   { label: "Kart", icon: Map },
   { label: "Innstillinger", href: "/instillinger", icon: Settings },
