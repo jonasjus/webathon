@@ -1,4 +1,4 @@
-import type { ActivityCategory } from "../../lib/supabase/types";
+import type { ActivityInterestCategory } from "../../lib/supabase/types";
 
 type CategoryAppearance = {
   label: string;
@@ -10,23 +10,23 @@ const defaultAppearance: CategoryAppearance = {
   color: "#7AA060",
 };
 
-const categoryAppearance: Partial<Record<ActivityCategory, CategoryAppearance>> = {
+const categoryAppearance = {
   fotball: { label: "Fotball", color: "#5FA8D3" },
   løping: { label: "Løping", color: "#F08A6E" },
   yoga: { label: "Yoga", color: "#F1B24A" },
   klatring: { label: "Klatring", color: "#8E6BB1" },
   padel: { label: "Padel", color: "#4F8A79" },
   sykling: { label: "Sykling", color: "#7AA060" },
-};
+} satisfies Partial<Record<ActivityInterestCategory, CategoryAppearance>>;
 
 interface CategoryTagProps {
-  category: ActivityCategory;
+  category: ActivityInterestCategory;
 }
 
-export function getCategoryAppearance(category: ActivityCategory | string | null | undefined) {
-  return category && category in categoryAppearance
-    ? categoryAppearance[category as ActivityCategory] ?? defaultAppearance
-    : defaultAppearance;
+export function getCategoryAppearance(category: ActivityInterestCategory | string | null | undefined) {
+  if (!category || typeof category !== "string") return defaultAppearance;
+  const appearance = (categoryAppearance as Record<string, CategoryAppearance | undefined>)[category];
+  return appearance ?? defaultAppearance;
 }
 
 export function CategoryTag({ category }: CategoryTagProps) {
@@ -44,7 +44,7 @@ export function CategoryTag({ category }: CategoryTagProps) {
 }
 
 interface SportGlyphProps {
-  category: ActivityCategory;
+  category: ActivityInterestCategory;
 }
 
 export function SportGlyph({ category }: SportGlyphProps) {
