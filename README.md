@@ -59,7 +59,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ---
 
 
-### 5. Technisk info
+### 5. Technical stack
 - Frontend: Next.js, React, Tailwind CSS
 - Backend: Supabase (PostgreSQL, Authentication, Storage)
 - Kart: Leaflet.js
