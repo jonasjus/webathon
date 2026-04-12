@@ -59,4 +59,6 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ---
 
 ### Bilder
-![venue.png](public/venue.png)
+![hjem.png](public/hjem.png)
+![kart.png](public/kart.png)
+![chat.png](public/chat.png)
