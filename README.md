@@ -58,6 +58,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
+
+### 5. Technisk info
+- Frontend: Next.js, React, Tailwind CSS
+- Backend: Supabase (PostgreSQL, Authentication, Storage)
+- Kart: Leaflet.js
+- Chat: Supabase Realtime
+- Deploy: Vercel
+
 ### Bilder
 ![hjem.png](public/hjem.png)
 ![kart.png](public/kart.png)
